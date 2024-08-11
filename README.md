@@ -1,1 +1,1 @@
-# programming-mpc
+# Programming MPC
