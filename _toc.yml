@@ -3,4 +3,5 @@
 format: jb-book
 root: intro
 chapters:
-- file: chapters/example.ipynb
+- file: chapters/chapter01.ipynb
+- file: chapters/chapter02.ipynb
