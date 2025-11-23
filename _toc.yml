@@ -5,3 +5,4 @@ root: intro
 chapters:
 - file: chapters/chapter01.ipynb
 - file: chapters/chapter02.ipynb
+- file: chapters/chapter03.ipynb
