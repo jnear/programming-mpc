@@ -7,4 +7,5 @@ chapters:
 - file: chapters/chapter02.ipynb
 - file: chapters/chapter03.ipynb
 - file: chapters/chapter04.ipynb
+- file: chapters/chapter05.ipynb
 - file: bibliography.md
