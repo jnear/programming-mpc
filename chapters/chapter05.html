@@ -1,0 +1,1235 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Building Applications with MPC &#8212; Programming MPC</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter05';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Oblivious Transfer" href="chapter06.html" />
+    <link rel="prev" title="Multiplication Triples" href="chapter04.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Programming MPC - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Programming MPC - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Programming MPC
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="chapter02.html">Additive Secret Sharing</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Building Applications with MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter05.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter05.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Building Applications with MPC</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secint-secure-integers"><code class="docutils literal notranslate"><span class="pre">SecInt</span></code>: Secure Integers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-cross-tabulation">Application: Cross-Tabulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secsignedint-signed-integers"><code class="docutils literal notranslate"><span class="pre">SecSignedInt</span></code>: Signed Integers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secdec-decimal-numbers"><code class="docutils literal notranslate"><span class="pre">SecDec</span></code>: Decimal Numbers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#division">Division</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-computing-the-average-age-of-heart-disease-patients">Application: Computing the Average Age of Heart Disease Patients</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="building-applications-with-mpc">
+<h1>Building Applications with MPC<a class="headerlink" href="#building-applications-with-mpc" title="Link to this heading">#</a></h1>
+<p>We saw a very simple application of MPC in Chapter 2 (counting the number of patients with heart disease, without sharing the underlying data), and we’ve now seen protocols for doing both addition and multiplication. What kinds of applications can we build with these tools, and how can we design APIs that make it easy to do?</p>
+<p>Throughout this book, we’ll use a style of encapsulating secret-shared data with <em>special objects</em> and defining operations on those objects using the fundamental MPC protocols we’ve learned about. For example, we’ll start this chapter by defining a <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> class for holding secret-shared integers, and we’ll define addition and multiplication for these objects using the additive homomorphism and multiplication triples, respectively. This approach enables building applications that look very similar to traditional centralized Python programs, so that we don’t need to worry about the details of the protocol when building applications.</p>
+<p>An alternative style, used commonly in the MPC literature, is to define MPC protocols that process <em>circuits</em>, and then to build applications by defining circuits. The circuits used in MPC are similar to hardware circuits, but have only addition and multiplication gates, and each wire in the circuit represents a secret-shared value. We’ll cover circuits in detail in Chapter TODO.</p>
+<section id="secint-secure-integers">
+<h2><code class="docutils literal notranslate"><span class="pre">SecInt</span></code>: Secure Integers<a class="headerlink" href="#secint-secure-integers" title="Link to this heading">#</a></h2>
+<p>We define the <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> class as an abstract representation of secret-shared integers. We’ll use Python’s <a class="reference external" href="https://docs.python.org/3/library/dataclasses.html"><code class="docutils literal notranslate"><span class="pre">dataclass</span></code></a> decorator, since <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> is a container for secret-shared data; the class will have two fields <code class="docutils literal notranslate"><span class="pre">s1</span></code> and <code class="docutils literal notranslate"><span class="pre">s2</span></code> to hold the additive secret shares defining the represented integer. We’ll also define several methods:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">__add__</span></code> method will add two <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> objects by adding the respective secret shares</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">__mul__</span></code> method will multiply two <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> objects using the <code class="docutils literal notranslate"><span class="pre">protocol_mult</span></code> protocol defined in Chapter 4</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">reveal</span></code> method will reveal the value of the <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> object by broadcasting the shares and reconstructing the secret</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">input</span></code> class method will construct at new <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> object by secret sharing the input value</p></li>
+</ul>
+<p>The definition of the class appears below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SecInt</span><span class="p">:</span>
+    <span class="c1"># s1 is p1&#39;s share of the value, and s2 is p2&#39;s share</span>
+    <span class="n">s1</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+    <span class="n">s2</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Secret share an input: p1 holds s1, and p2 holds s2&quot;&quot;&quot;</span>
+        <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">val</span><span class="o">.</span><span class="n">parties</span><span class="p">:</span>
+            <span class="n">s2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SecInt</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SecInt</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add two SecInt objects using local addition of shares&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SecInt</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">s1</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">s2</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">s2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiply two SecInt objects using a triple&quot;&quot;&quot;</span>
+        <span class="n">triple</span> <span class="o">=</span> <span class="n">multiplication_triples</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">protocol_mult</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">s2</span><span class="p">),</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">s2</span><span class="p">),</span> <span class="n">triple</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SecInt</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reveal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reveal the secret value by broadcast and reconstruction&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">s2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can write choreographic programs describing protocols that operate on <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> objects as if they’re regular Python numbers. For example, below a program that computes <span class="math notranslate nohighlight">\((x+y)^3\)</span> without revealing <span class="math notranslate nohighlight">\(x\)</span> or <span class="math notranslate nohighlight">\(y\)</span>. Note that every multiplication of <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> objects consumes a multiplication triple, so our program needs to begin by populating the global pool of multiplication triples as a preprocessing step.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">multiplication_triples</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">x_input</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">y_input</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># Preprocessing: deal multiplication triples</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+        <span class="n">multiplication_triples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">functionality_gen_triple</span><span class="p">())</span>
+
+    <span class="c1"># Create secret shares of the inputs</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">x_input</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">SecInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">y_input</span><span class="p">)</span>
+
+    <span class="c1"># Online phase: compute (x+y)^3</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">z</span><span class="o">*</span><span class="n">z</span><span class="o">*</span><span class="n">z</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(x+y)^3:&#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(x+y)^3: 343@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="application-cross-tabulation">
+<h2>Application: Cross-Tabulation<a class="headerlink" href="#application-cross-tabulation" title="Link to this heading">#</a></h2>
+<p>One common analysis of datasets that involves only addition of integers is <em><a class="reference external" href="https://en.wikipedia.org/wiki/Contingency_table">cross tabulation</a></em>, the process of counting the number of people in the dataset with particular combinations of attributes. In our heart disease example, we might want to answer a question like: “do people who experience exercise-induced angina more commonly have heart disease?” To answer this question, we can count how many people have:</p>
+<ul class="simple">
+<li><p>Neither exercise-induced angina nor heart disease</p></li>
+<li><p>Exercise-induced angina, but not heart disease</p></li>
+<li><p>No exercise-induced angina, but heart disease</p></li>
+<li><p>Both exercise-induced angina and heart disease</p></li>
+</ul>
+<p>The results will allow comparing the groups to determine the link between the two.</p>
+<p>In our framework, the easiest way to do this is to use the <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.crosstab.html">Pandas function for cross tabulation</a> and then convert the values to a tuple. This approach allows us to separate the values in the tuple and secret share each one of them. The following function builds the contingency table locally, using a single dataset:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">heart_disease_crosstab</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;exang&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can write a program to read in separate datasets for P1 and P2, secret share the associated contingency tables, and add corresponding values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># Read datasets</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart1.csv&#39;</span><span class="nd">@p1</span><span class="p">)</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart2.csv&#39;</span><span class="nd">@p2</span><span class="p">)</span>
+
+    <span class="c1"># Create crosstabs</span>
+    <span class="n">crosstab1</span> <span class="o">=</span> <span class="n">heart_disease_crosstab</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">crosstab2</span> <span class="o">=</span> <span class="n">heart_disease_crosstab</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># Secret share crosstabs</span>
+    <span class="n">sec_crosstab1</span> <span class="o">=</span> <span class="p">[</span><span class="n">SecInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">crosstab1</span><span class="p">]</span>
+    <span class="n">sec_crosstab2</span> <span class="o">=</span> <span class="p">[</span><span class="n">SecInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">crosstab2</span><span class="p">]</span>
+
+    <span class="c1"># Add corresponding values and reveal results</span>
+    <span class="n">crosstab</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sec_crosstab1</span><span class="p">,</span> <span class="n">sec_crosstab2</span><span class="p">)]</span>
+    <span class="n">crosstab_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">crosstab</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Final crosstab:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">crosstab_np</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final crosstab:
+[[39@{p2, p1} 95@{p2, p1}]
+ [49@{p2, p1} 17@{p2, p1}]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The results show that rates of exercise-induced angina are not too far apart for patients without heart disease, but there’s a significant difference between them for patients with heart disease! Many useful analyses can be performed this way, with only addition of data.</p>
+</section>
+<section id="secsignedint-signed-integers">
+<h2><code class="docutils literal notranslate"><span class="pre">SecSignedInt</span></code>: Signed Integers<a class="headerlink" href="#secsignedint-signed-integers" title="Link to this heading">#</a></h2>
+<p>So far we’ve only dealt with non-negative integers. As long as they’re smaller than the characteristic of the finite field we use, non-negative integers can be directly encoded as field elements. If we want to encode <em>negative</em> numbers, things get more complicated, since finite fields don’t have negative elements.</p>
+<p>The most common approach in MPC protocols is actually quite similar to the encoding of signed integers in binary. To encode a signed number <span class="math notranslate nohighlight">\(n\)</span> as a field element in <span class="math notranslate nohighlight">\(GF(p)\)</span>, we compute <span class="math notranslate nohighlight">\(n \mod p\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">encode_signed</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">GF</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This has the effect of encoding non-negative numbers as the equivalent field element:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encode_signed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(1, order=2147483647)
+</pre></div>
+</div>
+</div>
+</div>
+<p>It has an interesting impact on negative numbers: a negative number <span class="math notranslate nohighlight">\(n\)</span>, encoded as <span class="math notranslate nohighlight">\(n \mod p\)</span>, becomes <span class="math notranslate nohighlight">\(p - \lvert n \rvert\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encode_signed</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(2147483646, order=2147483647)
+</pre></div>
+</div>
+</div>
+</div>
+<p>A big advantage of this encoding is that field arithmetic basically translates into signed arithmetic on the encoded numbers. For example, <span class="math notranslate nohighlight">\(3 - 1\)</span> should be equal to <span class="math notranslate nohighlight">\(2\)</span>, and it is:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encode_signed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">encode_signed</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(2, order=2147483647)
+</pre></div>
+</div>
+</div>
+</div>
+<p>What about <em>decoding</em> these numbers, back to signed integers? We’ll treat the first <span class="math notranslate nohighlight">\(p/2\)</span> field elements as non-negative numbers, and the remaining ones as negative numbers. Decoding the non-negative numbers doesn’t change their values. We decode negative numbers by subtracting <span class="math notranslate nohighlight">\(p\)</span>, so that when composed with our encoding procedure we get <span class="math notranslate nohighlight">\(p - \lvert n \rvert - p = -\lvert n \rvert\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">decode_signed</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;3 encoded = </span><span class="si">{</span><span class="n">encode_signed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s1">; decoded = </span><span class="si">{</span><span class="n">decode_signed</span><span class="p">(</span><span class="n">encode_signed</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;-3 encoded = </span><span class="si">{</span><span class="n">encode_signed</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s1">; decoded = </span><span class="si">{</span><span class="n">decode_signed</span><span class="p">(</span><span class="n">encode_signed</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3 encoded = 3; decoded = 3
+-3 encoded = 2147483644; decoded = -3
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ve now effectively divided our finite field in half, so we’ve halved the maximum value we can represent without overflow (and we want to avoid overflow, since it is likely to cause the wrong answer). For example, if we multiply two large positive numbers, we can easily end up with a negative one:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">decode_signed</span><span class="p">(</span><span class="n">encode_signed</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">encode_signed</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">15</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-1073741823
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is a problem with any binary number encoding a signed integer, and it <a class="reference external" href="https://stackoverflow.com/questions/1970680/integer-overflow-in-numpy-arrays">even causes problems in NumPy</a>. The solution is just to be careful about the size of the finite field you use for your application, to ensure that overflow isn’t a problem.</p>
+<p>We can define a class called <code class="docutils literal notranslate"><span class="pre">SecSignedInt</span></code> to represent signed integers using the encoding and decoding procedures we’ve defined, building on the <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> class. The only differences are in sharing (we encode the number before sharing) and revealing (we decode the number before returning it).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">encode_signed</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">GF</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">decode_signed</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SecSignedInt</span><span class="p">:</span>
+    <span class="c1"># s1 is p1&#39;s share of the value, and s2 is p2&#39;s share</span>
+    <span class="n">s1</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+    <span class="n">s2</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Secret share an input: p1 holds s1, and p2 holds s2&quot;&quot;&quot;</span>
+        <span class="n">encoded_val</span> <span class="o">=</span> <span class="n">encode_signed</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">encoded_val</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">val</span><span class="o">.</span><span class="n">parties</span><span class="p">:</span>
+            <span class="n">s2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SecSignedInt</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SecSignedInt</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add two SecInt objects using local addition of shares&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SecSignedInt</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">s1</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">s2</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">s2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiply two SecInt objects using a triple&quot;&quot;&quot;</span>
+        <span class="n">triple</span> <span class="o">=</span> <span class="n">multiplication_triples</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">protocol_mult</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">s2</span><span class="p">),</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">s2</span><span class="p">),</span> <span class="n">triple</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SecSignedInt</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reveal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reveal the secret value by broadcast and reconstruction&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decode_signed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">s2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s a simple example of adding a positive and negative number, resulting in a negative number:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecSignedInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">SecSignedInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Result:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Result: -2@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="secdec-decimal-numbers">
+<h2><code class="docutils literal notranslate"><span class="pre">SecDec</span></code>: Decimal Numbers<a class="headerlink" href="#secdec-decimal-numbers" title="Link to this heading">#</a></h2>
+<p>What if we want to represent decimal numbers? Finite fields definitely can’t do that! The most common approaches in MPC are inspired by techniques used in binary circuits used to build computers, such as <a class="reference external" href="https://en.wikipedia.org/wiki/Fixed-point_arithmetic">fixed-point arithmetic</a> and <a class="reference external" href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">floating-point arithmetic</a>. However, the MPC versions of these techniques usually differ a bit from the hardware versions, because some things that are easy in a binary circuit are much more difficult using operations over finite fields.</p>
+<p>The basic idea behind fixed- or floating-point numbers is that we can represent a decimal number like <span class="math notranslate nohighlight">\(0.3\)</span> as an integer multiplied by some power of 10: <span class="math notranslate nohighlight">\(0.3 = 3 * 10^{-1}\)</span>. Computer hardware usually uses a base of 2 (instead of 2) because multiplying by a power of 2 can be accomplished via shifting. In the MPC world, we can use any base; we’ll use 10 in this section for readability.</p>
+<p>We can use this technique to design a function for encoding a decimal number as a finite field element:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">encode_decimal</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">encoded_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="n">power</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">encoded_int</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">/</span><span class="mi">2</span>  <span class="c1"># avoid overflow in the encoding</span>
+    <span class="k">return</span> <span class="n">GF</span><span class="p">(</span><span class="n">encoded_int</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encode_decimal</span><span class="p">(</span><span class="mf">.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(30, order=2147483647)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encode_decimal</span><span class="p">(</span><span class="mf">35.63</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(3563, order=2147483647)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We lose precision if the power is not large enough</span>
+<span class="n">encode_decimal</span><span class="p">(</span><span class="mf">0.12345</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(12, order=2147483647)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We regain precision by increasing the power</span>
+<span class="n">encode_decimal</span><span class="p">(</span><span class="mf">0.12345</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(12345, order=2147483647)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Decoding is the inverse: we convert to an integer, then divide by the value we multiplied by during encoding. We incorporate the technique used above for signed numbers in our decoding procedure, so that we can represent negative decimals too.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">decode_decimal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">int_encoded</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">int_encoded</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span>
+    <span class="k">return</span> <span class="n">int_encoded</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="n">power</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">decode_decimal</span><span class="p">(</span><span class="n">encode_decimal</span><span class="p">(</span><span class="mf">.3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.3
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">decode_decimal</span><span class="p">(</span><span class="n">encode_decimal</span><span class="p">(</span><span class="o">-</span><span class="mf">.3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.3
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is a useful representation because the operations of finite field arithmetic translate (with some caveats) into equivalent operations on the encoded decimal numbers. For example, we can add encoded decimals and we get the right answer:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">encode_decimal</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">encode_decimal</span><span class="p">(</span><span class="mf">34.6</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Encoded x:&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;encoded y:&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;encoded z:&#39;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;z decoded:&#39;</span><span class="p">,</span> <span class="n">decode_decimal</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Encoded x: 30 encoded y: 3460 encoded z: 3490
+z decoded: 34.9
+</pre></div>
+</div>
+</div>
+</div>
+<p>Things are more complicated for multiplication, because <span class="math notranslate nohighlight">\((x * 10^2)(y * 10^2) = xy * 10^4\)</span>: <em>the power goes up!</em> This is not necessarily a problem, as long as we decode the resulting number correctly to account for the increase in power:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">encode_decimal</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">encode_decimal</span><span class="p">(</span><span class="mf">34.6</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Encoded x:&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;encoded y:&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;encoded z:&#39;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;z decoded (wrong power):&#39;</span><span class="p">,</span> <span class="n">decode_decimal</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;z decoded (right power):&#39;</span><span class="p">,</span> <span class="n">decode_decimal</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Encoded x: 30 encoded y: 3460 encoded z: 103800
+z decoded (wrong power): 1038.0
+z decoded (right power): 10.38
+</pre></div>
+</div>
+</div>
+</div>
+<p>There is one problem with this solution: each multiplication significantly increases the size of the encoded number because of the presence of the scaling factor, and this quickly leads to overflow. With our example numbers, <span class="math notranslate nohighlight">\(x * y * y * y\)</span> is represented as <span class="math notranslate nohighlight">\(x*y*y*y*10^8\)</span>, which is already larger than <span class="math notranslate nohighlight">\(p/2\)</span> and leads to overflow:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">encode_decimal</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">encode_decimal</span><span class="p">(</span><span class="mf">34.6</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Encoded x:&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;encoded y:&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;encoded z:&#39;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;z decoded (right power; wrong answer):&#39;</span><span class="p">,</span> <span class="n">decode_decimal</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Encoded x: 30 encoded y: 3460 encoded z: 1406532034
+z decoded (right power; wrong answer): -7.40951613
+</pre></div>
+</div>
+</div>
+</div>
+<p>Fixed-point arithmetic implementations typically deal with this issue by <em>scaling</em> the encoded numbers back down after multiplying (e.g. by dividing by <span class="math notranslate nohighlight">\(10^2\)</span>), causing a loss of precision but avoiding overflow. Floating-point arithmetic uses a similar process called <em>normalization</em>. In hardware, when the base is 2, this is easy to do with an arithmetic shift; in MPC, division (no matter the base) is not so easy.</p>
+<p>For now, we’ll ignore the problem, and return to it later and implement a (relatively complicated) solution called <em>truncation</em>.</p>
+<p>We can define a class called <code class="docutils literal notranslate"><span class="pre">SecDec</span></code> for decimal numbers in an analagous way to the previous classes. We represent the current power of a decimal number explicitly in the object, as a <em>public</em> value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">encode_decimal</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">encoded_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="n">power</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">encoded_int</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">/</span><span class="mi">2</span>  <span class="c1"># avoid overflow in the encoding</span>
+    <span class="k">return</span> <span class="n">GF</span><span class="p">(</span><span class="n">encoded_int</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">decode_decimal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">int_encoded</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">int_encoded</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span>
+    <span class="k">return</span> <span class="n">int_encoded</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="n">power</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SecDec</span><span class="p">:</span>
+    <span class="n">s1</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+    <span class="n">s2</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+    <span class="n">power</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">encoded_val</span> <span class="o">=</span> <span class="n">encode_decimal</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
+        <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">encoded_val</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">val</span><span class="o">.</span><span class="n">parties</span><span class="p">:</span>
+            <span class="n">s2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SecDec</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SecDec</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">power</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">power</span>
+        <span class="k">return</span> <span class="n">SecDec</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">s1</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">s2</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">s2</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">triple</span> <span class="o">=</span> <span class="n">multiplication_triples</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">protocol_mult</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">s2</span><span class="p">),</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">s1</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">s2</span><span class="p">),</span> <span class="n">triple</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SecDec</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">power</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reveal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decode_decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">s2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">0.4</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="o">-</span><span class="mf">5.5</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x + y:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x * y:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x * y * y:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + y: -5.1@{p2, p1}
+x * y: -2.2@{p2, p1}
+x * y * y: 12.1@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>This approach is not quite the same as either floating-point or fixed-point arithmetic - it’s not fixed-point, since the power varies as operations are performed, and it’s not floating-point, since it lacks normalization and the power is public.</p>
+</section>
+<section id="division">
+<h2>Division<a class="headerlink" href="#division" title="Link to this heading">#</a></h2>
+<p>Now that we have decimal numbers, can we perform division?</p>
+<p>The answer is “kind of.” Division is just multiplication by the reciprocal (<span class="math notranslate nohighlight">\(x/y = x * (1/y)\)</span>), so if we have a secret-shared reciprocal (or if the denominator is public, or known to one of the parties) then our <code class="docutils literal notranslate"><span class="pre">SecDec</span></code> class can already do the operation. Here’s an example where we compute <span class="math notranslate nohighlight">\(34 / 3\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">34</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">.33</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;34 / 3:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>34 / 3: 11.22@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>But, what if the denominator is unknown to all parties? In that case, we need to <em>compute</em> its reciprocal using our MPC operations, which we can’t do directly.</p>
+<p>One common approach is to <em>approximate</em> the reciprocal using <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method#Multiplicative_inverses_of_numbers_and_power_series">Newton’s method</a>, which only requires multiplication and subtraction (of decimal numbers). This approach involves an iterative algorithm that starts from a guess for the reciprocal and converges to the actual reciprocal (as long as the guess is decent). It usually produces a decent approximation after just a few iterations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reciprocal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_reciprocal_guess</span><span class="p">):</span>
+    <span class="n">x_reciprocal</span> <span class="o">=</span> <span class="n">x_reciprocal_guess</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Before iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">, the reciprocal is </span><span class="si">{</span><span class="n">x_reciprocal</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">x_reciprocal</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x_reciprocal</span><span class="p">)</span> <span class="o">*</span> <span class="n">x_reciprocal</span>
+    <span class="k">return</span> <span class="n">x_reciprocal</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reciprocal</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Before iteration 0, the reciprocal is 0.1
+Before iteration 1, the reciprocal is 0.17
+Before iteration 2, the reciprocal is 0.2533
+Before iteration 3, the reciprocal is 0.31411733000000003
+Before iteration 4, the reciprocal is 0.3322255689810133
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.3333296519077525
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can combine this idea with the <code class="docutils literal notranslate"><span class="pre">SecDec</span></code> class to build a secure reciprocal protocol. We will need to be careful about how many iterations we perform, however, since our approach overflows quickly as the number of multiplications increases, and each iteration of the algorithm performs 3 multiplications. We perform subtraction by multiplying the subtrahend by -1 and then adding.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_reciprocal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_reciprocal_guess</span><span class="p">):</span>
+    <span class="n">neg_one</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">power</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x_reciprocal</span> <span class="o">=</span> <span class="n">x_reciprocal_guess</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">prod1</span> <span class="o">=</span> <span class="n">neg_one</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x_reciprocal</span>
+        <span class="n">x_reciprocal</span> <span class="o">=</span> <span class="p">(</span><span class="n">prod1</span> <span class="o">+</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">power</span><span class="o">=</span><span class="n">prod1</span><span class="o">.</span><span class="n">power</span><span class="p">))</span> <span class="o">*</span> <span class="n">x_reciprocal</span>
+    <span class="k">return</span> <span class="n">x_reciprocal</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">34</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">power</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">guess</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">.2</span><span class="p">),</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">protocol_reciprocal</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">guess</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;1/3:&#39;</span><span class="p">,</span> <span class="n">y1</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;34 / 3:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y1</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1/3: 0.33311488@{p2, p1}
+34 / 3: -0.0557574091@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>With 3 iterations, a good guess, and being careful with the starting powers for our encodings (e.g. using <code class="docutils literal notranslate"><span class="pre">power=0</span></code> when we encode integers, to avoid increasing the power unnecessarily), we’re able to calculate a pretty good approximation of the reciprocal without overflowing. However, we get the wrong answer when multiplying by the reciprocal to perform division, due to overflow. We can fix the problem in this case by using a larger field to avoid overflow:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">61</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">multiplication_triples</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># Deal new multiplication triples in the new field</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+        <span class="n">multiplication_triples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">functionality_gen_triple</span><span class="p">())</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">34</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">power</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">guess</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">.2</span><span class="p">),</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">protocol_reciprocal</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">guess</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;1/3:&#39;</span><span class="p">,</span> <span class="n">y1</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;34 / 3:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y1</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1/3: 0.33311488@{p2, p1}
+34 / 3: 11.32590592@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>This approach is clearly limited, since increasing the field size has significant drawbacks (e.g. memory usage and computation time for field operations). However, for many applications, a few multiplications is enough, and even limited division is sufficient to get good results.</p>
+</section>
+<section id="application-computing-the-average-age-of-heart-disease-patients">
+<h2>Application: Computing the Average Age of Heart Disease Patients<a class="headerlink" href="#application-computing-the-average-age-of-heart-disease-patients" title="Link to this heading">#</a></h2>
+<p>We now have the tools needed to build a protocol that computes the average age of heart disease patients in the heart disease dataset, without revealing the sum of ages or the count of patients. We’ll use the <code class="docutils literal notranslate"><span class="pre">SecDec</span></code> class to represent numbers, and the approach described above for computing the reciprocal. The guess for the reciprocal is important for ensuring we get the right answer, and this can be challenging in many applications. In this one, however, it’s easy: each party’s data has about half of the heart disease patients, so doubling the number of heart disease patients a single party has is a decent estimate of the total, and can be used to make a good guess at the reciprocal. Since the reciprocal is smaller in this example than the last one, we’ll need to use an even larger finite field to avoid overflow. We include some debugging printouts to show the protocol working, but in a real deployment we’d keep the reciprocal secret.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">count_heart_disease_patients</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">127</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">multiplication_triples</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># Deal new multiplication triples in the new field</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">multiplication_triples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">functionality_gen_triple</span><span class="p">())</span>
+
+    <span class="c1"># Read datasets</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart1.csv&#39;</span><span class="nd">@p1</span><span class="p">)</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart2.csv&#39;</span><span class="nd">@p2</span><span class="p">)</span>
+
+    <span class="c1"># Numerator: compute the total sum of all ages of heart disease patients</span>
+    <span class="n">sum1</span> <span class="o">=</span> <span class="n">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+    <span class="n">sum2</span> <span class="o">=</span> <span class="n">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+
+    <span class="n">total_sum</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">sum1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">sum2</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Denominator: compute the total number of heart disease patients</span>
+    <span class="n">count1</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+    <span class="n">count2</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+
+    <span class="n">total_count</span> <span class="o">=</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">count1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">count2</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Compute the reciprocal</span>
+    <span class="n">guess</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">count1</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reciprocal guess:&#39;</span><span class="p">,</span> <span class="n">guess</span><span class="p">)</span>
+    <span class="n">reciprocal</span> <span class="o">=</span> <span class="n">protocol_reciprocal</span><span class="p">(</span><span class="n">total_count</span><span class="p">,</span> <span class="n">SecDec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">guess</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Secret-shared reciprocal:&#39;</span><span class="p">,</span> <span class="n">reciprocal</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Actual reciprocal:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">total_count</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+
+    <span class="c1"># Compute the average: numerator * reciprocal</span>
+    <span class="n">average</span> <span class="o">=</span> <span class="n">total_sum</span> <span class="o">*</span> <span class="n">reciprocal</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Final average:&#39;</span><span class="p">,</span> <span class="n">average</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reciprocal guess: 0.00909090909090909@{p1}
+Secret-shared reciprocal: 0.008928571428571428@{p2, p1}
+Actual reciprocal: 0.008928571428571428@{p2, p1}
+Final average: 52.25@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter04.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Multiplication Triples</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter06.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Oblivious Transfer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secint-secure-integers"><code class="docutils literal notranslate"><span class="pre">SecInt</span></code>: Secure Integers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-cross-tabulation">Application: Cross-Tabulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secsignedint-signed-integers"><code class="docutils literal notranslate"><span class="pre">SecSignedInt</span></code>: Signed Integers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secdec-decimal-numbers"><code class="docutils literal notranslate"><span class="pre">SecDec</span></code>: Decimal Numbers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#division">Division</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-computing-the-average-age-of-heart-disease-patients">Application: Computing the Average Age of Heart Disease Patients</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Joseph P. Near
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

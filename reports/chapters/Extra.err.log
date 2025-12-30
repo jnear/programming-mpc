@@ -1,0 +1,58 @@
+Traceback (most recent call last):
+  File "/home/jnear/anaconda3/envs/mpc_book/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/jnear/anaconda3/envs/mpc_book/lib/python3.11/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jnear/anaconda3/envs/mpc_book/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jnear/anaconda3/envs/mpc_book/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/jnear/anaconda3/envs/mpc_book/lib/python3.11/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/jnear/anaconda3/envs/mpc_book/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/jnear/anaconda3/envs/mpc_book/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# secret share a list of values among two servers
+def share_list(xs):
+    # secret share each element of the list
+    all_shares = [share(secret=x, n=2) for x in xs]
+
+    # make two lists of shares: one for server 1, and the other for server 2
+    shares1, shares2 = zip(*all_shares)
+
+    # return the shares
+    return shares1, shares2
+
+share_list([1,2,3])
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[1], line 12[0m
+[1;32m      9[0m     [38;5;66;03m# return the shares[39;00m
+[1;32m     10[0m     [38;5;28;01mreturn[39;00m shares1, shares2
+[0;32m---> 12[0m [43mshare_list[49m[43m([49m[43m[[49m[38;5;241;43m1[39;49m[43m,[49m[38;5;241;43m2[39;49m[43m,[49m[38;5;241;43m3[39;49m[43m][49m[43m)[49m
+
+Cell [0;32mIn[1], line 4[0m, in [0;36mshare_list[0;34m(xs)[0m
+[1;32m      2[0m [38;5;28;01mdef[39;00m [38;5;21mshare_list[39m(xs):
+[1;32m      3[0m     [38;5;66;03m# secret share each element of the list[39;00m
+[0;32m----> 4[0m     all_shares [38;5;241m=[39m [43m[[49m[43mshare[49m[43m([49m[43msecret[49m[38;5;241;43m=[39;49m[43mx[49m[43m,[49m[43m [49m[43mn[49m[38;5;241;43m=[39;49m[38;5;241;43m2[39;49m[43m)[49m[43m [49m[38;5;28;43;01mfor[39;49;00m[43m [49m[43mx[49m[43m [49m[38;5;129;43;01min[39;49;00m[43m [49m[43mxs[49m[43m][49m
+[1;32m      6[0m     [38;5;66;03m# make two lists of shares: one for server 1, and the other for server 2[39;00m
+[1;32m      7[0m     shares1, shares2 [38;5;241m=[39m [38;5;28mzip[39m([38;5;241m*[39mall_shares)
+
+Cell [0;32mIn[1], line 4[0m, in [0;36m<listcomp>[0;34m(.0)[0m
+[1;32m      2[0m [38;5;28;01mdef[39;00m [38;5;21mshare_list[39m(xs):
+[1;32m      3[0m     [38;5;66;03m# secret share each element of the list[39;00m
+[0;32m----> 4[0m     all_shares [38;5;241m=[39m [[43mshare[49m(secret[38;5;241m=[39mx, n[38;5;241m=[39m[38;5;241m2[39m) [38;5;28;01mfor[39;00m x [38;5;129;01min[39;00m xs]
+[1;32m      6[0m     [38;5;66;03m# make two lists of shares: one for server 1, and the other for server 2[39;00m
+[1;32m      7[0m     shares1, shares2 [38;5;241m=[39m [38;5;28mzip[39m([38;5;241m*[39mall_shares)
+
+[0;31mNameError[0m: name 'share' is not defined
+

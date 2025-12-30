@@ -1,0 +1,1085 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Multiplication Triples &#8212; Programming MPC</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const style = document.createElement('style');
+style.textContent = `.mermaid-container {
+    position: relative !important;
+    display: inline-block;
+    width: 100%;
+}
+
+.mermaid-fullscreen-btn {
+    position: absolute !important;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-fullscreen-content {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-fullscreen-content.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-fullscreen-content .mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-fullscreen-content .mermaid svg {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 85vh;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}
+`;
+document.head.appendChild(style);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const initFullscreen = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(initFullscreen, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-fullscreen-content${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-fullscreen-content');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = '';
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", initFullscreen);
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter04';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Building Applications with MPC" href="chapter05.html" />
+    <link rel="prev" title="Proving Security" href="chapter03.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Programming MPC - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Programming MPC - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Programming MPC
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="chapter02.html">Additive Secret Sharing</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Multiplication Triples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Building Applications with MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter04.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter04.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Multiplication Triples</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-multiplication-triple">What is a Multiplication Triple?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-multiplication-triples-using-a-dealer">Generating Multiplication Triples using a Dealer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiplying-additive-shares-using-multiplication-triples">Multiplying Additive Shares using Multiplication Triples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-multiplication-triples">Why use Multiplication Triples?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-computing-the-variance-of-ages-for-patients-with-heart-disease">Application: Computing the Variance of Ages for Patients with Heart Disease</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="multiplication-triples">
+<h1>Multiplication Triples<a class="headerlink" href="#multiplication-triples" title="Link to this heading">#</a></h1>
+<p>We’ve seen how to use additive secret sharing to build protocols for summation, by using the additive homomorphism property of additive shares.</p>
+<p>What if we want to do multiplication? Unfortunately, additive shares don’t have a multiplicative homomorphism!</p>
+<p>Fortunately, there’s a commonly-used trick for performing multiplication on additive secret shares that leverages a construction called a <em>multiplication triple</em>. The idea is due to <a class="reference internal" href="#"><span class="xref myst">Don Beaver</span></a> <span id="id1">[<a class="reference internal" href="../bibliography.html#id3" title="Donald Beaver. Efficient multiparty protocols using circuit randomization. In Annual international cryptology conference, 420–432. Springer, 1991.">Bea91</a>]</span>; multiplication triples are often called <em>Beaver triples</em>, and the approach is sometimes called <em>Beaver’s trick</em>.</p>
+<p>For more information on multiplication triples, see <strong>Section 3.4 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
+<section id="what-is-a-multiplication-triple">
+<h2>What is a Multiplication Triple?<a class="headerlink" href="#what-is-a-multiplication-triple" title="Link to this heading">#</a></h2>
+<p>A multiplication triple is values <span class="math notranslate nohighlight">\(a, b, c\)</span> such that <span class="math notranslate nohighlight">\(a * b = c\)</span>, but with an important property:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> are <em>secret shared</em> among the parties</p></li>
+<li><p><em>No party</em> knows the actual values of <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> - each party only knows their own share</p></li>
+</ul>
+<p>So, in the two-party setting, a multiplication triple is actually represented by six secret shares:</p>
+<ul class="simple">
+<li><p>P1 knows <span class="math notranslate nohighlight">\(a_1\)</span>, <span class="math notranslate nohighlight">\(b_1\)</span>, and <span class="math notranslate nohighlight">\(c_1\)</span></p></li>
+<li><p>P2 knows <span class="math notranslate nohighlight">\(a_2\)</span>, <span class="math notranslate nohighlight">\(b_2\)</span>, and <span class="math notranslate nohighlight">\(c_2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((a_1 + a_2) * (b_1 + b_2) = c_1 + c_2\)</span></p></li>
+<li><p>Neither P1 nor P2 knows <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, or <span class="math notranslate nohighlight">\(c\)</span></p></li>
+</ul>
+<p>Multiplication triples can be used to perform multiplication of arbitrary additive shares, as we’ll see later in this chapter.</p>
+</section>
+<section id="generating-multiplication-triples-using-a-dealer">
+<h2>Generating Multiplication Triples using a Dealer<a class="headerlink" href="#generating-multiplication-triples-using-a-dealer" title="Link to this heading">#</a></h2>
+<p>No party is supposed to know the values <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> - so how do we generate shares of them, without revealing them to any of the parties?</p>
+<p>This actually turns out to be quite a difficult problem, and is one of the major sticking points in building high-performance MPC protocols. It’s fundamentally a circular problem - we can’t generate a triple that is unknown to all parties without performing some multiplication, but we can’t perform multiplication without having access to some triples! We’ll study some options for doing this later in this book.</p>
+<p>For now, we’ll describe the ideal functionality for generating multiplication triples, and defer implementing a protocol that realizes the functionality until later. Our ideal functionality will use the trusted “functionality party” to generate the multiplication triple and send secret shares of the triple to the participating parties. In practice, a secure protocol realizing the functionality would be used instead, unless an actual trusted third party exists who can generate the triples.</p>
+<div class="tip admonition">
+<p class="admonition-title">Ideal functionality: generate multiplication triple</p>
+<p>The ideal functionality for generating a new multiplication triple for the parties P1 and P2 has two steps:</p>
+<ol class="arabic simple">
+<li><p>The “functionality party” FGen generates the triple <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, <span class="math notranslate nohighlight">\(c\)</span></p></li>
+<li><p>FGen secret shares <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span>, and sends shares to P1 and P2</p></li>
+</ol>
+</div>
+<p>We can implement this functionality as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p1&#39;</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p2&#39;</span><span class="p">)</span>
+<span class="n">Fgen</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;Fgen&#39;</span><span class="p">)</span>
+<span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">share</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">s1</span>
+    <span class="k">return</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span>
+
+<span class="k">def</span> <span class="nf">deal_shares</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">s1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Fgen</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">s2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Fgen</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span>
+
+<span class="k">def</span> <span class="nf">functionality_gen_triple</span><span class="p">():</span>
+    <span class="c1"># Step 1: generate a, b, c</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">Fgen</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Fgen</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+    <span class="c1"># Step 2: secret share a, b, c</span>
+    <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">deal_shares</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">deal_shares</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">deal_shares</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">),</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">),</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can use the <code class="docutils literal notranslate"><span class="pre">functionality_gen_triple</span></code> ideal functionality to generate new multiplication triples, like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># Generate and deal the triple</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">functionality_gen_triple</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Shared triple:&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="c1"># Pattern match on the structure of the triple to extract the shares</span>
+    <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">),</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">),</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span> <span class="o">=</span> <span class="n">t</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed a:&#39;</span><span class="p">,</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">a2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed b:&#39;</span><span class="p">,</span> <span class="n">b1</span> <span class="o">+</span> <span class="n">b2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed c:&#39;</span><span class="p">,</span> <span class="n">c1</span> <span class="o">+</span> <span class="n">c2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed a*b:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="o">+</span><span class="n">a2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">b1</span><span class="o">+</span><span class="n">b2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shared triple: ((11@{Fgen, p1}, 12@{p2, Fgen}), (11@{Fgen, p1}, 4@{p2, Fgen}), (8@{Fgen, p1}, 14@{p2, Fgen}))
+Reconstructed a: 6@{Fgen}
+Reconstructed b: 15@{Fgen}
+Reconstructed c: 5@{Fgen}
+Reconstructed a*b: 5@{Fgen}
+</pre></div>
+</div>
+</div>
+</div>
+<p>As expected, the shares of the triple are such that <span class="math notranslate nohighlight">\((a_1 + a_2) * (b_1 + b_2) = c_1 + c_2\)</span>, except that all arithmetic is done <span class="math notranslate nohighlight">\(\mod p\)</span>. Each time we run the program, we’ll get a new multiplication triple.</p>
+</section>
+<section id="multiplying-additive-shares-using-multiplication-triples">
+<h2>Multiplying Additive Shares using Multiplication Triples<a class="headerlink" href="#multiplying-additive-shares-using-multiplication-triples" title="Link to this heading">#</a></h2>
+<p>How do we use a multiplication triple to actually perform multiplication? We can use Beaver’s trick to perform the multiplication, consuming one multiplication triple in the process. The following protocol performs the multiplication, and is due to Beaver <span id="id2">[<a class="reference internal" href="../bibliography.html#id3" title="Donald Beaver. Efficient multiparty protocols using circuit randomization. In Annual international cryptology conference, 420–432. Springer, 1991.">Bea91</a>]</span>.</p>
+<div class="note admonition">
+<p class="admonition-title">Protocol: multiplication of secret-shared values using a multiplication triple</p>
+<p>Setup:</p>
+<ul class="simple">
+<li><p>We want to multiply <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span></p></li>
+<li><p>P1 has shares <span class="math notranslate nohighlight">\(x_1\)</span> and <span class="math notranslate nohighlight">\(y_1\)</span></p></li>
+<li><p>P2 has shares <span class="math notranslate nohighlight">\(x_2\)</span> and <span class="math notranslate nohighlight">\(y_2\)</span></p></li>
+<li><p>P1 has shares <span class="math notranslate nohighlight">\(a_1\)</span>, <span class="math notranslate nohighlight">\(b_1\)</span>, and <span class="math notranslate nohighlight">\(c_1\)</span> of a multiplication triple</p></li>
+<li><p>P2 has shares <span class="math notranslate nohighlight">\(a_2\)</span>, <span class="math notranslate nohighlight">\(b_2\)</span>, and <span class="math notranslate nohighlight">\(c_2\)</span> of the same multiplication triple</p></li>
+</ul>
+<p>The parties P1 and P2 follow the following steps:</p>
+<ol class="arabic simple">
+<li><p>P1 computes <span class="math notranslate nohighlight">\(x_1 - a_1\)</span> and sends the result to P2</p></li>
+<li><p>P2 computes <span class="math notranslate nohighlight">\(x_2 - a_2\)</span> and sends the result to P1</p></li>
+<li><p>P1 and P2 both compute <span class="math notranslate nohighlight">\(d = (x_1 - a_1) + (x_2 - a_2) = (x_1 + x_2) - (a_1 + a_2) = x - a\)</span></p></li>
+<li><p>P1 computes <span class="math notranslate nohighlight">\(y_1 - b_1\)</span> and sends the result to P2</p></li>
+<li><p>P2 computes <span class="math notranslate nohighlight">\(y_2 - b_2\)</span> and sends the result to P1</p></li>
+<li><p>P1 and P2 both compute <span class="math notranslate nohighlight">\(e = (y_1 - b_1) + (y_2 - b_2) = (y_1 + y_2) - (b_1 + b_2) = y - b\)</span></p></li>
+<li><p>P1 computes <span class="math notranslate nohighlight">\(r_1 = d*e + d*b_1 + e*a_1 + c_1\)</span></p></li>
+<li><p>P2 computes <span class="math notranslate nohighlight">\(r_2 = 0 + d*b_2 + e*a_2 + c_2\)</span></p></li>
+</ol>
+<p>At the end of the protocol, <span class="math notranslate nohighlight">\(r_1\)</span> and <span class="math notranslate nohighlight">\(r_2\)</span> are additive shares of <span class="math notranslate nohighlight">\(x*y\)</span>.</p>
+</div>
+<p><strong>Is it secure?</strong> In steps 1, 2, 4, and 5, each party sends results computed from their shares to the other party. Doesn’t this violate security? Fortunately not - the shares of <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are not known to the other party, and can’t be inferred from the received values, since neither party knows <span class="math notranslate nohighlight">\(a\)</span> or <span class="math notranslate nohighlight">\(b\)</span> either! This is why it’s so important that the values of <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> be unknown to the parties - these values effectively <em>mask</em> the shares being sent during multiplication.</p>
+<p>This use of the multiplication triple for masking means that <strong>each multiplication triple can only be used once</strong>, to perform a single multiplication. If a triple is used more than once, then correlations between input values may enable a participant to infer the value of <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, or <span class="math notranslate nohighlight">\(c\)</span>, and thus learn the values of the input shares. <strong>Using a multiplication triple to perform a multiplication “consumes” it</strong> and it can’t be used again.</p>
+<p><strong>Is it correct?</strong> Consider the following identity:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+x*y =&amp; (x - a + a)(y - b + b)\\
+=&amp; (d+a)(e+b)\\
+=&amp; de + db + ae + ab\\
+=&amp; de + db + ae + c
+\end{align*}
+\end{split}\]</div>
+<p>The shares <span class="math notranslate nohighlight">\(r_1\)</span> and <span class="math notranslate nohighlight">\(r_2\)</span> computed at the end of the protocol are exactly additive shares of this value!</p>
+<p>We can implement this protocol using a choreographic function called <code class="docutils literal notranslate"><span class="pre">protocol_mult</span></code> whose inputs are secret-shared values <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> and a multiplication triple:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">triple</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">),</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">),</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span> <span class="o">=</span> <span class="n">triple</span>
+
+    <span class="c1"># Step 1. P1 computes d_1 = x_1 - a_1 and sends the result to P2</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">a1</span>
+    <span class="n">d1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+
+    <span class="c1"># Step 2. P2 computes d_2 = x_2 - a_2 and sends the result to P1</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">a2</span>
+    <span class="n">d2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: P1 and P2 both compute $d = d_1 + d_2 = x - a$</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">+</span> <span class="n">d2</span>
+
+    <span class="c1"># Step 4. P1 computes e_1 = y_1 - b_1 and sends the result to P2</span>
+    <span class="n">e1</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">b1</span>
+    <span class="n">e1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+
+    <span class="c1"># Step 5. P2 computes e_2 = y_2 - b_2 and sends the result to P1    </span>
+    <span class="n">e2</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">b2</span>
+    <span class="n">e2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+    <span class="c1"># Step 6. P1 and P2 both compute $e = e_1 + e_2 = y - b$</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">e1</span> <span class="o">+</span> <span class="n">e2</span>
+
+    <span class="c1"># Step 7. P1 computes r_1 = d*e + d*b_1 + e*a_1 + c_1</span>
+    <span class="n">r_1</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="n">b1</span> <span class="o">+</span> <span class="n">e</span> <span class="o">*</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">c1</span>
+
+    <span class="c1"># Step 8. P2 computes r_2 = 0 + d*b_2 + e*a_2 + c_2</span>
+    <span class="n">r_2</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">b2</span> <span class="o">+</span> <span class="n">e</span> <span class="o">*</span> <span class="n">a2</span> <span class="o">+</span> <span class="n">c2</span>
+
+    <span class="k">return</span> <span class="n">r_1</span><span class="p">,</span> <span class="n">r_2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can apply the protocol by passing in secret-shared values (like the ones we constructed in Chapter 2) and a multiplication triple generated by the functionality we wrote earlier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># P1 knows the input x, and P2 knows the input y</span>
+    <span class="n">x_input</span> <span class="o">=</span> <span class="mi">3</span><span class="nd">@p1</span>
+    <span class="n">y_input</span> <span class="o">=</span> <span class="mi">4</span><span class="nd">@p2</span>
+
+    <span class="c1"># Create secret shares of the inputs</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">x_input</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">y_input</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">x2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+    <span class="c1"># Generate a multiplication triple</span>
+    <span class="n">triple</span> <span class="o">=</span> <span class="n">functionality_gen_triple</span><span class="p">()</span>
+
+    <span class="c1"># Perform the multiplication</span>
+    <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">protocol_mult</span><span class="p">((</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span> <span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="n">triple</span><span class="p">)</span>
+
+    <span class="c1"># Broadcast results and print the product</span>
+    <span class="n">r1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">r2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Product:&#39;</span><span class="p">,</span> <span class="n">r1</span> <span class="o">+</span> <span class="n">r2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Product: 12@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>As expected, the product of 3 and 4 is 12. As in the summation protocol, we need to be careful that the size of the finite field used in the protocol is large enough to hold the product, or it will wrap around and we’ll get the wrong answer.</p>
+<p>This protocol is quite a bit more complicated than the summation protocol we built earlier. It requires the dealer to communicate the multiplication triple to the parties, and it also requires the parties to communicate two field elements to each other during the multiplication step. The sequence diagram below describes an example execution of the protocol:</p>
+<pre  class="mermaid">
+        sequenceDiagram
+participant p1
+participant p2
+participant Fgen
+Note right of Fgen: Secret share inputs
+p1 -&gt;&gt; p2 : 14
+p2 -&gt;&gt; p1 : 13
+Note right of Fgen: Generate multiplication triple
+dealer -&gt;&gt; p1 : 16
+dealer -&gt;&gt; p2 : 8
+dealer -&gt;&gt; p1 : 7
+dealer -&gt;&gt; p2 : 3
+dealer -&gt;&gt; p1 : 0
+dealer -&gt;&gt; p2 : 2
+Note right of Fgen: Perform multiplication
+p1 -&gt;&gt; p2 : 7
+p2 -&gt;&gt; p1 : 6
+p1 -&gt;&gt; p2 : 6
+p2 -&gt;&gt; p1 : 5
+Note right of Fgen: Reconstruct product
+p1 -&gt;&gt; p2 : 2
+p2 -&gt;&gt; p1 : 10
+    </pre></section>
+<section id="why-use-multiplication-triples">
+<h2>Why use Multiplication Triples?<a class="headerlink" href="#why-use-multiplication-triples" title="Link to this heading">#</a></h2>
+<p>Using multiplication triples to do multiplication of additive secret shares has a major issue: it requires the presence of a trusted dealer, or the use of a more complicated (and expensive) protocol to generate the triples. A trusted dealer generally obviates the need for a secure protocol in the first place, since the dealer could simply perform the multiplication themselves! So, what’s the point of using multiplication triples?</p>
+<p>As we’ll continue to see throughout this book: <em>secure multiplication is hard</em>. There is no magical solution that provides a simple, convenient, efficient approach for multiplication (as we have for addition, via the additive homomorphism of secret shares). Alternatives to multiplication triples make different tradeoffs, but none of them provides a solution that is better in every way.</p>
+<p>The multiplication triple approach differs from many of the alternatives by separating the triple generation step from the multiplication itself. This has several advantages:</p>
+<ul class="simple">
+<li><p>It makes protocols modular: a protocol that uses multiplication triples to perform multiplication can choose from many different approaches for <em>generating</em> the triples, and any of them will work. We’ll see examples of these later in the book.</p></li>
+<li><p>It allows generating triples in parallel, since triples are independent from each other.</p></li>
+<li><p>It enables performing the expensive triple generation portion as a pre-processing step, since the triples don’t depend on the actual input to the protocol. This is often referred to as an “offline” step that the parties can perform ahead of time. In settings where reacting quickly to new inputs is important, this can be a huge benefit.</p></li>
+<li><p>It makes the multiplication step simple: the approach presented in this chapter is perhaps the simplest protocol for multiplying secret shares.</p></li>
+</ul>
+</section>
+<section id="application-computing-the-variance-of-ages-for-patients-with-heart-disease">
+<h2>Application: Computing the Variance of Ages for Patients with Heart Disease<a class="headerlink" href="#application-computing-the-variance-of-ages-for-patients-with-heart-disease" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter03.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Proving Security</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter05.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Building Applications with MPC</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-multiplication-triple">What is a Multiplication Triple?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-multiplication-triples-using-a-dealer">Generating Multiplication Triples using a Dealer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiplying-additive-shares-using-multiplication-triples">Multiplying Additive Shares using Multiplication Triples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-multiplication-triples">Why use Multiplication Triples?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-computing-the-variance-of-ages-for-patients-with-heart-disease">Application: Computing the Variance of Ages for Patients with Heart Disease</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Joseph P. Near
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

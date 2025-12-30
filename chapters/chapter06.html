@@ -1,0 +1,892 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Oblivious Transfer &#8212; Programming MPC</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter06';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bibliography" href="../bibliography.html" />
+    <link rel="prev" title="Building Applications with MPC" href="chapter05.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Programming MPC - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Programming MPC - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Programming MPC
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="chapter02.html">Additive Secret Sharing</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Building Applications with MPC</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Oblivious Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter06.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter06.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Oblivious Transfer</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-oblivious-transfer-functionality">The Oblivious Transfer Functionality</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-protocol-for-oblivious-transfer">A Protocol for Oblivious Transfer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-generating-binary-multiplication-triples-using-ot">Application: Generating Binary Multiplication Triples using OT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-generating-arithmetic-multiplication-triples-using-ot">Application: Generating Arithmetic Multiplication Triples using OT</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="oblivious-transfer">
+<h1>Oblivious Transfer<a class="headerlink" href="#oblivious-transfer" title="Link to this heading">#</a></h1>
+<p>Oblivious Transfer (OT) is a fundamental primitive used in many MPC protocols. As we’ll see at the end of this chapter, it can be used to build a protocol for generating multiplication triples. It is also used as part of the online portion of other MPC protocols, as we’ll see in later chapters.</p>
+<p>For more information on Oblivious Transfer, see <strong>Sections 2.4 and 3.7 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
+<section id="the-oblivious-transfer-functionality">
+<h2>The Oblivious Transfer Functionality<a class="headerlink" href="#the-oblivious-transfer-functionality" title="Link to this heading">#</a></h2>
+<p>OT is a protocol between two parties: the <em>Sender</em> and the <em>Receiver</em>. The Sender provides two inputs, and the Receiver selects one of them. At the end of the protocol, the Receiver gets <em>only</em> one of the Sender’s inputs (the selected one), and the Sender <em>does not know which input was selected</em> (this is the “oblivious” part - the Sender is oblivious to the selection decision). In fact, the Sender does not receive any output from OT. The ideal functionality for this version of OT, which is called 1-out-of-2 OT because the sender provides two inputs, is defined as follows:</p>
+<div class="tip admonition">
+<p class="admonition-title">Ideal functionality: 1-out-of-2 Oblivious Transfer</p>
+<ol class="arabic simple">
+<li><p>The Sender sends the secret inputs <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> to <span class="math notranslate nohighlight">\(\mathcal{F}_\text{OT}\)</span></p></li>
+<li><p>The Receiver sends the selection bit <span class="math notranslate nohighlight">\(s\)</span> to <span class="math notranslate nohighlight">\(\mathcal{F}_\text{OT}\)</span></p></li>
+<li><p>If <span class="math notranslate nohighlight">\(s = 0\)</span>, <span class="math notranslate nohighlight">\(\mathcal{F}_\text{OT}\)</span> sends <span class="math notranslate nohighlight">\(x_0\)</span> to the Receiver; if <span class="math notranslate nohighlight">\(s = 1\)</span>, <span class="math notranslate nohighlight">\(\mathcal{F}_\text{OT}\)</span> sends <span class="math notranslate nohighlight">\(x_1\)</span> to the Receiver</p></li>
+</ol>
+</div>
+<p>We can implement the functionality as follows. We’ll use integers for the inputs and the selection.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sender</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;sender&#39;</span><span class="p">)</span>
+<span class="n">receiver</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;receiver&#39;</span><span class="p">)</span>
+<span class="n">FOT</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;FOT&#39;</span><span class="p">)</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">inputs</span><span class="p">[</span><span class="n">selection</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">functionality_ot</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
+    <span class="n">inputs</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">FOT</span><span class="p">)</span>
+    <span class="n">selection</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">FOT</span><span class="p">)</span>
+    <span class="n">selected_input</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
+    <span class="n">selected_input</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">FOT</span><span class="p">,</span> <span class="n">receiver</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">selected_input</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">42</span><span class="p">,</span> <span class="mi">67</span><span class="p">])</span>
+
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">receiver</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">selected_input</span> <span class="o">=</span> <span class="n">functionality_ot</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;OT Result (s=0):&#39;</span><span class="p">,</span> <span class="n">selected_input</span><span class="p">)</span>
+
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">receiver</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">selected_input</span> <span class="o">=</span> <span class="n">functionality_ot</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;OT Result (s=1):&#39;</span><span class="p">,</span> <span class="n">selected_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OT Result (s=0): 42@{FOT, receiver}
+OT Result (s=1): 67@{FOT, receiver}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-protocol-for-oblivious-transfer">
+<h2>A Protocol for Oblivious Transfer<a class="headerlink" href="#a-protocol-for-oblivious-transfer" title="Link to this heading">#</a></h2>
+<p>In this section we’ll define a simple protocol for OT that realizes the functionality in the semi-honest setting. Our approach follows Section 3.7 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a> and uses <a class="reference external" href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> as a fundamental building block. The asymmetry between Sender and Receiver in OT is very different from what we’ve seen in prior chapters, and it turns out that this asymmetry creates a deep link between OT and public-key cryptography (see Gertner et al. <span id="id1">[<a class="reference internal" href="../bibliography.html#id2" title="Yael Gertner, Sampath Kannan, Tal Malkin, Omer Reingold, and Mahesh Viswanathan. The relationship between public key encryption and oblivious transfer. In Proceedings 41st Annual Symposium on Foundations of Computer Science, 325–335. IEEE, 2000.">GKM+00</a>]</span>) for details).</p>
+<p>We’ll use the <a class="reference external" href="https://pypi.org/project/PyNaCl/">PyNaCl</a> library for public-key cryptography. This library is a wrapper around <a class="reference external" href="https://github.com/jedisct1/libsodium">libsodium</a>, a high-performance cryptography library. The <a class="reference external" href="https://pynacl.readthedocs.io/en/latest/public/">documentation for public-key cryptography in PyNaCl can be found here</a>. Here’s a simple example that generates a key pair, encrypts a value, and then decrypts the value. When using the PyNaCl library, everything is bytes (input values, keys, encrypted values, etc) - so we will often need to encode the values we want to encrypt into bytestrings before doing so.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nacl.public</span> <span class="kn">import</span> <span class="n">PrivateKey</span><span class="p">,</span> <span class="n">PublicKey</span><span class="p">,</span> <span class="n">SealedBox</span>
+
+<span class="c1"># Generate the key pair (secret key and public key)</span>
+<span class="n">key_pair</span> <span class="o">=</span> <span class="n">PrivateKey</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Key pair:&#39;</span><span class="p">,</span> <span class="n">key_pair</span><span class="p">)</span>
+
+<span class="c1"># Encrypt a value using the public key from the key pair</span>
+<span class="n">pk</span> <span class="o">=</span> <span class="n">key_pair</span><span class="o">.</span><span class="n">public_key</span>
+<span class="n">encrypted_value</span> <span class="o">=</span> <span class="n">SealedBox</span><span class="p">(</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;this is a test&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Encrypted value:&#39;</span><span class="p">,</span> <span class="n">encrypted_value</span><span class="p">)</span>
+
+<span class="c1"># Decrypt the value using the secret key from the key pair</span>
+<span class="n">decrypted_value</span> <span class="o">=</span> <span class="n">SealedBox</span><span class="p">(</span><span class="n">key_pair</span><span class="p">)</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_value</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Decrypted value:&#39;</span><span class="p">,</span> <span class="n">decrypted_value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key pair: b&#39;\xea\x938h\xa4Ua\x90V\x05\x85IxDB\xc7\xc2\xfa\x9d\xadH\x1a\x1a\xaek&gt;\xdcg\x9f:\xf4y&#39;
+Encrypted value: b&quot;\x04skh\xbdQpn\xdf\xa9\xf2m]\xcc\xe2\x0b^\xce\xec\xd2@\xf9\xc1\xcdiy\xc8\x9c\xe9m@M&#39;\xd00\x12\xc0\x90\xaa\x0b\xcb\xe5@{\r\x9e\xc4\xd0\xca\xd9n\x05\x04\x8e%\xf7\x14dv\xb4~\xb1&quot;
+Decrypted value: b&#39;this is a test&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>In our OT protocol, the basic idea is for the Receiver to send two public keys to the Sender, and for the Sender to encrypt <em>both</em> secret inputs (one input per public key) and send the encrypted inputs back to the Receiver. However, the two public keys are special: one is generated as part of a key pair (so the Receiver knows the corresponding secret key), and the other is <em>totally random</em> (so no secret key exists, and <em>the Receiver cannot decrypt any message encrypted with it</em>). Which one is “real” and which one is random depends on the selection bit. This approach satisfies the requirements of the ideal functionality: the Receiver gets only the selected input (because they can’t decrypt the other one), and the Sender gets nothing (because the two public keys both look random, without knowledge of how they were generated).</p>
+<p>Note that this protocol is <em>very</em> insecure in the presence of malicious adversaries. For example, a malicious Receiver could send two “real” public keys to the Sender, and then trivially decrypt both inputs.</p>
+<div class="note admonition">
+<p class="admonition-title">Protocol: 1-out-of-2 Oblivious Transfer</p>
+<p>Setup:</p>
+<ul class="simple">
+<li><p>Sender has secret inputs <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span></p></li>
+<li><p>Receiver has selection bit <span class="math notranslate nohighlight">\(s\)</span></p></li>
+</ul>
+<p>The parties Sender and Receiver follow the following steps:</p>
+<ol class="arabic simple">
+<li><p>The Receiver generates a key pair <span class="math notranslate nohighlight">\(sk\)</span>, <span class="math notranslate nohighlight">\(pk\)</span>, and samples a random public key, <span class="math notranslate nohighlight">\(pk'\)</span>, from the public key space. If <span class="math notranslate nohighlight">\(s = 0\)</span>, the Receiver sends the pair <span class="math notranslate nohighlight">\((pk, pk')\)</span> to the Sender; if <span class="math notranslate nohighlight">\(s = 1\)</span>, the receiver sends the pair <span class="math notranslate nohighlight">\((pk', pk)\)</span> to the Sender.</p></li>
+<li><p>The Sender receives <span class="math notranslate nohighlight">\((pk_0, pk_1)\)</span> and sends back to the Receiver two encryptions <span class="math notranslate nohighlight">\(e_0 = \text{Enc}_{pk_0}(x_0), e_1 = \text{Enc}_{pk_1}(x_1)\)</span>.</p></li>
+<li><p>The Receiver receives <span class="math notranslate nohighlight">\(e_0, e_1\)</span> and decrypts the ciphertext <span class="math notranslate nohighlight">\(e_s\)</span> using <span class="math notranslate nohighlight">\(sk\)</span>. The Receiver is unable to decrypt the second ciphertext as it does not have the corresponding secret key.</p></li>
+</ol>
+</div>
+<p>The implementation follows the same steps, but uses the PyNaCl API to perform the key generation, encryption, and decryption operations. Since PyNaCl only supports encrypting bytes, the protocol converts the secret inputs to bytestrings (the protocol expects the inputs to be integers, and returns an integer).</p>
+<p>Our implementation also generalizes the idea to 1-out-of-<span class="math notranslate nohighlight">\(n\)</span> OT, where <span class="math notranslate nohighlight">\(n\)</span> is any positive integer. To do this, the Receiver provides a selection index as an integer between 0 and <span class="math notranslate nohighlight">\(n-1\)</span> (rather than just a bit), the Receiver generates <span class="math notranslate nohighlight">\(n-1\)</span> fake public keys (rather than 1), the Sender sends <span class="math notranslate nohighlight">\(n\)</span> encrypted values to the Receiver, and the Receiver is able to decrypt only one of them. Common variants of OT are 1-out-of-2 (as described above) and 1-out-of-4 (as we’ll use in the next section).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nacl.utils</span> <span class="kn">import</span> <span class="n">random</span>
+
+<span class="c1"># Protocol for 1-out-of-n OT</span>
+<span class="k">def</span> <span class="nf">protocol_ot</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># Function for the Receiver to generate keys</span>
+    <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+    <span class="k">def</span> <span class="nf">gen_keys</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="c1"># Generate a single real key pair key = (sk, pk)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">PrivateKey</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="n">public_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">PublicKey</span><span class="p">(</span><span class="n">random</span><span class="p">(</span><span class="n">PublicKey</span><span class="o">.</span><span class="n">SIZE</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="n">public_keys</span><span class="p">[</span><span class="n">selection</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">public_key</span>
+        <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">public_keys</span>
+
+    <span class="c1"># Function for the Sender to encrypt the secret inputs</span>
+    <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+    <span class="k">def</span> <span class="nf">encrypt_inputs</span><span class="p">(</span><span class="n">pub_keys</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="c1"># Encode the inputs as bytes</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">bit_length</span><span class="p">()</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">//</span> <span class="mi">8</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">])</span>
+        <span class="n">inputs_bytes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span>
+    
+        <span class="c1"># Encrypt the inputs</span>
+        <span class="n">encrypted_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">SealedBox</span><span class="p">(</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">pk</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> \
+                            <span class="nb">zip</span><span class="p">(</span><span class="n">pub_keys</span><span class="p">,</span> <span class="n">inputs_bytes</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">encrypted_inputs</span>
+
+    <span class="c1"># Function for the Receiver to decrypt the result</span>
+    <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+    <span class="k">def</span> <span class="nf">decrypt_result</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">encrypted_inputs</span><span class="p">):</span>
+        <span class="c1"># Select the correct input</span>
+        <span class="n">selected_input</span> <span class="o">=</span> <span class="n">encrypted_inputs</span><span class="p">[</span><span class="n">selection</span><span class="p">]</span>
+        <span class="c1"># Decrypt it and convert it from bytes to int</span>
+        <span class="n">plaintext</span> <span class="o">=</span> <span class="n">SealedBox</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">selected_input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">plaintext</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Generate keys and send to Sender</span>
+    <span class="n">sk</span><span class="p">,</span> <span class="n">pub_keys</span> <span class="o">=</span> <span class="n">gen_keys</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">untup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">pub_keys</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">sender</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Encrypt inputs and send to Receiver</span>
+    <span class="n">encrypted_inputs</span> <span class="o">=</span> <span class="n">encrypt_inputs</span><span class="p">(</span><span class="n">pub_keys</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+    <span class="n">encrypted_inputs</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Decrypt result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">decrypt_result</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="n">sk</span><span class="p">,</span> <span class="n">encrypted_inputs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">42</span><span class="p">,</span> <span class="mi">67</span><span class="p">])</span>
+
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">receiver</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">selected_input</span> <span class="o">=</span> <span class="n">protocol_ot</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;OT Result (s=0):&#39;</span><span class="p">,</span> <span class="n">selected_input</span><span class="p">)</span>
+
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">receiver</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">selected_input</span> <span class="o">=</span> <span class="n">protocol_ot</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;OT Result (s=1):&#39;</span><span class="p">,</span> <span class="n">selected_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OT Result (s=0): 42@{receiver}
+OT Result (s=1): 67@{receiver}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="application-generating-binary-multiplication-triples-using-ot">
+<h2>Application: Generating Binary Multiplication Triples using OT<a class="headerlink" href="#application-generating-binary-multiplication-triples-using-ot" title="Link to this heading">#</a></h2>
+<p>One important use of OT is to generate multiplication triples. We previously introduced the ideal functionality for generating multiplication triples, but we didn’t implement a protocol realizing it because we didn’t have the necessary tools. With OT, now we do!</p>
+<p>We’ll start with the case of generating <em>binary</em> multiplication triples: the case where all secret values and secret shares are in <span class="math notranslate nohighlight">\(GF(2)\)</span> (i.e. either 0 or 1). Since <span class="math notranslate nohighlight">\(GF(2)\)</span> is a finite field, the protocols we built earlier that use multiplication triples will work just fine in this case.</p>
+<p>Recall that our goal is to generate secret-shared <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> such that <span class="math notranslate nohighlight">\(a*b = c\)</span>. Specifically, we want to end up in the following situation:</p>
+<ul class="simple">
+<li><p>P1 knows <span class="math notranslate nohighlight">\(a_1\)</span>, <span class="math notranslate nohighlight">\(b_1\)</span>, <span class="math notranslate nohighlight">\(c_1\)</span></p></li>
+<li><p>P2 knows <span class="math notranslate nohighlight">\(a_2\)</span>, <span class="math notranslate nohighlight">\(b_2\)</span>, <span class="math notranslate nohighlight">\(c_2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((a_1+a_2)(b_1 + b_2) = c_1 + c_2\)</span></p></li>
+</ul>
+<p>To get there, we’ll use this basic idea:</p>
+<ol class="arabic simple">
+<li><p>P1 picks <span class="math notranslate nohighlight">\(a_1\)</span>, <span class="math notranslate nohighlight">\(b_1\)</span>, <span class="math notranslate nohighlight">\(c_1\)</span> randomly</p></li>
+<li><p>P2 picks <span class="math notranslate nohighlight">\(a_2\)</span>, <span class="math notranslate nohighlight">\(b_2\)</span> randomly</p></li>
+<li><p>P1 and P2 run OT, with P1 as sender and P2 as receiver, so that P2 ends up with <span class="math notranslate nohighlight">\(c_2\)</span></p></li>
+</ol>
+<p>What should the secret inputs and selection bit for OT be? We actually need to use <em>two</em> selection bits: the values of P2’s shares (<span class="math notranslate nohighlight">\(a_2\)</span> and <span class="math notranslate nohighlight">\(b_2\)</span>). For the inputs, since we’re working in <span class="math notranslate nohighlight">\(GF(2)\)</span>, P1 can build the a big truth table to list the possible values of <span class="math notranslate nohighlight">\(c_2\)</span>, and use the truth table to generate the set of secret inputs. An excerpt of the complete truth table for valid multiplication triples looks like this:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(a_1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(b_1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(c_1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(a_2\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(b_2\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(c_2\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>…</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The complete table is large, so we don’t show it here. But to generate multiplication triples, we won’t actually have to build the whole thing. When P1 builds the truth table to use in OT, P1 actually knows many of the values of the secret shares listed in it, and so most of the rows in the table can be eliminated. The only values P1 <em>doesn’t</em> know are <span class="math notranslate nohighlight">\(a_2\)</span> and <span class="math notranslate nohighlight">\(b_2\)</span>, and there are only four possible combinations of those values. So, we can write a function that builds the truth table for <span class="math notranslate nohighlight">\(a_2\)</span> and <span class="math notranslate nohighlight">\(b_2\)</span>, given the values of the other shares:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GF_2</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">truth_table</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">c1</span><span class="p">):</span>
+    <span class="n">possible_c2s</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Consider all possibilities for a2 and b2</span>
+    <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">GF_2</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">b2</span> <span class="ow">in</span> <span class="n">GF_2</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+            <span class="c1"># Compute the share c2 in terms of the others</span>
+            <span class="n">c2</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="o">+</span><span class="n">a2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span><span class="o">+</span><span class="n">b2</span><span class="p">)</span> <span class="o">-</span> <span class="n">c1</span>
+            <span class="n">possible_c2s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">possible_c2s</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">truth_table</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> 
+                      <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> 
+                      <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[GF(0, order=2), GF(0, order=2), GF(0, order=2), GF(1, order=2)]@{p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that these values are the first four values of <span class="math notranslate nohighlight">\(c_2\)</span> in the truth table excerpt above.</p>
+<p>We can use 1-out-of-4 OT to deliver the value <span class="math notranslate nohighlight">\(c_2\)</span> to P2 without P1 knowing what it is. We’ll use the truth table generated by <code class="docutils literal notranslate"><span class="pre">truth_table</span></code> as the secret inputs, and the values of <span class="math notranslate nohighlight">\(a_2\)</span> and <span class="math notranslate nohighlight">\(b_2\)</span> as selection bits to build the selection index.</p>
+<p>The complete protocol for generating a binary multiplication triple can be defined as follows:</p>
+<div class="note admonition">
+<p class="admonition-title">Protocol: Generate Binary Multiplication Triple</p>
+<p>The parties P1 and P2 follow the following steps:</p>
+<ol class="arabic simple">
+<li><p>P1 picks <span class="math notranslate nohighlight">\(a_1\)</span>, <span class="math notranslate nohighlight">\(b_1\)</span>, and <span class="math notranslate nohighlight">\(c_1 \in GF(2)\)</span> randomly</p></li>
+<li><p>P2 picks <span class="math notranslate nohighlight">\(a_2\)</span>, <span class="math notranslate nohighlight">\(b_2 \in GF(2)\)</span> randomly</p></li>
+<li><p>P1 generates the truth table based on its shares by running <code class="docutils literal notranslate"><span class="pre">truth_table</span></code></p></li>
+<li><p>P1 and P2 run 1-out-of-4 OT, with P1 as sender and P2 as receiver. P1 submits the truth table as the set of secret inputs, and P2 submits the value <span class="math notranslate nohighlight">\(2*a_2 + b_2\)</span> as the selection index. P2 receives the output of OT, which is the value of <span class="math notranslate nohighlight">\(c_2\)</span>.</p></li>
+</ol>
+<p>At the end of the protocol, P1 and P2 hold secret shares of <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span>, such that <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are random and unknown to either party, and <span class="math notranslate nohighlight">\(a*b = c\)</span>.</p>
+</div>
+<p>This protocol realizes the ideal functionality described in chapter 4, in the presence of a semi-honest adversary. We can replace uses of that functionality in applications that perform multiplication using triples to avoid the need for a trusted party to generate the triples; this is how most actual deployments of triple-based protocols work.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_gen_binary_mult_triple</span><span class="p">():</span>
+    <span class="c1"># Function for computing the selection index</span>
+    <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+    <span class="k">def</span> <span class="nf">compute_selection</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Pick P1&#39;s shares</span>
+    <span class="n">a1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+
+    <span class="c1"># Step 2: Pick P2&#39;s shares</span>
+    <span class="n">a2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+
+    <span class="c1"># Step 3: Generate truth table</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">truth_table</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">c1</span><span class="p">)</span>
+
+    <span class="c1"># Step 4: Run 1-out-of-4 OT to deliver c2 to P2</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">compute_selection</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+    <span class="n">c2_val</span> <span class="o">=</span> <span class="n">protocol_ot</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> 
+                         <span class="n">inputs</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> 
+                         <span class="n">selection</span><span class="o">=</span><span class="n">selection</span><span class="p">,</span> 
+                         <span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">GF_2</span><span class="p">,</span> <span class="n">c2_val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">),</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">),</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Protocol for checking a triple by reconstruction</span>
+<span class="k">def</span> <span class="nf">test_triple</span><span class="p">(</span><span class="n">triple</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">),</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">),</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span> <span class="o">=</span> <span class="n">triple</span>
+    <span class="n">a2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">b2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">c2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">ab</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="o">+</span><span class="n">a2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span><span class="o">+</span><span class="n">b2</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c1</span><span class="o">+</span><span class="n">c2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;a*b: </span><span class="si">{</span><span class="n">ab</span><span class="si">}</span><span class="s1">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="c1"># Generate a triple</span>
+        <span class="n">triple</span> <span class="o">=</span> <span class="n">protocol_gen_binary_mult_triple</span><span class="p">()</span>
+        <span class="c1"># Verify it&#39;s correct</span>
+        <span class="n">test_triple</span><span class="p">(</span><span class="n">triple</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a*b: 1@{p1}, c: 1@{p1}
+a*b: 0@{p1}, c: 0@{p1}
+a*b: 0@{p1}, c: 0@{p1}
+a*b: 0@{p1}, c: 0@{p1}
+a*b: 0@{p1}, c: 0@{p1}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="application-generating-arithmetic-multiplication-triples-using-ot">
+<h2>Application: Generating Arithmetic Multiplication Triples using OT<a class="headerlink" href="#application-generating-arithmetic-multiplication-triples-using-ot" title="Link to this heading">#</a></h2>
+<p>We’ve seen how to generate multiplication triples in <span class="math notranslate nohighlight">\(GF(2)\)</span>, but all of the example applications in prior chapters were in <span class="math notranslate nohighlight">\(GF(p)\)</span> rather than <span class="math notranslate nohighlight">\(GF(2)\)</span>, so this doesn’t seem very useful. We’ll see additional applications in later chapters where they are useful, but for now it would be great to be able to generate triples in <span class="math notranslate nohighlight">\(GF(p)\)</span> instead. This is a more difficult problem that requires a slightly more complex protocol to solve.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter05.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Building Applications with MPC</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-oblivious-transfer-functionality">The Oblivious Transfer Functionality</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-protocol-for-oblivious-transfer">A Protocol for Oblivious Transfer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-generating-binary-multiplication-triples-using-ot">Application: Generating Binary Multiplication Triples using OT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-generating-arithmetic-multiplication-triples-using-ot">Application: Generating Arithmetic Multiplication Triples using OT</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Joseph P. Near
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1273 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Additive Secret Sharing &#8212; Programming MPC</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const style = document.createElement('style');
+style.textContent = `.mermaid-container {
+    position: relative !important;
+    display: inline-block;
+    width: 100%;
+}
+
+.mermaid-fullscreen-btn {
+    position: absolute !important;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-fullscreen-content {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-fullscreen-content.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-fullscreen-content .mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-fullscreen-content .mermaid svg {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 85vh;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}
+`;
+document.head.appendChild(style);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const initFullscreen = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(initFullscreen, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-fullscreen-content${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-fullscreen-content');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = '';
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", initFullscreen);
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter02';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Proving Security" href="chapter03.html" />
+    <link rel="prev" title="Distributed Protocols" href="chapter01.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Programming MPC - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Programming MPC - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Programming MPC
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Additive Secret Sharing</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Building Applications with MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter02.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter02.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Additive Secret Sharing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Additive Secret Sharing</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-additive-secret-shares">Building Additive Secret Shares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge-generating-random-numbers">Challenge: Generating Random Numbers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-fields-and-modular-arithmetic">Finite Fields and Modular Arithmetic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-additive-secret-sharing">Implementing Additive Secret Sharing</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#secure-summation-for-two-parties">Secure Summation for Two Parties</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aside-what-happens-if-we-don-t-use-modular-arithmetic">Aside: What Happens if We Don’t Use Modular Arithmetic?</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-counting-heart-disease-patients">Application: Counting Heart Disease Patients</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-average-age-of-heart-disease-patients">Application: Average Age of Heart Disease Patients</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease">Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties; also calculate the average age of people with heart disease</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="additive-secret-sharing">
+<h1>Additive Secret Sharing<a class="headerlink" href="#additive-secret-sharing" title="Link to this heading">#</a></h1>
+<p>Recall the two-party summation protocol from the last chapter:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pychor</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p1&#39;</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p2&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># initialize the input values</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># Round 1: Each party sends their input to the other party</span>
+    <span class="n">v1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">v2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+    <span class="c1"># Round 2: Both parties sum the results and print them out</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">+</span> <span class="n">v2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total sum:&#39;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>What if the parties don’t trust each other? In this protocol, both parties completely reveal their inputs. If the parties would like to compute the total sum, but <em>without</em> revealing their input numbers, this protocol won’t work.</p>
+<p>This chapter covers <em>additive secret sharing</em> \cite{todo}, a building block of MPC protocols that we’ll use throughout the rest of this book. Additive secret sharing will allow the parties to encrypt their inputs before sharing them with each other, to add values together without decrypting them, and to decrypt only the total sum at the end of the protocol.</p>
+<p>This combination of features sounds almost too good to be true, and it is - additive secret sharing comes with some important limitations that we’ll cover at the end of the chapter.</p>
+<section id="building-additive-secret-shares">
+<h2>Building Additive Secret Shares<a class="headerlink" href="#building-additive-secret-shares" title="Link to this heading">#</a></h2>
+<p>An additive secret sharing scheme consists of at least 2 functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">share(x,n)</span></code> generates <code class="docutils literal notranslate"><span class="pre">n</span></code> secret shares of the secret value <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reconstruct(ss)</span></code> decrypts a secret value from a list <code class="docutils literal notranslate"><span class="pre">ss</span></code> of <code class="docutils literal notranslate"><span class="pre">n</span></code> secret shares</p></li>
+</ul>
+<p>The two key requirements for an additive secret sharing scheme are:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">n</span></code> secret shares should add up to <code class="docutils literal notranslate"><span class="pre">x</span></code> (this is the “additive” part)</p></li>
+<li><p><em>All</em> <code class="docutils literal notranslate"><span class="pre">n</span></code> secret shares are required to reconstruct <code class="docutils literal notranslate"><span class="pre">x</span></code> - it’s impossible to learn anything about <code class="docutils literal notranslate"><span class="pre">x</span></code> from fewer than <code class="docutils literal notranslate"><span class="pre">n</span></code> shares (this is the “secret” part)</p></li>
+</ol>
+<p>How do we meet both requirements at once? A simple way is to build the secret shares as <em>random numbers</em> (which clearly reveal nothing about the secret <code class="docutils literal notranslate"><span class="pre">x</span></code>), and then set the final share so that the shares add up to <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<p>In other words, we set <span class="math notranslate nohighlight">\(r_1, \dots, r_{n-1}\)</span> to random numbers, and then set <span class="math notranslate nohighlight">\(r_n\)</span> to <span class="math notranslate nohighlight">\(x - \sum_{i=1}^{n-1} r_i\)</span>. If we do this, it will definitely be true that <span class="math notranslate nohighlight">\(\sum_{i=1}^n r_i = x\)</span>.</p>
+<p>The last share is <em>not</em> random - doesn’t that reveal something about <span class="math notranslate nohighlight">\(x\)</span>? Not if we do things carefully. The intuition is that <span class="math notranslate nohighlight">\(\sum_{i=1}^{n-1} r_i\)</span> is uniformly random since each of the <span class="math notranslate nohighlight">\(r_i\)</span>’s individually is uniformly random. This means that <span class="math notranslate nohighlight">\(x - \sum_{i=1}^{n-1} r_i\)</span> must also be uniformly random, since we’re just adding a constant to a uniformly random value. This argument is basically correct, but it depends a lot on the definition of “random number” - which turns out to introduce some challenges, as discussed next.</p>
+</section>
+<section id="challenge-generating-random-numbers">
+<h2>Challenge: Generating Random Numbers<a class="headerlink" href="#challenge-generating-random-numbers" title="Link to this heading">#</a></h2>
+<p>To actually implement this idea, we’ll need to be more precise about what kind of numbers we’re dealing with, and define a specific way of generating random numbers – and we’ll run into a challenge! Maybe we want to secret share an integer (e.g. <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5</span></code>), and we’d like our shares also to be integers.</p>
+<p>How do we generate a random integer? We’d like our random integers to be <a class="reference internal" href="#todo"><span class="xref myst">uniformly random</span></a> – meaning that each integer has an equal chance of being selected.</p>
+<p>Generating uniformly random integers turns out to be an interesting problem, because there are infinitely many integers! Python’s <code class="docutils literal notranslate"><span class="pre">randint</span></code> function requires the programmer to specify upper and lower bounds for the integer to avoid this issue, and it generates uniformly random integers between the lower and upper bounds. What lower and upper bounds do we pick?</p>
+<p>It turns out that <em>we can’t just pick lower and upper bounds</em>. If we do, the resulting shares might reveal something about the secret, even if you’re missing some of them. We describe why this is at the end of the chapter.</p>
+</section>
+<section id="finite-fields-and-modular-arithmetic">
+<h2>Finite Fields and Modular Arithmetic<a class="headerlink" href="#finite-fields-and-modular-arithmetic" title="Link to this heading">#</a></h2>
+<p>To solve this problem, most encryption systems use <a class="reference internal" href="#todo"><span class="xref myst">modular arithmetic</span></a>. To implement this approach, we’ll pick an upper bound for our numbers (e.g. 10), and perform all arithmetic modulo this number. This special number is called the <em>modulus</em> and is conventionally denoted by the letters <code class="docutils literal notranslate"><span class="pre">p</span></code> or <code class="docutils literal notranslate"><span class="pre">q</span></code>. For example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;2+3 mod p:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">%</span><span class="k">p</span>)
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;2+7 mod p:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span><span class="o">%</span><span class="k">p</span>)
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;5+7 mod p:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span><span class="o">%</span><span class="k">p</span>)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2+3 mod p: 5
+2+7 mod p: 9
+5+7 mod p: 1
+</pre></div>
+</div>
+</div>
+</div>
+<p>Modular arithmetic means that when the result would exceed <code class="docutils literal notranslate"><span class="pre">p</span></code>, it “wraps around” back to 0 - this is why <code class="docutils literal notranslate"><span class="pre">5+7</span> <span class="pre">mod</span> <span class="pre">p</span></code> is 2. Modular arithmetic is sometimes compared to “clock arithmetic” since the hands on a clock also “wrap around” - on a 12-hour clock, the modulus is 12, and 3 hours later than 11 o’clock is 2 o’clock (just like <code class="docutils literal notranslate"><span class="pre">11</span> <span class="pre">+</span> <span class="pre">3</span> <span class="pre">%</span> <span class="pre">12</span> <span class="pre">=</span> <span class="pre">2</span></code>).</p>
+<p>One kind of modular arithmetic commonly used in cryptography is arithmetic over <a class="reference internal" href="#todo"><span class="xref myst">finite fields</span></a> (also called <em>Galois fields</em> after the French mathematician Galois, who invented them). A finite field is a subset of the integers <span class="math notranslate nohighlight">\(\{0, \dots, p\}\)</span>, where <span class="math notranslate nohighlight">\(p\)</span> is a prime number. The field itself is often referred to as <span class="math notranslate nohighlight">\(GF(p)\)</span>, and <span class="math notranslate nohighlight">\(p\)</span> is often called the <em>order</em> or <em>modulus</em> of the field. The following operations are defined on elements of a finite field <span class="math notranslate nohighlight">\(GF(p)\)</span>:</p>
+<ul class="simple">
+<li><p>Addition (as integer addition <span class="math notranslate nohighlight">\(\mod p\)</span>)</p></li>
+<li><p>Multiplication (as integer multiplication <span class="math notranslate nohighlight">\(\mod p\)</span>)</p></li>
+<li><p>Inverse (i.e. for <span class="math notranslate nohighlight">\(x\)</span>, find <span class="math notranslate nohighlight">\(x^{-1} \in GF(p)\)</span> such that <span class="math notranslate nohighlight">\(x \cdot x^{-1} = 1\)</span>)</p></li>
+</ul>
+<p>Why does <span class="math notranslate nohighlight">\(p\)</span> need to be a prime number? If it’s not, you get a mathematical structure called a <a class="reference internal" href="#todo"><span class="xref myst">ring</span></a> instead. A ring over the integers <span class="math notranslate nohighlight">\(\mathbb{Z}_p\)</span> is a set <span class="math notranslate nohighlight">\(\{0, \dots, p\}\)</span> where <span class="math notranslate nohighlight">\(p\)</span> need not be prime, for which addition and multiplication are defined as in the finite field. However, the inverse may <em>not</em> be defined for every element of a ring - there may be some <span class="math notranslate nohighlight">\(x \in \mathbb{Z}_p\)</span> such that no <span class="math notranslate nohighlight">\(x^{-1} \in \mathbb{Z}_p\)</span> exists such that <span class="math notranslate nohighlight">\(x \cdot x^{-1} = 1\)</span>. In a finite field (i.e. when <span class="math notranslate nohighlight">\(p\)</span> is prime), an inverse for each element that is also a member of the field is <em>guaranteed</em> to exist.</p>
+<p>For systems that need to compute inverses, finite fields are thus required. For systems that don’t need to (including additive secret sharing as used in this chapter), a ring works just as well. There’s often no downside to using a finite field even when the inverse is not required - the only difference is the additional restriction on the modulus <span class="math notranslate nohighlight">\(p\)</span>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">galois</span></code> library, named for the <a class="reference external" href="https://en.wikipedia.org/wiki/%C3%89variste_Galois">French mathematician Évariste Galois</a>, is a library for working with finite fields in Python. It allows us to create a finite field “factory” using the <code class="docutils literal notranslate"><span class="pre">galois.GF</span></code> function, providing a modulus. Then, we can use the “factory” to create finite field elements. The Python objects that represent finite field elements implement the regular arithmetic operators (e.g. <code class="docutils literal notranslate"><span class="pre">+</span></code> and <code class="docutils literal notranslate"><span class="pre">*</span></code>), but perform modular arithmetic to produce field elements as output. For example, this program creates a finite field <code class="docutils literal notranslate"><span class="pre">gf</span></code> = <span class="math notranslate nohighlight">\(GF(p)\)</span>, then creates a field element object <code class="docutils literal notranslate"><span class="pre">x</span></code> for the number 8, and then adds <code class="docutils literal notranslate"><span class="pre">x</span></code> to itself. Since addition is performed <span class="math notranslate nohighlight">\(\mod p\)</span>, the result is 5 (rather than 16).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">galois</span>
+<span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x+x:&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x+x: 5
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="implementing-additive-secret-sharing">
+<h2>Implementing Additive Secret Sharing<a class="headerlink" href="#implementing-additive-secret-sharing" title="Link to this heading">#</a></h2>
+<p>Since finite fields are finite, it’s easy to pick uniformly random field elements. This means we can easily implement the idea outlined above for additive secret sharing. To escret share a secret field element <span class="math notranslate nohighlight">\(x\)</span>, we set <span class="math notranslate nohighlight">\(r_1, \dots, r_{n-1} \in GF(p)\)</span> to random field elements, and then set <span class="math notranslate nohighlight">\(r_n\)</span> to <span class="math notranslate nohighlight">\(x - \sum_{i=1}^{n-1} r_i\)</span>. This is easy to implement:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">share</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># create n-1 random field elements for the first n-1 shares</span>
+    <span class="n">shares</span> <span class="o">=</span> <span class="p">[</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="c1"># create one more share: secret - sum(other shares)</span>
+    <span class="c1"># this way, all shares add up to secret</span>
+    <span class="c1"># gf(shares) is a trick to convert a list of field elements to an array with the .sum() method</span>
+    <span class="n">shares</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span> <span class="o">-</span> <span class="n">GF</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">shares</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Shares of 5:&#39;</span><span class="p">,</span> <span class="n">share</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares of 5: [GF(5, order=11), GF(6, order=11), GF(5, order=11)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll get a different set of shares every time we run <code class="docutils literal notranslate"><span class="pre">share</span></code>, since it’s randomized - but by construction, they’ll always add up to the secret. Since we constructed our shares carefully, reconstruction is easy - we just add up the shares!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">GF</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">shares</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Shares:&#39;</span><span class="p">,</span> <span class="n">shares</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed value:&#39;</span><span class="p">,</span> <span class="n">reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares: [GF(0, order=11), GF(10, order=11), GF(6, order=11)]
+Reconstructed value: 5
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll get a different set of shares each time we secret share a secret, but they’ll always add up to the secret.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="secure-summation-for-two-parties">
+<h1>Secure Summation for Two Parties<a class="headerlink" href="#secure-summation-for-two-parties" title="Link to this heading">#</a></h1>
+<p>We can use additive secret sharing to build a secure version of the summation protocol at the beginning of this chapter. Instead of having the parties send their secret inputs directly to each other, the clients will use additive secret shares to compute the sum:</p>
+<ol class="arabic simple">
+<li><p>The parties secret-share their secret values into <span class="math notranslate nohighlight">\(n=2\)</span> shares</p></li>
+<li><p>Each party sends one share to the other party</p></li>
+<li><p>Each party adds the share they receive to the one they kept, to obtain one share of the total sum</p></li>
+<li><p>Each party sends their share of the total sum to the other party</p></li>
+<li><p>Each party adds together the shares of the total sum to “decrypt” the total sum</p></li>
+</ol>
+<p>For any secure protocol, we’d like to make sure that the protocol is <em>secure</em> and <em>correct</em>. By <em>secure</em>, we mean that the protocol doesn’t leak any information besides its intended output. We’ll make this idea more formal in a couple of chapters. By <em>correct</em>, we mean that the protocol computes the right answer - its output is the same as an insecure specification (in this case, the insecure summation protocol at the beginning of this chapter).</p>
+<p>Why is this plan <em>secure</em>? Each party has access to only a single share of each secret value, and never has access to the other share. Thus, neither of the parties can reconstruct any of the secret values. Note that this requires us to assume that the parties don’t <em>collude</em> with each other (e.g. by sending the shares they receive to each other) - this non-collusion assumption is part of our <em>threat model</em>, which we’ll discuss more in the next chapter.</p>
+<p><strong>Note</strong>: you might have noticed a problem with the above argument: if you know the total sum of two numbers, and you know one of the numbers, then it’s easy to calculate the other one. Does this break security for our two-party summation protocol? The answer is complicated, and we’ll discuss it more in later chapters.</p>
+<p>Why is this plan <em>correct</em>? Due to a really important property of additive secret shares called the <em>additive homomorphism</em>. This property says that <em>adding shares of two different secrets results in a share of the sum of the secrets</em>. More precisely:</p>
+<ul class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\(a_1, a_2 = \textsf{share}(a, 2)\)</span> (secret share the first secret)</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(b_1, b_2 = \textsf{share}(b, 2)\)</span> (secret share the second secret)</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(s_1 = a_1 + b_1\)</span> (add the first share of both secrets)</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(s_2 = a_2 + b_2\)</span> (add the second share of both secrets)</p></li>
+<li><p>Then <span class="math notranslate nohighlight">\(\textsf{reconstruct}([s_1, s_2]) = a + b\)</span> (reconstruction yields the sum of the original secrets)</p></li>
+</ul>
+<p>We can see that this works in our Python implementation, too:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># secret share 3</span>
+<span class="n">b1</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># secret share 4</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">b1</span>                  <span class="c1"># add share 1s together</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="n">a2</span> <span class="o">+</span> <span class="n">b2</span>                  <span class="c1"># add share 2s together</span>
+<span class="n">reconstruct</span><span class="p">([</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">])</span>         <span class="c1"># reconstruct a+b from the two shares of the sum</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GF(7, order=11)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The additive homomorphism property of additive secret shares allows for a kind of computation on encrypted data - it lets us add together shares of secrets we don’t know, and get new shares of useful computation results without knowing what those results are. In our summation protocol, it lets each party add together shares to obtain one share of the total sum.</p>
+<p>Now we’re ready to write the protocol! We’ll take exactly the same steps as above, but we’ll write the protocol as a choreography that includes the communication between the parties.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p1&#39;</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p2&#39;</span><span class="p">)</span>
+<span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">share</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">shares</span> <span class="o">=</span> <span class="p">[</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">shares</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span> <span class="o">-</span> <span class="n">GF</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">shares</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">GF</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">secure_sum</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="c1"># Round 1: Each party sends *shares* of their input to the other party</span>
+    <span class="n">v11</span><span class="p">,</span> <span class="n">v12</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">v21</span><span class="p">,</span> <span class="n">v22</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">v12</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">v21</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+    <span class="c1"># Round 2: Both parties sum the shares they hold and send the result to the other</span>
+    <span class="n">total1</span> <span class="o">=</span> <span class="n">v11</span> <span class="o">+</span> <span class="n">v21</span>
+    <span class="n">total2</span> <span class="o">=</span> <span class="n">v12</span> <span class="o">+</span> <span class="n">v22</span>
+    <span class="n">total1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">total2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+    <span class="c1"># Round 3: Both parties reconstruct the total</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">([</span><span class="n">total1</span><span class="p">,</span> <span class="n">total2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">total</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># initialize the input values</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="n">total</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total sum:&#39;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Great! We got the same answer as the original protocol. The shares each server receives are random-looking numbers, and the results that each server computes look random too - but they add up to the right answer due to the additive homomorphism. Here is one example of a sequence diagram showing the pattern of communication; the actual values sent between the parties will change every time the program runs, since the shares are random. Importantly, the shares of the total (5 and 2) add up to the total (7).</p>
+<pre  class="mermaid">
+        sequenceDiagram
+p1 -&gt;&gt; p2 : 8
+p2 -&gt;&gt; p1 : 10
+p1 -&gt;&gt; p2 : 5
+p2 -&gt;&gt; p1 : 2
+    </pre><p>The use of modular arithmetic in this protocol can lead to the protocol giving the wrong answer if we add numbers that are too big. If we try to add 7 and 8 (instead of 3 and 4) then the total sum will be 4 (rather than 15).</p>
+<p>The reason is that we’re performing all arithmetic <span class="math notranslate nohighlight">\(\mod p\)</span>; if we set <span class="math notranslate nohighlight">\(p=11\)</span>, then as soon as the total sum reaches 11, it wraps back around to 0, and we get the wrong answer! When we make <span class="math notranslate nohighlight">\(p\)</span> larger, the protocol can compute the right answer without wrapping around. In practice, very large primes are often used - common choices are <span class="math notranslate nohighlight">\(p = 2^{31} - 1\)</span>, which is not far off from the size of a 32-bit integer, and <span class="math notranslate nohighlight">\(p = 2^{61} - 1\)</span>, which is not too far off from the size of a 64-bit integer. These are <a class="reference external" href="https://en.wikipedia.org/wiki/Mersenne_prime">Mersenne primes</a> that have a nice format and are easy to remember. Even larger primes are used when the protocol needs to represent even bigger numbers.</p>
+<p>When we use a larger prime, the random shares are generated from a much larger set of numbers. This makes it more difficult to see that the shares add up to the right value, but running the protocol above with a larger field and the inputs 7 and 8 does result in the expected answer of 15. The following sequence diagram shows one execution of the protocol, using the prime <span class="math notranslate nohighlight">\(p= 2^{31} - 1\)</span>.</p>
+<pre  class="mermaid">
+        sequenceDiagram
+p1 -&gt;&gt; p2 : 537748294
+p2 -&gt;&gt; p1 : 692616394
+p1 -&gt;&gt; p2 : 154868107
+p2 -&gt;&gt; p1 : 1992615555
+    </pre><section id="aside-what-happens-if-we-don-t-use-modular-arithmetic">
+<h2>Aside: What Happens if We Don’t Use Modular Arithmetic?<a class="headerlink" href="#aside-what-happens-if-we-don-t-use-modular-arithmetic" title="Link to this heading">#</a></h2>
+<p>We can implement additive secret sharing <em>without</em> modular arithmetic by simply choosing upper and lower bounds for the random numbers we generate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">share_</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># the first n-1 shares are random numbers</span>
+    <span class="n">shares</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="c1"># the last share is chosen to make them add up to x</span>
+    <span class="n">shares</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">secret</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">shares</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">shares</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;2 shares of the secret 5:&#39;</span><span class="p">,</span> <span class="n">share_</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 shares of the secret 5: [0, 5]
+</pre></div>
+</div>
+</div>
+</div>
+<p>This definition meets the requirements for secret sharing! We can define the <code class="docutils literal notranslate"><span class="pre">reconstruct</span></code> function by simply adding up the shares, and we’ll get <code class="docutils literal notranslate"><span class="pre">x</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reconstruct_</span><span class="p">(</span><span class="n">ss</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed secret from the 2 shares:&#39;</span><span class="p">,</span> <span class="n">reconstruct_</span><span class="p">(</span><span class="n">share_</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed secret from the 2 shares: 5
+</pre></div>
+</div>
+</div>
+</div>
+<p>It also seems like it might meet requirement #2. The shares themselves are random numbers between 0 and 10, so they don’t reveal anything about <code class="docutils literal notranslate"><span class="pre">x</span></code>. Right?</p>
+<p>Not quite. Let’s do an experiment to see if the shares are actually random. We’ll run the <code class="docutils literal notranslate"><span class="pre">share</span></code> function 1000 times, generating secret shares of <code class="docutils literal notranslate"><span class="pre">x=5</span></code>, then count how many times each number between 0 and 10 occurs in each share position. Let’s do the first share first:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">share_</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">)]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/595b522b3ffe7aee5371de7989a596cb0a8994bb71d0c054ec900e3cdefeb70e.png" src="../_images/595b522b3ffe7aee5371de7989a596cb0a8994bb71d0c054ec900e3cdefeb70e.png" />
+</div>
+</div>
+<p>Sure enough, all results between 0 and 10 seem to be equally likely. The bars aren’t identical because we’ve approximated the distribution of random shares by sampling 10000 times; if we increased the number of samples, the bars would get closer together.</p>
+<p>This result is an example of <em>uniform randomness</em> - it’s just like flipping a fair coin or rolling a fair 6-sided die. The graph would look the same no matter what <code class="docutils literal notranslate"><span class="pre">x</span></code> was - the first share doesn’t reveal anything about <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<p>Let’s see if the same thing is true for the second share:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/996d80fe13b717738c30540f280aab996ea3ac8fd129abe2c16000b118137c65.png" src="../_images/996d80fe13b717738c30540f280aab996ea3ac8fd129abe2c16000b118137c65.png" />
+</div>
+</div>
+<p>This graph has a similar shape, but the maximum and minimum are different - there are no results smaller than -5, and there are lots of results bigger than 10. Unfortunately, this is a sign that the second share - by itself - can sometimes reveal something about <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<p>For example, if the second share’s value is 15, then <code class="docutils literal notranslate"><span class="pre">x</span></code> <em>must have been</em> at least 5 - since the first share was between -10 and 10, any secret smaller than 5 would make it impossible for the second share to be 15.</p>
+<p>This is a major security flaw, since neither share by itself is supposed to reveal anything about <code class="docutils literal notranslate"><span class="pre">x</span></code>. To fix this problem, we could use larger bounds than -10 and 10, which might make it harder to observe one of the problematic cases - but no matter how large we make the bounds, the same kind of leeakage is possible at the extreme values.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="application-counting-heart-disease-patients">
+<h1>Application: Counting Heart Disease Patients<a class="headerlink" href="#application-counting-heart-disease-patients" title="Link to this heading">#</a></h1>
+<p>Imagine two hospitals collect data about their patients, and they would like to collaborate to determine the prevalence of heart disease in the population. However, the hospitals are not willing to share their individual patient datasets with one another, since this could compromise the privacy of their patients. Instead, they would like to use a secure summation protocol to discover the total number of patients with heart disease between both hospitals, revealing <em>only</em> the total number of patients in the population with heart disease.</p>
+<p>We’ll use the famous <a class="reference external" href="https://archive.ics.uci.edu/dataset/45/heart+disease">heart disease dataset</a> available at the UCI Machine Learning Repository. For our purposes, we’ve split the dataset into two parts: <code class="docutils literal notranslate"><span class="pre">heart1.csv</span></code> contains the first hospital’s data, and <code class="docutils literal notranslate"><span class="pre">heart2.csv</span></code> contains the second hospital’s data. The <code class="docutils literal notranslate"><span class="pre">target</span></code> column of the dataset contains a 1 if the patient has heart disease, and a 0 otherwise. To implement the desired protocol, we can use the following plan:</p>
+<ol class="arabic simple">
+<li><p>Write a function <code class="docutils literal notranslate"><span class="pre">count_heart_disease_patients</span></code> to count how many patients have heart disease</p></li>
+<li><p>Have each hospital load their data and run the function on it to count their patients with heart disease</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">secure_sum</span></code> between the hospitals to calculate the total number of patients with heart disease</p></li>
+</ol>
+<p>The program below implements this plan.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Step 1: a function to count the number of patients with heart disease</span>
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">count_heart_disease_patients</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="c1"># Step 2: load data and count the number of patients with heart disease</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart1.csv&#39;</span><span class="nd">@p1</span><span class="p">)</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart2.csv&#39;</span><span class="nd">@p2</span><span class="p">)</span>
+
+    <span class="n">count1</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+    <span class="n">count2</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: run the secure sum protocol</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">count1</span><span class="p">,</span> <span class="n">count2</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total number of patients with heart disease:&#39;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of patients with heart disease: 112@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="application-average-age-of-heart-disease-patients">
+<h1>Application: Average Age of Heart Disease Patients<a class="headerlink" href="#application-average-age-of-heart-disease-patients" title="Link to this heading">#</a></h1>
+<p>In the next stage of their study, the two hospitals would like to know the average age of patients with heart disease, and the average age of patients without heart disease. The formula for computing the average is:</p>
+<div class="math notranslate nohighlight">
+\[ \frac{\sum_{i=0}^n \textit{age}_i}{n} \]</div>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the total number of patients. Unfortunately, this formula has division in it - and we don’t have a way to perform division over secret-shared values!</p>
+<p>Instead, we can build a more complicated protocol that reveals the numerator and denominator of this formula to both hospitals, and then compute the quotient as a post-processing step. This reveals the total number of heart disease patients across both hospitals, which is strictly more information than the quotient by itself. However, our previous step already revealed this value, so we won’t worry about it in this case. We’ll need to implement more complicated protocols to avoid revealing this information.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart1.csv&#39;</span><span class="nd">@p1</span><span class="p">)</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">,</span> <span class="s1">&#39;heart2.csv&#39;</span><span class="nd">@p2</span><span class="p">)</span>
+
+    <span class="c1"># Numerator: compute the total sum of all ages of heart disease patients</span>
+    <span class="n">sum1</span> <span class="o">=</span> <span class="n">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+    <span class="n">sum2</span> <span class="o">=</span> <span class="n">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+
+    <span class="n">total_sum</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">)</span>
+
+    <span class="c1"># Denominator: compute the total number of heart disease patients</span>
+    <span class="n">count1</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+    <span class="n">count2</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+
+    <span class="n">total_count</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">count1</span><span class="p">,</span> <span class="n">count2</span><span class="p">)</span>
+
+    <span class="n">sum_int</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">total_sum</span><span class="p">)</span>
+    <span class="n">count_int</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">total_count</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Average age of patients with heart disease:&#39;</span><span class="p">,</span> <span class="n">sum_int</span> <span class="o">/</span> <span class="n">count_int</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average age of patients with heart disease: 52.25@{p2, p1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that we convert the total sum and count from field elements to integers before performing the division. Division of field elements doesn’t have the same meaning, and won’t give us the right answer.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease">
+<h1>Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties; also calculate the average age of people with heart disease<a class="headerlink" href="#homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease" title="Link to this heading">#</a></h1>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter01.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Distributed Protocols</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter03.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Proving Security</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Additive Secret Sharing</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-additive-secret-shares">Building Additive Secret Shares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge-generating-random-numbers">Challenge: Generating Random Numbers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-fields-and-modular-arithmetic">Finite Fields and Modular Arithmetic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-additive-secret-sharing">Implementing Additive Secret Sharing</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#secure-summation-for-two-parties">Secure Summation for Two Parties</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aside-what-happens-if-we-don-t-use-modular-arithmetic">Aside: What Happens if We Don’t Use Modular Arithmetic?</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-counting-heart-disease-patients">Application: Counting Heart Disease Patients</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-average-age-of-heart-disease-patients">Application: Average Age of Heart Disease Patients</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease">Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties; also calculate the average age of people with heart disease</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Joseph P. Near
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
