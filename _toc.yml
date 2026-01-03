@@ -9,4 +9,5 @@ chapters:
 - file: chapters/chapter04.ipynb
 - file: chapters/chapter05.ipynb
 - file: chapters/chapter06.ipynb
+- file: chapters/chapter07.ipynb
 - file: bibliography.md
