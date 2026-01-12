@@ -481,9 +481,7 @@ window.addEventListener("load", initFullscreen);
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
-
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Additive Secret Sharing</a></li>
-
 
 
 
@@ -705,7 +703,6 @@ document.write(`
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-counting-heart-disease-patients">Application: Counting Heart Disease Patients</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-average-age-of-heart-disease-patients">Application: Average Age of Heart Disease Patients</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease">Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties; also calculate the average age of people with heart disease</a></li>
 </ul>
 
             </nav>
@@ -743,7 +740,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p1, p2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p2, p1}
 </pre></div>
 </div>
 </div>
@@ -840,7 +837,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares of 5: [GF(10, order=11), GF(9, order=11), GF(8, order=11)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares of 5: [GF(6, order=11), GF(6, order=11), GF(4, order=11)]
 </pre></div>
 </div>
 </div>
@@ -858,7 +855,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares: [GF(1, order=11), GF(9, order=11), GF(6, order=11)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares: [GF(10, order=11), GF(0, order=11), GF(6, order=11)]
 Reconstructed value: 5
 </pre></div>
 </div>
@@ -952,7 +949,7 @@ Reconstructed value: 5
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p1, p2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p2, p1}
 </pre></div>
 </div>
 </div>
@@ -993,7 +990,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 shares of the secret 5: [8, -3]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 shares of the secret 5: [0, 5]
 </pre></div>
 </div>
 </div>
@@ -1025,7 +1022,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/6df39f41c7aea2b4d688511ad4e4b4a094353a97c1986d01607674042fe61f8e.png" src="../_images/6df39f41c7aea2b4d688511ad4e4b4a094353a97c1986d01607674042fe61f8e.png" />
+<img alt="../_images/119a9abf4bd6a4485e37f93a5fb1d7dba993e610d02271640f4024dcf7bdb78a.png" src="../_images/119a9abf4bd6a4485e37f93a5fb1d7dba993e610d02271640f4024dcf7bdb78a.png" />
 </div>
 </div>
 <p>Sure enough, all results between 0 and 10 seem to be equally likely. The bars aren’t identical because we’ve approximated the distribution of random shares by sampling 10000 times; if we increased the number of samples, the bars would get closer together.</p>
@@ -1038,7 +1035,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1ddc0497b98317620b9052e5b1b554dafc3eb7104cb18afc77ac30dba1d703f0.png" src="../_images/1ddc0497b98317620b9052e5b1b554dafc3eb7104cb18afc77ac30dba1d703f0.png" />
+<img alt="../_images/62a87796f1075af6aa59bb8b3e7c2358a7e40068a963fc197fcf28d0f363624a.png" src="../_images/62a87796f1075af6aa59bb8b3e7c2358a7e40068a963fc197fcf28d0f363624a.png" />
 </div>
 </div>
 <p>This graph has a similar shape, but the maximum and minimum are different - there are no results smaller than -5, and there are lots of results bigger than 10. Unfortunately, this is a sign that the second share - by itself - can sometimes reveal something about <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
@@ -1088,7 +1085,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of patients with heart disease: 112@{p1, p2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of patients with heart disease: 112@{p2, p1}
 </pre></div>
 </div>
 </div>
@@ -1131,15 +1128,12 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average age of patients with heart disease: 52.25@{p1, p2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average age of patients with heart disease: 52.25@{p2, p1}
 </pre></div>
 </div>
 </div>
 </div>
 <p>Note that we convert the total sum and count from field elements to integers before performing the division. Division of field elements doesn’t have the same meaning, and won’t give us the right answer.</p>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease">
-<h1>Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties; also calculate the average age of people with heart disease<a class="headerlink" href="#homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease" title="Link to this heading">#</a></h1>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1219,7 +1213,6 @@ p2 -&gt;&gt; p1 : 1992615555
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-counting-heart-disease-patients">Application: Counting Heart Disease Patients</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#application-average-age-of-heart-disease-patients">Application: Average Age of Heart Disease Patients</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#homework-extend-this-to-n-parties-also-calculate-the-average-age-of-people-with-heart-disease">Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties; also calculate the average age of people with heart disease</a></li>
 </ul>
 
   </nav></div>

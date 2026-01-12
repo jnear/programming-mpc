@@ -57,8 +57,6 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -481,9 +479,7 @@ window.addEventListener("load", initFullscreen);
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Distributed Protocols</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="chapter02.html">Additive Secret Sharing</a></li>
-
 
 
 
@@ -692,13 +688,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Distributed Protocols</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choreographic-programming-and-pychor">Choreographic Programming and PyChor</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#homework-extend-this-to-n-parties">Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties</a></li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -750,7 +741,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -774,7 +765,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -787,9 +778,6 @@ p1 -&gt;&gt; p2 : 3
 p2 -&gt;&gt; p1 : 4
     </pre><p>This protocol requires both parties to reveal their input number to the other party, and does not provide any kind of security. We’ll see how to add security (and perform more complicated computation) in later chapters.</p>
 </section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="homework-extend-this-to-n-parties">
-<h1>Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties<a class="headerlink" href="#homework-extend-this-to-n-parties" title="Link to this heading">#</a></h1>
 </section>
 
     <script type="text/x-thebe-config">
@@ -856,13 +844,8 @@ p2 -&gt;&gt; p1 : 4
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Distributed Protocols</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choreographic-programming-and-pychor">Choreographic Programming and PyChor</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#homework-extend-this-to-n-parties">Homework: extend this to <span class="math notranslate nohighlight">\(n\)</span> parties</a></li>
-</ul>
-
   </nav></div>
 
 </div></div>

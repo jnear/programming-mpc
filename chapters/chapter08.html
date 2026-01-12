@@ -183,9 +183,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="chapter02.html">Additive Secret Sharing</a></li>
-
 
 
 
@@ -458,8 +456,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Representation of x: SecBitInt(bits=[SecBit(s1=1@{p1}, s2=0@{p2, p1}), SecBit(s1=1@{p1}, s2=0@{p2, p1}), SecBit(s1=1@{p1}, s2=1@{p2, p1})])
-Value of x: 3@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Representation of x: SecBitInt(bits=[SecBit(s1=1@{p1}, s2=0@{p1, p2}), SecBit(s1=1@{p1}, s2=0@{p1, p2}), SecBit(s1=1@{p1}, s2=1@{p1, p2})])
+Value of x: 3@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -488,7 +486,7 @@ Value of x: 3@{p2, p1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x: 6@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x: 6@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -503,7 +501,7 @@ Value of x: 3@{p2, p1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x + x: 1@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x + x: 1@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -542,8 +540,8 @@ Value of x: 3@{p2, p1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x == x: 1@{p2, p1}
-(x+x) == x: 0@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x == x: 1@{p1, p2}
+(x+x) == x: 0@{p1, p2}
 </pre></div>
 </div>
 </div>

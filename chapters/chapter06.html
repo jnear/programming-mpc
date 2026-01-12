@@ -183,9 +183,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="chapter02.html">Additive Secret Sharing</a></li>
-
 
 
 
@@ -464,8 +462,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OT Result (s=0): 42@{FOT, receiver}
-OT Result (s=1): 67@{FOT, receiver}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OT Result (s=0): 42@{receiver, FOT}
+OT Result (s=1): 67@{receiver, FOT}
 </pre></div>
 </div>
 </div>
@@ -495,8 +493,8 @@ OT Result (s=1): 67@{FOT, receiver}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key pair: b&#39;\xa1\x15\x08\x1e\x03\xf9\xf8\xdaW\xb6\xb6\x19\x99$c\x98\xbc_H\xfd1(\xc6 \xces\x7f\x14\x86\xc5\xcf\xcd&#39;
-Encrypted value: b&#39;2lY\x87c\xa6\\\xb4\xa0\xa7P&lt;\x99\x05\xb8\xf8\x97\x05C4\x07\x12\xd4\xa6\x84\xc0\xea\x1c\x07\xdb\x9b*\x189\x9e\x93\xce\xc8&quot;xlFz\xf6M\xfa\x0eS%\xa2\x88\xaf\x05\x03\x9aRh\xc5\x99-\xb3\xc5&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key pair: b&#39;b\xb7\xa4O\x1a\xdf\xd7\xdd\xd1M\xcc\xe4j\x05\x94\xc7\x03&lt;\\\x83+\xff\xe4,UE\t\x16J\n\xc0&lt;&#39;
+Encrypted value: b&#39;\xe4{\xad\xbb\xf33\x04K\x00\xac\xd1\xa4\x7f\xd7\xfd\xdf\xbd\xd3$c_\x12]f\xd3\xc2\x95T\xe7s\xaaV\xc6\x1aa+0\x95m\xe4\x1ccH\x8f\xd3^w\x87J\xf6u3\xf2\xb9.Ma&amp;\x01\xe7\xfcQ&#39;
 Decrypted value: b&#39;this is a test&#39;
 </pre></div>
 </div>
@@ -758,9 +756,9 @@ OT Result (s=1): 67@{receiver}
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a*b: 0@{p1}, c: 0@{p1}; are they equal? True
 a*b: 1@{p1}, c: 1@{p1}; are they equal? True
-a*b: 1@{p1}, c: 1@{p1}; are they equal? True
-a*b: 1@{p1}, c: 1@{p1}; are they equal? True
 a*b: 0@{p1}, c: 0@{p1}; are they equal? True
+a*b: 0@{p1}, c: 0@{p1}; are they equal? True
+a*b: 1@{p1}, c: 1@{p1}; are they equal? True
 </pre></div>
 </div>
 </div>
@@ -880,7 +878,7 @@ c_2' &amp;= a_2 b_2\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cross term shares: (10@{p1}, 11@{p2})
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cross term shares: (13@{p1}, 8@{p2})
 </pre></div>
 </div>
 </div>
@@ -933,7 +931,7 @@ c_2' &amp;= a_2 b_2\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiplication triple: ((13@{p1}, 1@{p2}), (4@{p1}, 4@{p2}), (14@{p1}, 13@{p2}))
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiplication triple: ((16@{p1}, 16@{p2}), (2@{p1}, 16@{p2}), (13@{p1}, 2@{p2}))
 </pre></div>
 </div>
 </div>
