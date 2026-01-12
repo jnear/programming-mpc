@@ -489,8 +489,13 @@ window.addEventListener("load", initFullscreen);
 
 <li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Building Applications with MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Applying Arithmetic MPC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter07.html">The GMW Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter08.html">Applying Binary MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter09.html">Shamir Secret Sharing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter10.html">The BGW Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter11.html">Garbled Circuits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -722,7 +727,7 @@ document.write(`
 <span class="n">p2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p2&#39;</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="nd">@p1</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -733,7 +738,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>Here, the <code class="docutils literal notranslate"><span class="pre">with</span></code> block starts a new choreography using the <em>local backend</em>. The local backend simulates the execution of the protocol on a single computer, without using any actual network communication. The <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol is used in PyChor to indicate that a value should be located at a particular location, so <code class="docutils literal notranslate"><span class="pre">5&#64;p1</span></code> is the value 5 located at <code class="docutils literal notranslate"><span class="pre">p1</span></code>.</p>
+<p>Here, the <code class="docutils literal notranslate"><span class="pre">with</span></code> block starts a new choreography using the <em>local backend</em>. The local backend simulates the execution of the protocol on a single computer, without using any actual network communication. The <code class="docutils literal notranslate"><span class="pre">constant</span></code> method is used in PyChor to convert a regular Python constant into a value located at a particular location, so <code class="docutils literal notranslate"><span class="pre">p1.constant(5)</span></code> is the value 5 located at <code class="docutils literal notranslate"><span class="pre">p1</span></code>.</p>
 <p>To send a value to another party, we can use the <code class="docutils literal notranslate"><span class="pre">send</span></code> operator. The expression <code class="docutils literal notranslate"><span class="pre">x.send(p,</span> <span class="pre">q)</span></code> sends the value of <code class="docutils literal notranslate"><span class="pre">x</span></code> from party <code class="docutils literal notranslate"><span class="pre">p</span></code> to party <code class="docutils literal notranslate"><span class="pre">q</span></code>. After this operation, <em>both</em> <code class="docutils literal notranslate"><span class="pre">p</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> will know the value of <code class="docutils literal notranslate"><span class="pre">x</span></code>—it is <em>located at both parties</em>. For example, the following protocol constructs a value located at <code class="docutils literal notranslate"><span class="pre">p1</span></code>, then <code class="docutils literal notranslate"><span class="pre">p1</span></code> sends that value to <code class="docutils literal notranslate"><span class="pre">p2</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -745,7 +750,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5@{p1, p2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5@{p2, p1}
 </pre></div>
 </div>
 </div>
@@ -769,7 +774,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p1, p2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total sum: 7@{p2, p1}
 </pre></div>
 </div>
 </div>

@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter06';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Bibliography" href="../bibliography.html" />
-    <link rel="prev" title="Building Applications with MPC" href="chapter05.html" />
+    <link rel="next" title="The GMW Protocol" href="chapter07.html" />
+    <link rel="prev" title="Applying Arithmetic MPC" href="chapter05.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -191,8 +191,13 @@
 
 <li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Building Applications with MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Applying Arithmetic MPC</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Oblivious Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter07.html">The GMW Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter08.html">Applying Binary MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter09.html">Shamir Secret Sharing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter10.html">The BGW Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter11.html">Garbled Circuits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -407,7 +412,10 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="oblivious-transfer">
 <h1>Oblivious Transfer<a class="headerlink" href="#oblivious-transfer" title="Link to this heading">#</a></h1>
 <p>Oblivious Transfer (OT) is a fundamental primitive used in many MPC protocols. As we’ll see at the end of this chapter, it can be used to build a protocol for generating multiplication triples. It is also used as part of the online portion of other MPC protocols, as we’ll see in later chapters.</p>
+<div class="seealso admonition">
+<p class="admonition-title">Further reading: Oblivious Transfer</p>
 <p>For more information on Oblivious Transfer, see <strong>Sections 2.4 and 3.7 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
+</div>
 <section id="the-oblivious-transfer-functionality">
 <h2>The Oblivious Transfer Functionality<a class="headerlink" href="#the-oblivious-transfer-functionality" title="Link to this heading">#</a></h2>
 <p>OT is a protocol between two parties: the <em>Sender</em> and the <em>Receiver</em>. The Sender provides two inputs, and the Receiver selects one of them. At the end of the protocol, the Receiver gets <em>only</em> one of the Sender’s inputs (the selected one), and the Sender <em>does not know which input was selected</em> (this is the “oblivious” part - the Sender is oblivious to the selection decision). In fact, the Sender does not receive any output from OT. The ideal functionality for this version of OT, which is called 1-out-of-2 OT because the sender provides two inputs, is defined as follows:</p>
@@ -465,7 +473,7 @@ OT Result (s=1): 67@{FOT, receiver}
 </section>
 <section id="a-protocol-for-oblivious-transfer">
 <h2>A Protocol for Oblivious Transfer<a class="headerlink" href="#a-protocol-for-oblivious-transfer" title="Link to this heading">#</a></h2>
-<p>In this section we’ll define a simple protocol for OT that realizes the functionality in the semi-honest setting. Our approach follows Section 3.7 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a> and uses <a class="reference external" href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> as a fundamental building block. The asymmetry between Sender and Receiver in OT is very different from what we’ve seen in prior chapters, and it turns out that this asymmetry creates a deep link between OT and public-key cryptography (see Gertner et al. <span id="id1">[<a class="reference internal" href="../bibliography.html#id2" title="Yael Gertner, Sampath Kannan, Tal Malkin, Omer Reingold, and Mahesh Viswanathan. The relationship between public key encryption and oblivious transfer. In Proceedings 41st Annual Symposium on Foundations of Computer Science, 325–335. IEEE, 2000.">GKM+00</a>]</span>) for details).</p>
+<p>In this section we’ll define a simple protocol for OT that realizes the functionality in the semi-honest setting. Our approach follows Section 3.7 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a> and uses <a class="reference external" href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> as a fundamental building block. The asymmetry between Sender and Receiver in OT is very different from what we’ve seen in prior chapters, and it turns out that this asymmetry creates a deep link between OT and public-key cryptography (see Gertner et al. <span id="id1">[<a class="reference internal" href="../bibliography.html#id4" title="Yael Gertner, Sampath Kannan, Tal Malkin, Omer Reingold, and Mahesh Viswanathan. The relationship between public key encryption and oblivious transfer. In Proceedings 41st Annual Symposium on Foundations of Computer Science, 325–335. IEEE, 2000.">GKM+00</a>]</span>) for details).</p>
 <p>We’ll use the <a class="reference external" href="https://pypi.org/project/PyNaCl/">PyNaCl</a> library for public-key cryptography. This library is a wrapper around <a class="reference external" href="https://github.com/jedisct1/libsodium">libsodium</a>, a high-performance cryptography library. The <a class="reference external" href="https://pynacl.readthedocs.io/en/latest/public/">documentation for public-key cryptography in PyNaCl can be found here</a>. Here’s a simple example that generates a key pair, encrypts a value, and then decrypts the value. When using the PyNaCl library, everything is bytes (input values, keys, encrypted values, etc) - so we will often need to encode the values we want to encrypt into bytestrings before doing so.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -487,8 +495,8 @@ OT Result (s=1): 67@{FOT, receiver}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key pair: b&#39;\xea\x938h\xa4Ua\x90V\x05\x85IxDB\xc7\xc2\xfa\x9d\xadH\x1a\x1a\xaek&gt;\xdcg\x9f:\xf4y&#39;
-Encrypted value: b&quot;\x04skh\xbdQpn\xdf\xa9\xf2m]\xcc\xe2\x0b^\xce\xec\xd2@\xf9\xc1\xcdiy\xc8\x9c\xe9m@M&#39;\xd00\x12\xc0\x90\xaa\x0b\xcb\xe5@{\r\x9e\xc4\xd0\xca\xd9n\x05\x04\x8e%\xf7\x14dv\xb4~\xb1&quot;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key pair: b&#39;\xa1\x15\x08\x1e\x03\xf9\xf8\xdaW\xb6\xb6\x19\x99$c\x98\xbc_H\xfd1(\xc6 \xces\x7f\x14\x86\xc5\xcf\xcd&#39;
+Encrypted value: b&#39;2lY\x87c\xa6\\\xb4\xa0\xa7P&lt;\x99\x05\xb8\xf8\x97\x05C4\x07\x12\xd4\xa6\x84\xc0\xea\x1c\x07\xdb\x9b*\x189\x9e\x93\xce\xc8&quot;xlFz\xf6M\xfa\x0eS%\xa2\x88\xaf\x05\x03\x9aRh\xc5\x99-\xb3\xc5&#39;
 Decrypted value: b&#39;this is a test&#39;
 </pre></div>
 </div>
@@ -669,15 +677,12 @@ OT Result (s=1): 67@{receiver}
             <span class="n">possible_c2s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">possible_c2s</span>
 
-<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">truth_table</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> 
-                      <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> 
-                      <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">))))</span>
+<span class="n">truth_table</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[GF(0, order=2), GF(0, order=2), GF(0, order=2), GF(1, order=2)]@{p1}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[GF(0, order=2), GF(0, order=2), GF(0, order=2), GF(1, order=2)]
 </pre></div>
 </div>
 </div>
@@ -739,7 +744,7 @@ OT Result (s=1): 67@{receiver}
     <span class="n">c2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
     <span class="n">ab</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="o">+</span><span class="n">a2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span><span class="o">+</span><span class="n">b2</span><span class="p">)</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">c1</span><span class="o">+</span><span class="n">c2</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;a*b: </span><span class="si">{</span><span class="n">ab</span><span class="si">}</span><span class="s1">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;a*b: </span><span class="si">{</span><span class="n">ab</span><span class="si">}</span><span class="s1">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s1">; are they equal? </span><span class="si">{</span><span class="n">ab</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">c</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
@@ -751,11 +756,11 @@ OT Result (s=1): 67@{receiver}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a*b: 1@{p1}, c: 1@{p1}
-a*b: 0@{p1}, c: 0@{p1}
-a*b: 0@{p1}, c: 0@{p1}
-a*b: 0@{p1}, c: 0@{p1}
-a*b: 0@{p1}, c: 0@{p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a*b: 0@{p1}, c: 0@{p1}; are they equal? True
+a*b: 1@{p1}, c: 1@{p1}; are they equal? True
+a*b: 1@{p1}, c: 1@{p1}; are they equal? True
+a*b: 1@{p1}, c: 1@{p1}; are they equal? True
+a*b: 0@{p1}, c: 0@{p1}; are they equal? True
 </pre></div>
 </div>
 </div>
@@ -763,7 +768,181 @@ a*b: 0@{p1}, c: 0@{p1}
 </section>
 <section id="application-generating-arithmetic-multiplication-triples-using-ot">
 <h2>Application: Generating Arithmetic Multiplication Triples using OT<a class="headerlink" href="#application-generating-arithmetic-multiplication-triples-using-ot" title="Link to this heading">#</a></h2>
-<p>We’ve seen how to generate multiplication triples in <span class="math notranslate nohighlight">\(GF(2)\)</span>, but all of the example applications in prior chapters were in <span class="math notranslate nohighlight">\(GF(p)\)</span> rather than <span class="math notranslate nohighlight">\(GF(2)\)</span>, so this doesn’t seem very useful. We’ll see additional applications in later chapters where they are useful, but for now it would be great to be able to generate triples in <span class="math notranslate nohighlight">\(GF(p)\)</span> instead. This is a more difficult problem that requires a slightly more complex protocol to solve.</p>
+<p>We’ve seen how to generate multiplication triples in <span class="math notranslate nohighlight">\(GF(2)\)</span>, but all of the example applications in prior chapters were in <span class="math notranslate nohighlight">\(GF(p)\)</span> rather than <span class="math notranslate nohighlight">\(GF(2)\)</span>, so this doesn’t seem very useful. We’ll see additional applications in later chapters where they are useful, but for now it would be great to be able to generate triples in <span class="math notranslate nohighlight">\(GF(p)\)</span> instead. This is a more difficult problem that requires a slightly more complex protocol to solve. We’ll start by assuming that the parties will generate shares of <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> randomly, then compute <span class="math notranslate nohighlight">\(c\)</span> by multiplying. Recall that:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+c &amp;= (a_1 + a_2)(b_1 + b_2)\\
+&amp;= a_1 b_1 + a_2 b_2 + a_1 b_2 + a_2 b_1\\
+\end{align*}
+\end{split}\]</div>
+<p>The first term involves shares known by P1, and the second one involes shares known by P2. We’ll (tentatively) set the shares of <span class="math notranslate nohighlight">\(c\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+c_1' &amp;= a_1 b_1\\
+c_2' &amp;= a_2 b_2\\
+\end{align*}
+\end{split}\]</div>
+<p>The parties can compute these shares locally, without communication. However, these are not quite the shares we want: <span class="math notranslate nohighlight">\(c_1' + c_2'\)</span> is missing the cross-terms <span class="math notranslate nohighlight">\(a_1 b_2 + a_2 b_1\)</span> from the earlier equation.</p>
+<p>To solve this problem, we’ll use OT to build secret shares of <span class="math notranslate nohighlight">\(t = a_1 b_2\)</span> and <span class="math notranslate nohighlight">\(u = a_2 b_1\)</span>. Specifically, we’ll generate the shares:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(t_1 = - r\)</span> where P1 knows <span class="math notranslate nohighlight">\(r\)</span> but doesn’t know <span class="math notranslate nohighlight">\(a_1 b_2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(t_2 = r + a_1 b_2\)</span> where P2 <em>doesn’t</em> know <span class="math notranslate nohighlight">\(r\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(u_1 = - s\)</span> where P1 knows <span class="math notranslate nohighlight">\(s\)</span> but doesn’t know <span class="math notranslate nohighlight">\(a_2 b_1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(u_2 = s + a_2 b_1\)</span> where P2 <em>doesn’t</em> know <span class="math notranslate nohighlight">\(s\)</span></p></li>
+</ul>
+<p>Here, the values <span class="math notranslate nohighlight">\(r\)</span> and <span class="math notranslate nohighlight">\(s\)</span> act as <em>masks</em> to allow sharing the cross-term’s value without revealing it. Once we’ve accomplished this, we can set the two shares of <span class="math notranslate nohighlight">\(c\)</span>:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(c_1 = c_1' + t_1 + u_1 = a_1 b_1 - r - s\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(c_2 = c_2' + t_2 + u_2 = a_2 b_2 + r + a_1 b_2 + s + a_2 b_1\)</span></p></li>
+</ul>
+<p>With this setup, we get that <span class="math notranslate nohighlight">\(c_1 + c_2 = a b\)</span>, as desired.</p>
+<p>To build the secret shares of <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(u\)</span>, we’ll use a process called <em>bit decomposition</em> to convert arithmetic shares into binary digits, and then use 1-out-of-2 OT to deliver a bitwise masked version of the correct share to P2. P2 will be able to sum the bits to obtain their shares of <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(u\)</span>. Here’s a function <code class="docutils literal notranslate"><span class="pre">bit_decompose</span></code> to turn a field element into an equivalent list of bits. For a field with characteristic <span class="math notranslate nohighlight">\(p\)</span>, we’ll need <span class="math notranslate nohighlight">\(\lceil \log_2(p) \rceil\)</span> bits to represent the number.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We use a small p to make the results easy to read</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">bit_decompose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nbits</span><span class="p">):</span>
+    <span class="c1"># Convert the input to an integer</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># Return a list of bits corresponding to x</span>
+    <span class="c1"># the least-significant bit is the first element</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbits</span><span class="p">)]</span>
+
+<span class="c1"># Bit-decompose the field element 15</span>
+<span class="n">bit_decompose</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1, 1, 1, 1, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following protocol implements the process of generating shares <span class="math notranslate nohighlight">\(t_1\)</span> and <span class="math notranslate nohighlight">\(t_2 \in GF(p)\)</span> of the cross-term <span class="math notranslate nohighlight">\(a_1 b_2\)</span>. We denote indexing into a vector as <span class="math notranslate nohighlight">\(V[j]\)</span> (instead of <span class="math notranslate nohighlight">\(V_j\)</span>) to avoid confusion with the subscripts in the names of secret shares.</p>
+<div class="note admonition">
+<p class="admonition-title">Protocol: Secret Share a Cross-Term</p>
+<p>The parties P1 and P2 follow the following steps:</p>
+<ol class="arabic simple">
+<li><p>P2 bit-decomposes <span class="math notranslate nohighlight">\(b_2\)</span> into a vector <span class="math notranslate nohighlight">\(B_2 \in \{0, 1\}^n\)</span> where <span class="math notranslate nohighlight">\(n = \lceil \log_2(p) \rceil\)</span>.</p></li>
+<li><p>P1 generates a random length-<span class="math notranslate nohighlight">\(n\)</span> vector of field elements <span class="math notranslate nohighlight">\(R \in GF(p)^n\)</span> to mask the OT results.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(j \in 0 \dots n-1\)</span>, P1 and P2 run OT, with the secret inputs <span class="math notranslate nohighlight">\(R[j]\)</span> and <span class="math notranslate nohighlight">\(R[j] + a_1 * 2^j\)</span> and the selection bit <span class="math notranslate nohighlight">\(B_2[j]\)</span>. P2 receives the vector of results <span class="math notranslate nohighlight">\(O \in GF(p)^n\)</span>.</p></li>
+<li><p>P1 computes <span class="math notranslate nohighlight">\(t_1 = -\sum R \mod p\)</span> and P2 computes <span class="math notranslate nohighlight">\(t_2 = \sum O \mod p\)</span>.</p></li>
+</ol>
+<p>At the end of the protocol, the parties hold additive shares of <span class="math notranslate nohighlight">\(a_1 b_2\)</span>.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_crossterm</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">b2</span><span class="p">):</span>
+    <span class="c1"># Function to generate the secret inputs for OT</span>
+    <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+    <span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">rj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">rj</span><span class="p">,</span> <span class="p">(</span><span class="n">rj</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="n">j</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span><span class="p">]</span>
+
+    <span class="c1"># Step 1: P2 bit decomposes b2</span>
+    <span class="n">num_bits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
+    <span class="n">b2_bits</span> <span class="o">=</span> <span class="n">bit_decompose</span><span class="p">(</span><span class="n">b2</span><span class="p">,</span> <span class="n">num_bits</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="n">num_bits</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: P1 generates a random vector r to mask a1*b2</span>
+    <span class="n">r_vec</span> <span class="o">=</span> <span class="p">[</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_bits</span><span class="p">)]</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r_vec</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span>
+
+    <span class="c1"># Step 3: P1 and P2 run OT to get rj+a1*b2[j]*2^j for each j</span>
+    <span class="n">ot_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">protocol_ot</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> 
+                              <span class="n">inputs</span><span class="o">=</span><span class="n">table</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">r_vec</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> 
+                              <span class="n">selection</span><span class="o">=</span><span class="n">b2_bits</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> 
+                              <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_bits</span><span class="p">)]</span>
+
+    <span class="c1"># Step 4: Compute shares</span>
+    <span class="c1"># P1&#39;s share is -r</span>
+    <span class="c1"># P2&#39;s share is sum(rj+a1*b2[j]*2^j) = r + a1*b2</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">GF</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="n">GF</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ot_results</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">a1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cross term shares:&#39;</span><span class="p">,</span> <span class="n">protocol_crossterm</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">b2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cross term shares: (10@{p1}, 11@{p2})
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we’re able to define a protocol for generating an arithmetic multiplication triple:</p>
+<div class="note admonition">
+<p class="admonition-title">Protocol: Generate Arithmetic Multiplication Triple</p>
+<p>The parties P1 and P2 follow the following steps:</p>
+<ol class="arabic simple">
+<li><p>P1 picks <span class="math notranslate nohighlight">\(a_1\)</span>, <span class="math notranslate nohighlight">\(b_1 \in GF(p)\)</span> randomly</p></li>
+<li><p>P2 picks <span class="math notranslate nohighlight">\(a_2\)</span>, <span class="math notranslate nohighlight">\(b_2 \in GF(p)\)</span> randomly</p></li>
+<li><p>P1 and P2 run <code class="docutils literal notranslate"><span class="pre">protocol_crossterm</span></code> with the inputs <span class="math notranslate nohighlight">\(a_1\)</span>, <span class="math notranslate nohighlight">\(b_2\)</span> to obtain shares of <span class="math notranslate nohighlight">\(t = a_1 b_2\)</span>. P1 gets <span class="math notranslate nohighlight">\(t_1\)</span> and P2 gets <span class="math notranslate nohighlight">\(t_2\)</span>.</p></li>
+<li><p>P1 and P2 run <code class="docutils literal notranslate"><span class="pre">protocol_crossterm</span></code> with the inputs <span class="math notranslate nohighlight">\(b_1\)</span>, <span class="math notranslate nohighlight">\(a_2\)</span> to obtain shares of <span class="math notranslate nohighlight">\(u = a_2 b_1\)</span>. P1 gets <span class="math notranslate nohighlight">\(u_1\)</span> and P2 gets <span class="math notranslate nohighlight">\(u_2\)</span>.</p></li>
+<li><p>P1 computes the share <span class="math notranslate nohighlight">\(c_1 = a_1 b_1 + t_1 + u_1\)</span></p></li>
+<li><p>P2 computes the share <span class="math notranslate nohighlight">\(c_2 = a_2 b_2 + t_2 + u_2\)</span></p></li>
+</ol>
+<p>At the end of the protocol, P1 and P2 hold secret shares of <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span>, such that <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are random and unknown to either party, and <span class="math notranslate nohighlight">\(a*b = c\)</span>.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_gen_arithmetic_mult_triple</span><span class="p">():</span>
+    <span class="c1"># Step 1: Pick P1&#39;s shares</span>
+    <span class="n">a1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+
+    <span class="c1"># Step 2: Pick P2&#39;s shares</span>
+    <span class="n">a2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+
+    <span class="c1"># Step 3: Obtain shares of a1 * b2</span>
+    <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">protocol_crossterm</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+
+    <span class="c1"># Step 4: Obtain shares of b1 * a2</span>
+    <span class="n">u1</span><span class="p">,</span> <span class="n">u2</span> <span class="o">=</span> <span class="n">protocol_crossterm</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
+
+    <span class="c1"># Step 5 &amp; 6: Compute shares</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">*</span> <span class="n">b1</span> <span class="o">+</span> <span class="n">t1</span> <span class="o">+</span> <span class="n">u1</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">a2</span> <span class="o">*</span> <span class="n">b2</span> <span class="o">+</span> <span class="n">t2</span> <span class="o">+</span> <span class="n">u2</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">),</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">),</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Multiplication triple:&#39;</span><span class="p">,</span> <span class="n">protocol_gen_arithmetic_mult_triple</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiplication triple: ((13@{p1}, 1@{p2}), (4@{p1}, 4@{p2}), (14@{p1}, 13@{p2}))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that this protocol requires two uses of the <code class="docutils literal notranslate"><span class="pre">protocol_crossterm</span></code> protocol, and each one of those requires <span class="math notranslate nohighlight">\(\lceil \log_2(p) \rceil\)</span> uses of OT. Each OT requires two public-key encryptions, which is often the most expensive part of one of these protocols. This means that generating multiplication triples in <span class="math notranslate nohighlight">\(GF(p)\)</span> is expensive!</p>
+<div class="seealso admonition">
+<p class="admonition-title">Further reading: OT extension</p>
+<p>The idea of <em>Oblivious Transfer extension</em>, introduced in <span id="id2">[<a class="reference internal" href="../bibliography.html#id3" title="Yuval Ishai, Joe Kilian, Kobbi Nissim, and Erez Petrank. Extending oblivious transfers efficiently. In Annual International Cryptology Conference, 145–161. Springer, 2003.">IKNP03</a>]</span>, speeds up protocols that make use of OT in batches (e.g. for generating multiplication triples) by “extending” a small number of “base OTs” (e.g. 128) to a much larger number of usable OTs (e.g. thousands). Techniques for OT extension are surveyed in <strong>Section 3.7.2 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
+</div>
 </section>
 </section>
 
@@ -803,15 +982,15 @@ a*b: 0@{p1}, c: 0@{p1}
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Building Applications with MPC</p>
+        <p class="prev-next-title">Applying Arithmetic MPC</p>
       </div>
     </a>
     <a class="right-next"
-       href="../bibliography.html"
+       href="chapter07.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Bibliography</p>
+        <p class="prev-next-title">The GMW Protocol</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

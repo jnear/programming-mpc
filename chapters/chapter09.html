@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Shamir Secret Sharing &#8212; Programming MPC</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter09';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The BGW Protocol" href="chapter10.html" />
+    <link rel="prev" title="Applying Binary MPC" href="chapter08.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Programming MPC - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Programming MPC - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Programming MPC
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01.html">Distributed Protocols</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="chapter02.html">Additive Secret Sharing</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05.html">Applying Arithmetic MPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter07.html">The GMW Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter08.html">Applying Binary MPC</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Shamir Secret Sharing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter10.html">The BGW Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter11.html">Garbled Circuits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jnear/programming-mpc/issues/new?title=Issue%20on%20page%20%2Fchapters/chapter09.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/chapter09.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Shamir Secret Sharing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#threshold-secret-sharing-schemes">Threshold Secret Sharing Schemes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-shamir-scheme">The Shamir Scheme</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-shares">Constructing Shares</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction">Reconstruction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-shamir-shares">Adding Shamir Shares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiplying-shamir-shares">Multiplying Shamir Shares</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hidden cell for imports</span>
+
+<span class="kn">import</span> <span class="nn">galois</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="shamir-secret-sharing">
+<h1>Shamir Secret Sharing<a class="headerlink" href="#shamir-secret-sharing" title="Link to this heading">#</a></h1>
+<p>Chapter 2 introduced additive secret sharing, a simple secret sharing scheme with an additive homomorphism. This chapter describes <a class="reference internal" href="#todo"><span class="xref myst"><em>Shamir secret sharing</em></span></a>, a <em>threshold sharing scheme</em>.</p>
+<div class="seealso admonition">
+<p class="admonition-title">Further reading: Shamir Secret Sharing</p>
+<p>For more information on Shamir secret sharing, see <strong>TODO MAYBE JOY OF CRYPTOGRAPHY</strong>.</p>
+</div>
+<section id="threshold-secret-sharing-schemes">
+<h2>Threshold Secret Sharing Schemes<a class="headerlink" href="#threshold-secret-sharing-schemes" title="Link to this heading">#</a></h2>
+<p>A <a class="reference internal" href="#todo"><span class="xref myst">threshold secret sharing scheme</span></a> is similar to additive secret sharing, but with one major difference: it’s possible to reconstruct the secret with <em>only a subset of the shares</em>. More formally, a threshold scheme is defined by two functions</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">share(x,t,n)</span></code> generates <code class="docutils literal notranslate"><span class="pre">n</span></code> secret shares with threshold <code class="docutils literal notranslate"><span class="pre">t</span></code> of the secret value <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reconstruct(ss)</span></code> decrypts a secret value from a list <code class="docutils literal notranslate"><span class="pre">ss</span></code> of <code class="docutils literal notranslate"><span class="pre">t</span></code> or more secret shares</p></li>
+</ul>
+<p>Note the new parameter <code class="docutils literal notranslate"><span class="pre">t</span></code> (the threshold): when secret sharing a value, we can create as many shares as we like (by setting <code class="docutils literal notranslate"><span class="pre">n</span></code>), but when reconstructing, we can use any subset of size at least <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<p>Threshold schemes have useful applications in MPC and also in other contexts. For example, threshold schemes are often used to share values among multiple parties when it’s likely that some of the parties could become unavailable during reconstruction (e.g. by losing their shares, or due to a network issue).</p>
+</section>
+<section id="the-shamir-scheme">
+<h2>The Shamir Scheme<a class="headerlink" href="#the-shamir-scheme" title="Link to this heading">#</a></h2>
+<p>The <a class="reference internal" href="#"><span class="xref myst">Shamir secret sharing scheme</span></a> is due to Adi Shamir <span id="id1">[]</span>. There are two key ideas behind the scheme:</p>
+<ul class="simple">
+<li><p>To secret share a value with threshold <span class="math notranslate nohighlight">\(t\)</span>, construct a <a class="reference internal" href="#todo"><span class="xref myst"><em>polynomial</em> of degree <span class="math notranslate nohighlight">\(t\)</span></span></a></p></li>
+<li><p>To reconstruct the secret from <span class="math notranslate nohighlight">\(t\)</span> shares, use <em>polynomial interpolation</em></p></li>
+</ul>
+<p>This approach works because <em>any</em> <span class="math notranslate nohighlight">\(t\)</span> points on a degree-<span class="math notranslate nohighlight">\(t\)</span> polynomial are sufficient to reconstruct the polynomial. Fewer than <span class="math notranslate nohighlight">\(t\)</span> points are insufficient to reconstruct the polynomial, so access to fewer than <span class="math notranslate nohighlight">\(t\)</span> shares gives no information about the secret.</p>
+<p>A polynomial of degree <span class="math notranslate nohighlight">\(t\)</span> has the following form:</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
+\]</div>
+<p>In Shamir’s scheme, the <span class="math notranslate nohighlight">\(y\)</span>-intercept <span class="math notranslate nohighlight">\(c_0\)</span> encodes the secret, and the other coefficients <span class="math notranslate nohighlight">\(c_1, \dots, c_t\)</span> are random. These polynomials work exactly like normal polynomials, except that we compute everything in a finite field <span class="math notranslate nohighlight">\(GF(p)\)</span> (as usual!). That means all of the coefficients <span class="math notranslate nohighlight">\(c_0, \dots, c_t\)</span> are in <span class="math notranslate nohighlight">\(GF(p)\)</span>, and when we compute an <span class="math notranslate nohighlight">\(x,y\)</span> point on the polynomial, we do so with field arithmetic. This causes interesting results when we graph the polynomial - as we’ll see, the polynomial will appear to “wrap around” in the graph, just like all arithmetic in a finite field.</p>
+<p>The Galois library has some useful functions for working with polynomials. The following example shows the construction of a degree-2 polynomial with the coefficients 10 and 5 in the field <span class="math notranslate nohighlight">\(GF(97)\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="mi">97</span>
+<span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">coefficients</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="n">poly</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">Poly</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span>
+<span class="n">poly</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Poly(10x + 5, GF(97))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once we have a <code class="docutils literal notranslate"><span class="pre">Poly</span></code> object, we can evaluate the polynomial at any value of <span class="math notranslate nohighlight">\(x\)</span> to get the value of <span class="math notranslate nohighlight">\(y\)</span> - for example, to graph the polynomial.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xs</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">97</span><span class="p">)))</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0778eab9e65bfe002a7b43101c3f7e763877f8c01d1f8ba9772f5f59d8c2e6fa.png" src="../_images/0778eab9e65bfe002a7b43101c3f7e763877f8c01d1f8ba9772f5f59d8c2e6fa.png" />
+</div>
+</div>
+<p>Notice that the <span class="math notranslate nohighlight">\(y\)</span> values never exceed <span class="math notranslate nohighlight">\(p\)</span> - the polynomial “wraps around” back to 0 when it reaches <span class="math notranslate nohighlight">\(p\)</span>. Higher-degree polynomials tend to have even more interesting shapes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coefficients</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="n">poly</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">Poly</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">97</span><span class="p">)))</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="n">poly</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Poly(10x^4 + 5x^3 + 38x^2 + 29x + 5, GF(97))
+</pre></div>
+</div>
+<img alt="../_images/f4f4229e414a5ebf7ddb7fd2cb7026d5a77c1e19ca6591c857d326722f67a277.png" src="../_images/f4f4229e414a5ebf7ddb7fd2cb7026d5a77c1e19ca6591c857d326722f67a277.png" />
+</div>
+</div>
+<section id="constructing-shares">
+<h3>Constructing Shares<a class="headerlink" href="#constructing-shares" title="Link to this heading">#</a></h3>
+<p>To construct <span class="math notranslate nohighlight">\(n\)</span> shares of a secret with threshold <span class="math notranslate nohighlight">\(t\)</span>, we’ll following these steps:</p>
+<ol class="arabic simple">
+<li><p>Choose <span class="math notranslate nohighlight">\(t-1\)</span> random coefficients <span class="math notranslate nohighlight">\(c_1, \dots, c_t\)</span></p></li>
+<li><p>Construct a degree-<span class="math notranslate nohighlight">\(t\)</span> polynomial <span class="math notranslate nohighlight">\(f(x)\)</span> with coefficients <span class="math notranslate nohighlight">\(c_0, \dots, c_t\)</span> where <span class="math notranslate nohighlight">\(c_0\)</span> is the secret</p></li>
+<li><p>The shares are <span class="math notranslate nohighlight">\(n\)</span> <span class="math notranslate nohighlight">\((x, y)\)</span> pairs <span class="math notranslate nohighlight">\((x_1, f(x_1)), \dots, (x_n, f(x_n))\)</span> where <span class="math notranslate nohighlight">\(x_i &gt; 0\)</span></p></li>
+</ol>
+<p>In the last step, it’s common to pick <span class="math notranslate nohighlight">\(x_1 = 1, x_2 = 2, \dots, x_n = n\)</span> for convenience. We can implement these steps in the function <code class="docutils literal notranslate"><span class="pre">shamir_share</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">shamir_share</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="c1"># Step 1: pick t-1 random coefficients</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="p">[</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+
+    <span class="c1"># Step 2: construct the polynomial</span>
+    <span class="n">coefficients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">Poly</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">coefficients</span><span class="p">))</span>
+
+    <span class="c1"># Step 3: compute the shares</span>
+    <span class="n">shares</span> <span class="o">=</span> <span class="p">[(</span><span class="n">GF</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">poly</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">shares</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(GF(1, order=97), GF(50, order=97)),
+ (GF(2, order=97), GF(87, order=97)),
+ (GF(3, order=97), GF(27, order=97)),
+ (GF(4, order=97), GF(64, order=97))]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reconstruction">
+<h3>Reconstruction<a class="headerlink" href="#reconstruction" title="Link to this heading">#</a></h3>
+<p>Reconstruction is performed using <a class="reference internal" href="#todo"><span class="xref myst">polynomial interpolation</span></a>. Given at least <span class="math notranslate nohighlight">\(t\)</span> <span class="math notranslate nohighlight">\((x,y)\)</span> pairs on the polynomial, the interpolation process allows us to reconstruct the original polynomial. Since the coefficient <span class="math notranslate nohighlight">\(c_0\)</span> is equal to the secret, knowing the polynomial is equivalent to knowing the secret. Reconstruction follows these steps:</p>
+<ol class="arabic simple">
+<li><p>Recover the original polynomial <span class="math notranslate nohighlight">\(f(x)\)</span> using polynomial interpolation</p></li>
+<li><p>Evaluate <span class="math notranslate nohighlight">\(f(0)\)</span> to recover the secret</p></li>
+</ol>
+<p>The Galois library provides a function called <code class="docutils literal notranslate"><span class="pre">lagrange_poly</span></code> for performing interpolation, which we can use to implement reconstruction for Shamir shares.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">shamir_reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
+    <span class="c1"># Step 1: recover the polynomial</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">])</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">])</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">lagrange_poly</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: evaluate f(0) to recover the secret</span>
+    <span class="n">secret</span> <span class="o">=</span> <span class="n">poly</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">secret</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shares</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed secret:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed secret: 13
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s test the <em>threshold</em> part of Shamir sharing - since we set <span class="math notranslate nohighlight">\(t=2\)</span>, we should be able to reconstruct the secret using only 2 shares!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First two shares:&#39;</span><span class="p">,</span> <span class="n">shares</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed secret:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First two shares: [(GF(1, order=97), GF(88, order=97)), (GF(2, order=97), GF(66, order=97))]
+Reconstructed secret: 13
+</pre></div>
+</div>
+</div>
+</div>
+<p>But we should <em>not</em> be able to reconstruct the secret with only a single share, and indeed we get a random result when we try:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First share:&#39;</span><span class="p">,</span> <span class="n">shares</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed secret:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First share: [(GF(1, order=97), GF(88, order=97))]
+Reconstructed secret: 88
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="adding-shamir-shares">
+<h2>Adding Shamir Shares<a class="headerlink" href="#adding-shamir-shares" title="Link to this heading">#</a></h2>
+<p>Like additive shares, Shamir shares also have an additive homomorphism. It works because:</p>
+<ul class="simple">
+<li><p>Adding two polynomials is equivalent to adding their corresponding coefficients</p></li>
+<li><p>Since the coefficient <span class="math notranslate nohighlight">\(c_0\)</span> represents the secret, adding two polynomials representing two different secrets results in a new polynomial whose <span class="math notranslate nohighlight">\(y\)</span>-intercept is the sum of the two secrets</p></li>
+</ul>
+<p>Furthermore, it works on <em>shares</em> (in addition to the polynomials themselves) because:</p>
+<ul class="simple">
+<li><p>If <span class="math notranslate nohighlight">\((x, y_1)\)</span> lies on the polynomial <span class="math notranslate nohighlight">\(f_1\)</span></p></li>
+<li><p>And <span class="math notranslate nohighlight">\((x, y_2)\)</span> lies on the polynomial <span class="math notranslate nohighlight">\(f_2\)</span></p></li>
+<li><p>Then <span class="math notranslate nohighlight">\((x, y_1 + y_2)\)</span> lies on the polynomial <span class="math notranslate nohighlight">\(f_1 + f2\)</span></p></li>
+</ul>
+<p>So, we can add Shamir-shared numbers together locally, just like we can with additive shares! Unlike with additive shares, we need to be careful <em>which</em> shares we add together when using Shamir shares - the added shares need to have the same <span class="math notranslate nohighlight">\(x\)</span> coordinate. It’s typical to assign each party in a protocol a particular <span class="math notranslate nohighlight">\(x\)</span> coordinate and use the same one consistently throughout the protocol, so that each party always holds shares that are compatible.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span>
+    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">y2</span>
+
+<span class="n">shares1</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">shares2</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">add_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shares1</span><span class="p">,</span> <span class="n">shares2</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed sum:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed sum: 17
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="multiplying-shamir-shares">
+<h2>Multiplying Shamir Shares<a class="headerlink" href="#multiplying-shamir-shares" title="Link to this heading">#</a></h2>
+<p>In addition to being a threshold scheme, Shamir secret sharing has a limited form of <em>multiplicative homomorphism</em>! To see why, consider the following two polynomials:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+f_1(x) &amp;= 3 + 2x\\
+f_2(x) &amp;= 2 + 6x
+\end{align*}
+\end{split}\]</div>
+<p>Shares generated from these polynomials would represent the secrets 3 and 2, since those are the <span class="math notranslate nohighlight">\(y\)</span>-intercepts of the polynomials. What happens if we multiply these polynomials? Using basic algebra, we get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+f(x) &amp;= f_1(x) f_2(x) \\
+&amp;= 3*2 + 18x + 4x + 12x^2 \\
+&amp;= 6 + 22x + 12x^2
+\end{align*}
+\end{split}\]</div>
+<p>Look - the <span class="math notranslate nohighlight">\(y\)</span>-intercept is the <em>product of the two secrets</em>, as desired! There’s only one problem: the <em>degree of the polynomial has increased</em>. That means we’ll need more shares than before to reconstruct the secret, because the threshold depends on the degree of the polynomial.</p>
+<p>In general, multiplying two polynomials of degree <span class="math notranslate nohighlight">\(d\)</span> results in a polynomial of degree at most <span class="math notranslate nohighlight">\(2d\)</span>. This means we can multiply Shamir shares with threshold <span class="math notranslate nohighlight">\(t\)</span> to get new Shamir shares of the product with threshold <span class="math notranslate nohighlight">\(2t\)</span>. Here, we multiply shares with <span class="math notranslate nohighlight">\(t=2\)</span> and get new shares with <span class="math notranslate nohighlight">\(t=4\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mult_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span>
+    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span>
+
+<span class="n">shares1</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">shares2</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">mult_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shares1</span><span class="p">,</span> <span class="n">shares2</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed product:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed product: 52
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, note that we now need more than 2 shares to reconstruct, since the threshold has gone up. When we try to reconstruct with only 2 shares, we get a random result.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed product, with only 2 shares:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed product, with only 2 shares: 36
+</pre></div>
+</div>
+</div>
+</div>
+<p>This limited form of multiplicative homomorphism provides a great starting point for building MPC protocols that perform multiplication using Shamir shares, by shifting the problem of multiplication to one of reducing the degree of the resulting polynomial.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter08.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Applying Binary MPC</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter10.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">The BGW Protocol</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#threshold-secret-sharing-schemes">Threshold Secret Sharing Schemes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-shamir-scheme">The Shamir Scheme</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-shares">Constructing Shares</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction">Reconstruction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-shamir-shares">Adding Shamir Shares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiplying-shamir-shares">Multiplying Shamir Shares</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Joseph P. Near
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
