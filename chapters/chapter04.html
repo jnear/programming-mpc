@@ -361,7 +361,7 @@ window.addEventListener("load", initFullscreen);
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Applying Arithmetic MPC" href="chapter05.html" />
-    <link rel="prev" title="Proving Security" href="chapter03.html" />
+    <link rel="prev" title="Defining &amp; Proving Security" href="chapter03.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -485,7 +485,7 @@ window.addEventListener("load", initFullscreen);
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Defining &amp; Proving Security</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Multiplication Triples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter05.html">Applying Arithmetic MPC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
@@ -712,7 +712,7 @@ document.write(`
 <p>Fortunately, there’s a commonly-used trick for performing multiplication on additive secret shares that leverages a construction called a <em>multiplication triple</em>. The idea is due to <a class="reference external" href="https://sites.google.com/view/donbeaver/home">Don Beaver</a> <span id="id1">[<a class="reference internal" href="../bibliography.html#id5" title="Donald Beaver. Efficient multiparty protocols using circuit randomization. In Annual international cryptology conference, 420–432. Springer, 1991.">Bea91</a>]</span>; multiplication triples are often called <em>Beaver triples</em>, and the approach is sometimes called <em>Beaver’s trick</em>.</p>
 <div class="seealso admonition">
 <p class="admonition-title">Further reading: Multiplication Triples</p>
-<p>For more information on the GMW protocol, see <strong>Section 3.4 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
+<p>For more information on multiplication triples, see <strong>Section 3.4 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
 </div>
 <section id="what-is-a-multiplication-triple">
 <h2>What is a Multiplication Triple?<a class="headerlink" href="#what-is-a-multiplication-triple" title="Link to this heading">#</a></h2>
@@ -797,11 +797,11 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shared triple: ((3@{p1, Fgen}, 10@{p2, Fgen}), (4@{p1, Fgen}, 12@{p2, Fgen}), (8@{p1, Fgen}, 13@{p2, Fgen}))
-Reconstructed a: 13@{Fgen}
-Reconstructed b: 16@{Fgen}
-Reconstructed c: 4@{Fgen}
-Reconstructed a*b: 4@{Fgen}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shared triple: ((12@{p1, Fgen}, 4@{p2, Fgen}), (2@{p1, Fgen}, 4@{p2, Fgen}), (7@{p1, Fgen}, 4@{p2, Fgen}))
+Reconstructed a: 16@{Fgen}
+Reconstructed b: 6@{Fgen}
+Reconstructed c: 11@{Fgen}
+Reconstructed a*b: 11@{Fgen}
 </pre></div>
 </div>
 </div>
@@ -916,7 +916,7 @@ x*y =&amp; (x - a + a)(y - b + b)\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Product: 12@{p1, p2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Product: 12@{p2, p1}
 </pre></div>
 </div>
 </div>
@@ -997,7 +997,7 @@ p2 -&gt;&gt; p1 : 10
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Proving Security</p>
+        <p class="prev-next-title">Defining &amp; Proving Security</p>
       </div>
     </a>
     <a class="right-next"
@@ -1050,13 +1050,6 @@ By Joseph P. Near
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

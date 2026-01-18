@@ -360,7 +360,7 @@ window.addEventListener("load", initFullscreen);
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter02';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Proving Security" href="chapter03.html" />
+    <link rel="next" title="Defining &amp; Proving Security" href="chapter03.html" />
     <link rel="prev" title="Distributed Protocols" href="chapter01.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -485,7 +485,7 @@ window.addEventListener("load", initFullscreen);
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Proving Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter03.html">Defining &amp; Proving Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter05.html">Applying Arithmetic MPC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
@@ -837,7 +837,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares of 5: [GF(6, order=11), GF(6, order=11), GF(4, order=11)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares of 5: [GF(9, order=11), GF(7, order=11), GF(0, order=11)]
 </pre></div>
 </div>
 </div>
@@ -855,7 +855,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares: [GF(10, order=11), GF(0, order=11), GF(6, order=11)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares: [GF(6, order=11), GF(4, order=11), GF(6, order=11)]
 Reconstructed value: 5
 </pre></div>
 </div>
@@ -920,29 +920,35 @@ Reconstructed value: 5
 <span class="k">def</span> <span class="nf">reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">GF</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">secure_sum</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
-    <span class="c1"># Round 1: Each party sends *shares* of their input to the other party</span>
-    <span class="n">v11</span><span class="p">,</span> <span class="n">v12</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">v21</span><span class="p">,</span> <span class="n">v22</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">v12</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
-    <span class="n">v21</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">protocol_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c1"># Step 1: The parties secret-share their secret values</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="c1"># Round 2: Both parties sum the shares they hold and send the result to the other</span>
-    <span class="n">total1</span> <span class="o">=</span> <span class="n">v11</span> <span class="o">+</span> <span class="n">v21</span>
-    <span class="n">total2</span> <span class="o">=</span> <span class="n">v12</span> <span class="o">+</span> <span class="n">v22</span>
-    <span class="n">total1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
-    <span class="n">total2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="c1"># Step 2: Each party sends one share to the other party</span>
+    <span class="n">x2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
 
-    <span class="c1"># Round 3: Both parties reconstruct the total</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">([</span><span class="n">total1</span><span class="p">,</span> <span class="n">total2</span><span class="p">])</span>
+    <span class="c1"># Step 3: Each party adds the share they receive to the one they kept, </span>
+    <span class="c1"># to obtain one share of the total sum</span>
+    <span class="n">sum1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span>
+    <span class="n">sum2</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">y2</span>
+
+    <span class="c1"># Step 4: Each party sends their share of the total sum to the other party</span>
+    <span class="n">sum1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">sum2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+    <span class="c1"># Step 5: Each party adds together the shares of the total sum to &quot;decrypt&quot; </span>
+    <span class="c1"># the total sum</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">([</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">total</span>
 
 <span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
     <span class="c1"># initialize the input values</span>
-    <span class="n">v1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-    <span class="n">v2</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 
-    <span class="n">total</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">protocol_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total sum:&#39;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
 </pre></div>
@@ -990,7 +996,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 shares of the secret 5: [0, 5]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2 shares of the secret 5: [2, 3]
 </pre></div>
 </div>
 </div>
@@ -1022,7 +1028,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/119a9abf4bd6a4485e37f93a5fb1d7dba993e610d02271640f4024dcf7bdb78a.png" src="../_images/119a9abf4bd6a4485e37f93a5fb1d7dba993e610d02271640f4024dcf7bdb78a.png" />
+<img alt="../_images/c7c55071d16e99fd52be2b0a1c0d02fc6a2a2aaf5c1f04c1bb1c4c75daf9f04c.png" src="../_images/c7c55071d16e99fd52be2b0a1c0d02fc6a2a2aaf5c1f04c1bb1c4c75daf9f04c.png" />
 </div>
 </div>
 <p>Sure enough, all results between 0 and 10 seem to be equally likely. The bars aren’t identical because we’ve approximated the distribution of random shares by sampling 10000 times; if we increased the number of samples, the bars would get closer together.</p>
@@ -1035,7 +1041,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/62a87796f1075af6aa59bb8b3e7c2358a7e40068a963fc197fcf28d0f363624a.png" src="../_images/62a87796f1075af6aa59bb8b3e7c2358a7e40068a963fc197fcf28d0f363624a.png" />
+<img alt="../_images/a30c0d947b80aef46202d08db8de392526e619a29aba3536ecccf4b6599b5a54.png" src="../_images/a30c0d947b80aef46202d08db8de392526e619a29aba3536ecccf4b6599b5a54.png" />
 </div>
 </div>
 <p>This graph has a similar shape, but the maximum and minimum are different - there are no results smaller than -5, and there are lots of results bigger than 10. Unfortunately, this is a sign that the second share - by itself - can sometimes reveal something about <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
@@ -1078,7 +1084,7 @@ p2 -&gt;&gt; p1 : 1992615555
     <span class="n">count2</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
 
     <span class="c1"># Step 3: run the secure sum protocol</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">count1</span><span class="p">,</span> <span class="n">count2</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">protocol_sum</span><span class="p">(</span><span class="n">count1</span><span class="p">,</span> <span class="n">count2</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total number of patients with heart disease:&#39;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
 </pre></div>
@@ -1112,13 +1118,13 @@ p2 -&gt;&gt; p1 : 1992615555
     <span class="n">sum1</span> <span class="o">=</span> <span class="n">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
     <span class="n">sum2</span> <span class="o">=</span> <span class="n">sum_age_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
 
-    <span class="n">total_sum</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">)</span>
+    <span class="n">total_sum</span> <span class="o">=</span> <span class="n">protocol_sum</span><span class="p">(</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">)</span>
 
     <span class="c1"># Denominator: compute the total number of heart disease patients</span>
     <span class="n">count1</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
     <span class="n">count2</span> <span class="o">=</span> <span class="n">count_heart_disease_patients</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
 
-    <span class="n">total_count</span> <span class="o">=</span> <span class="n">secure_sum</span><span class="p">(</span><span class="n">count1</span><span class="p">,</span> <span class="n">count2</span><span class="p">)</span>
+    <span class="n">total_count</span> <span class="o">=</span> <span class="n">protocol_sum</span><span class="p">(</span><span class="n">count1</span><span class="p">,</span> <span class="n">count2</span><span class="p">)</span>
 
     <span class="n">sum_int</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">total_sum</span><span class="p">)</span>
     <span class="n">count_int</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">locally</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">total_count</span><span class="p">)</span>
@@ -1180,7 +1186,7 @@ p2 -&gt;&gt; p1 : 1992615555
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Proving Security</p>
+        <p class="prev-next-title">Defining &amp; Proving Security</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1235,13 +1241,6 @@ By Joseph P. Near
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

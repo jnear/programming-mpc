@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Proving Security &#8212; Programming MPC</title>
+    <title>Defining &amp; Proving Security &#8212; Programming MPC</title>
   
   
   
@@ -187,7 +187,7 @@
 
 
 
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Proving Security</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Defining &amp; Proving Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter04.html">Multiplication Triples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter05.html">Applying Arithmetic MPC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapter06.html">Oblivious Transfer</a></li>
@@ -382,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Proving Security</h1>
+    <h1>Defining & Proving Security</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -399,11 +399,19 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-participants">How Many Participants?</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-real-ideal-paradigm">The Real/Ideal Paradigm</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-security-the-real-ideal-paradigm">Defining Security: The Real/Ideal Paradigm</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ideal-world-and-ideal-functionality">The Ideal World and Ideal Functionality</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-real-world">The Real World</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simulator-and-simulator-security">The Simulator and Simulator Security</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-arguments">Hybrid Arguments</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simulator-and-simulator-security">The Simulator and Simulator Security</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-correctness">Proving Correctness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-semi-honest-security-with-a-simulator">Proving Semi-Honest Security with a Simulator</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#constraint-moves">Constraint Moves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-moves">Hybrid Moves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -417,8 +425,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="proving-security">
-<h1>Proving Security<a class="headerlink" href="#proving-security" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="defining-proving-security">
+<h1>Defining &amp; Proving Security<a class="headerlink" href="#defining-proving-security" title="Link to this heading">#</a></h1>
 <p>This chapter discusses how to prove that a protocol is secure. We start with the definition of a threat model, which is a prerequisite for proving security. Then, we describe the most common proof technique in MPC: simulator proofs in the real/ideal paradigm.</p>
 <section id="threat-models">
 <h2>Threat Models<a class="headerlink" href="#threat-models" title="Link to this heading">#</a></h2>
@@ -445,27 +453,230 @@ document.write(`
 <p>The dishonest majority assumption is the strongest one we can make. If <span class="math notranslate nohighlight">\(n\)</span> parties are corrupted, then security is impossible (or maybe vacuous?) - the adversary knows everything all <span class="math notranslate nohighlight">\(n\)</span> parties know, including their secrets.</p>
 <p>The dishonest majority assumption is clearly stronger than the honest majority assumption, but assuming an honest majority often makes it much easier to construct secure protocols - we’ll see several examples of protocols in later chapters. In real life, an honest majority might be a very reasonable assumption - in many cases, secure protocols are designed to protect against rare “bad actors” rather than situations where most participants are behaving badly.</p>
 <p>In protocols that involve different classes of parties (e.g. clients and servers), it’s common to state the assumptions precisely in terms of those classes, and it’s possible to mix the two (e.g. we assume an honest majority of clients, but a dishonest majority of servers).</p>
-<p>It’s also common to be more precise about how large the honest majority is. Many secure protocols for <a class="reference internal" href="#todo"><span class="xref myst">federated learning</span></a>, for example, assume that an even smaller fraction of parties may be corrupted (e.g. as few as 5% or 10%). For protocols involving hundreds or even thousands of parties, this may be a very reasonable assumption - it’s generally more difficult for an adversary to corrupt a large number of parties in real life.</p>
+<p>It’s also common to be more precise about how large the honest majority is. Many secure protocols for <a class="reference external" href="https://en.wikipedia.org/wiki/Federated_learning">federated learning</a>, for example, assume that an even smaller fraction of parties may be corrupted (e.g. as few as 5% or 10%). For protocols involving hundreds or even thousands of parties, this may be a very reasonable assumption - it’s generally more difficult for an adversary to corrupt a large number of parties in real life.</p>
 </section>
 <section id="how-many-participants">
 <h3>How Many Participants?<a class="headerlink" href="#how-many-participants" title="Link to this heading">#</a></h3>
 <p>WIP (2pc vs 3pc vs mpc, do more parties make it better?)</p>
 </section>
 </section>
-<section id="the-real-ideal-paradigm">
-<h2>The Real/Ideal Paradigm<a class="headerlink" href="#the-real-ideal-paradigm" title="Link to this heading">#</a></h2>
-<p>WIP</p>
+<section id="defining-security-the-real-ideal-paradigm">
+<h2>Defining Security: The Real/Ideal Paradigm<a class="headerlink" href="#defining-security-the-real-ideal-paradigm" title="Link to this heading">#</a></h2>
+<p>The most common way to define security for MPC protocols is via the <em>real/ideal paradigm</em>. The idea is to define two artifacts:</p>
+<ol class="arabic simple">
+<li><p>The <em>ideal functionality</em>, which computes an output with the aid of a <em>trusted third party</em></p></li>
+<li><p>The <em>protocol</em>, which computes an output without the use of a trusted third party</p></li>
+</ol>
+<p>Even though it’s not called a protocol, the ideal functionality is usually written like one: it’s specified in terms of a set of parties and the messages they send each other. The difference is that the ideal functionality includes an imaginary party who doesn’t exist in the real world: a trusted third party, assumed to be honest and trusted by all of the other parties.</p>
+<p>Security of the protocol is defined by relating the ideal functionality and the protocol. We say that a protocol <em>securely realizes</em> an ideal functionality if:</p>
+<ol class="arabic simple">
+<li><p>It’s correct: the outputs of the ideal functionality and protocol are identical</p></li>
+<li><p>It reveals no additional information: the adversary does not learn anything extra by observing execution of the protocol, compared to what they learn by observing execution of the ideal functionality</p></li>
+</ol>
+<p>The ideal functionality serves as the <em>specification</em> of what security means for the protocol we’re defining - it defines what information is allowed to leak out to the adversary.</p>
+<p>Why do we define security this way? Why can’t we just say that the protocol reveals <em>nothing</em> to the adversary? A definition like that would actually be <em>too</em> strong: it would prevent us from writing useful protocols, because most protocols reveal some information <em>on purpose</em>, via the protocol’s output. Using the ideal functionality as a specification of allowed leakage makes it possible to define useful protocols while precisely limiting what the adversary can learn.</p>
+<div class="seealso admonition">
+<p class="admonition-title">Further reading: Real/Ideal Paradigm</p>
+<p>For more information on the real/ideal paradigm, see <strong>Section 2.3 of <a class="reference external" href="https://securecomputation.org">Pragmatic MPC</a>.</strong></p>
+</div>
 <section id="the-ideal-world-and-ideal-functionality">
 <h3>The Ideal World and Ideal Functionality<a class="headerlink" href="#the-ideal-world-and-ideal-functionality" title="Link to this heading">#</a></h3>
+<p>The ideal functionality is essentially the protocol we would write in the <em>ideal world</em>: a world that has a trusted third party who is honest (not corrupted by the adversary) and whom everybody trusts. The ideal world doesn’t exist - if we had a trusted third party, we wouldn’t need secure protocols in the first place!</p>
+<p>An ideal functionality looks like a protocol, but involves a special party (the trusted third party) whose name usually matches the name of the functionality you’re defining. For example, our summation protocol might have an ideal functionality called <span class="math notranslate nohighlight">\(\mathcal{F}_\text{sum}\)</span>, and the trusted third party in its definition would also be called <span class="math notranslate nohighlight">\(\mathcal{F}_\text{sum}\)</span>. Figures 2.1, 2.2, and 2.3 in <a class="reference external" href="https://securecomputation.org">Pragmatic MPC</a> define some commonly-used ideal functionalities using this kind of notation.</p>
+<p>We’ll define ideal functionalities by writing them in the same style as protocols, but we’ll use an additional party whose name matches the name of the functionality. Ideal functionalities will generally (but not always) follow a simple structure:</p>
+<ol class="arabic simple">
+<li><p>The parties send their inputs to the functionality (the trusted third party)</p></li>
+<li><p>The functionality computes the outputs locally</p></li>
+<li><p>The functionality sends the outputs to the appropriate parties</p></li>
+</ol>
+<p>Since one party (the functionality) is allowed to know all the inputs at once, the ideal functionality is usually simple and easy to define. Here’s an ideal functionality for our summation task:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">97</span><span class="p">)</span>
+
+<span class="n">p1</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p1&#39;</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;p2&#39;</span><span class="p">)</span>
+<span class="n">Fsum</span> <span class="o">=</span> <span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="s1">&#39;Fsum&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">functionality_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">x</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">Fsum</span><span class="p">)</span>
+    <span class="n">y</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">Fsum</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="n">total</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Fsum</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">total</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Fsum</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since we’ve implemented it, we can run the functionality just like a regular protocol. But it’s not common to do this - the ideal functionality’s purpose is to serve as a specification rather than an implementation.</p>
 </section>
 <section id="the-real-world">
 <h3>The Real World<a class="headerlink" href="#the-real-world" title="Link to this heading">#</a></h3>
+<p>In the <em>real world</em>, no trusted third party is available, so we run the protocol we’ve written that doesn’t require one. Here’s a copy of the summation protocol. To prove the protocol is secure, we want to prove that it doesn’t reveal any more information to the adversary than the ideal functionality does.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">x2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">sum1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span>
+    <span class="n">sum2</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">y2</span>
+    <span class="n">sum1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">sum2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">([</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="the-simulator-and-simulator-security">
-<h3>The Simulator and Simulator Security<a class="headerlink" href="#the-simulator-and-simulator-security" title="Link to this heading">#</a></h3>
+<h2>The Simulator and Simulator Security<a class="headerlink" href="#the-simulator-and-simulator-security" title="Link to this heading">#</a></h2>
+<p>How do we prove that the adversary doesn’t learn more in the real world (by observing the protocol) than they do in the ideal world (by observing the functionality)?</p>
+<p>For most MPC protocols, proving security in the presence of a <em>semi-honest adversary</em> is done by showing the existence of a <em>simulator</em> (usually by actually constructing it). The simulator is a program that simulates what the adversary would have seen during an execution of the protocol, without actually running the protocol, and <em>without access to the inputs of the honest parties</em>. The proof is successful if it’s impossible to distinguish between observations of the simulator and observations of the real protocol.</p>
+<section id="proving-correctness">
+<h3>Proving Correctness<a class="headerlink" href="#proving-correctness" title="Link to this heading">#</a></h3>
+<p>Before we can prove security, we need to prove that the protocol is correct: it computes the same thing as the ideal functionality. This part of the proof is usually easier than proving security, since protocols are generally constructed to make it easy to see correctness - and correctness of the protocol is usually pretty easy to test just by running it.</p>
+<p>In our summation example, the ideal functionality clearly computes the result <span class="math notranslate nohighlight">\(total = x + y\)</span> and returns <code class="docutils literal notranslate"><span class="pre">total</span></code> to both parties. In the protocol, both parties compute:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+total &amp;= sum1 + sum2 \tag{definition of the protocol}\\
+&amp;= x1 + y1 + x2 + y2 \tag{definition of the protocol}\\
+&amp;= (x1 + x2) + (y1 + y2) \tag{algebra}\\
+&amp;= x + y \tag{definition of secret sharing}\\
+\end{align*}
+\end{split}\]</div>
+<p>So, we know that <code class="docutils literal notranslate"><span class="pre">functionality_sum(x,</span> <span class="pre">y)</span> <span class="pre">=</span> <span class="pre">protocol_sum(x,</span> <span class="pre">y)</span></code>.</p>
 </section>
-<section id="hybrid-arguments">
-<h3>Hybrid Arguments<a class="headerlink" href="#hybrid-arguments" title="Link to this heading">#</a></h3>
+<section id="proving-semi-honest-security-with-a-simulator">
+<h3>Proving Semi-Honest Security with a Simulator<a class="headerlink" href="#proving-semi-honest-security-with-a-simulator" title="Link to this heading">#</a></h3>
+<p>The idea behind simulator proofs is to show that:</p>
+<ul class="simple">
+<li><p>Anything the adversary can learn by observing the execution of the protocol</p></li>
+<li><p>They <em>could have learned</em> by observing the execution of the ideal functionality</p></li>
+</ul>
+<p>If we can prove this, then it means <em>the protocol reveals no more information than the ideal functionality</em>, which is our definition of security.</p>
+<p>How do we prove this? We do it by building a <em>simulator</em>: a program that represents a constructive proof of the above bullet points. In particular, the simulator must:</p>
+<ul class="simple">
+<li><p>Compute everything the adversary can observe during execution of the protocol</p></li>
+<li><p>With access only to the results of the ideal functionality, and <em>without</em> access to the inputs of the honest parties</p></li>
+</ul>
+<p>This might sound tricky: how do we compute everything the adversary observes, if we’re missing some of the input? The property that makes it possible is that the simulator <em>does</em> have access to the <em>output</em> of the ideal functionality, and most simulator proofs use the output to “work backwards” to the other values the adversary observes during the protocol.</p>
+<p>To build a correct simulator, we’ll use a structured form of <em>hybrid argument</em>. The simulator must compute values for the things observed by the adversary such that the joint probability distribution over these values is identical between the simulator and real protocol. Following a structured approach helps ensure we don’t make a mistake.</p>
+<p>A <em>hybrid argument</em> involves starting from the original protocol (using all of the inputs), and then modifying the program step by step until we arrive at the simulator (using only the corrupt party’s inputs). Each step in the chain is called a <em>hybrid</em>. For more information on the hybrid technique, see <a class="reference external" href="https://joyofcryptography.com/provsec/#sec.prove">Section 2.4 of <em>The Joy of Cryptography</em></a>.</p>
+<p>Constructing the simulator only proves <em>semi-honest security</em>, because we assume that the parties correctly execute the protocol. Proving malicious security is related but more complicated; see <a class="reference external" href="https://securecomputation.org">Section 2.3.3 of Pragmatic MPC</a> for details.</p>
+<p>When we build a simulator, we need to decide which parties are corrupted. To ensure security for all parties, we need to build separate simulators for each possible subset of corrupted parties, or a general simulator that works for any of these subsets. In many cases, we can assume a particular party is corrupted, build the simulator, and then argue that the same idea generalizes to other parties. For now, to simplify the proof, we’ll assume that <em>P1 is corrupted</em> and <em>P2 is honest</em>.</p>
+<p>For our summation example, we’ll start with <code class="docutils literal notranslate"><span class="pre">protocol_sum</span></code>, but extended with one extra argument: the output of the ideal functionality. The adversary will clearly observe the same values as the real protocol in this hybrid, since it’s identical to the real protocol.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hyb1_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">functionality_output</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">x2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">sum1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span>
+    <span class="n">sum2</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">y2</span>
+    <span class="n">sum1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">sum2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">([</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The structure of our proof will involve two kinds of steps:</p>
+<ol class="arabic simple">
+<li><p>We’ll maintain a set of <em>constraints</em>: mathematical equations we know are true. We’ll introduce and manipulate constraints using <em>constraint moves</em>, described next.</p></li>
+<li><p>We’ll build new hybrids in the sequence using <em>hybrid moves</em>, described after that.</p></li>
+</ol>
+<p>The last hybrid in the sequence will be the simulator.</p>
+<section id="constraint-moves">
+<h4>Constraint Moves<a class="headerlink" href="#constraint-moves" title="Link to this heading">#</a></h4>
+<p>During our proof, we’ll need to keep track of facts we know are true and manipulate them to come up with new facts. To do this, we’ll introduce <em>constraints</em> and use them in the proof. A constraint is just an equation involving some of the program variables. The following <em>constraint moves</em> are valid rules of thumb you can use to introduce and manipulate constraints.</p>
+<div class="important admonition">
+<p class="admonition-title">Constraint Move: Output Correctness</p>
+<p>If the protocol is correct (its output is equal to the ideal functionality’s output) then you can introduce a constraint saying that the two are equal.</p>
+<p>Why it’s allowed: The protocol’s output has already been shown to be equal to the ideal functionality’s output.</p>
+</div>
+<div class="important admonition">
+<p class="admonition-title">Constraint Move: Constraint Introduction</p>
+<p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">e</span></code> then you can introduce the constraint <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">e</span></code>.</p>
+<p>Why it’s allowed: The protocol enforces this constraint by explicitly computing it.</p>
+</div>
+<div class="important admonition">
+<p class="admonition-title">Constraint Move: Algebra</p>
+<p>You can perform algebra on constraints to derive new constraints.</p>
+<p>Why it’s allowed: Algebraic operations don’t change the validity of the set of constraints.</p>
+</div>
+</section>
+<section id="hybrid-moves">
+<h4>Hybrid Moves<a class="headerlink" href="#hybrid-moves" title="Link to this heading">#</a></h4>
+<p>To actually build new hybrids in the sequence, we’ll need to modify the program. We’ll make these modifications using the following <em>hybrid moves</em>, valid rules of thumb for modifying a hybrid to build a new one without changing the joint distribution over the observations of the adversary.</p>
+<div class="important admonition">
+<p class="admonition-title">Hybrid Move: Constraint Application</p>
+<p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">e1</span></code> where <code class="docutils literal notranslate"><span class="pre">e1</span></code> is some expression, and you have the constraint <code class="docutils literal notranslate"><span class="pre">e1</span> <span class="pre">=</span> <span class="pre">e2</span></code> where <code class="docutils literal notranslate"><span class="pre">e2</span></code> is some expression, then you can replace the statement with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">e2</span></code>.</p>
+<p>Why it’s allowed: Constraints are assumed to be true, and they give you an alternative way to compute the same thing.</p>
+</div>
+<div class="important admonition">
+<p class="admonition-title">Hybrid Move: Unused Share</p>
+<p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x1,</span> <span class="pre">x2</span> <span class="pre">=</span> <span class="pre">share(x)</span></code> and <code class="docutils literal notranslate"><span class="pre">x1</span></code> is not used in the rest of the protocol, then you can replace the statement with <code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">=</span> <span class="pre">random()</span></code>.</p>
+<p>Why it’s allowed: A single secret share in isolation appears uniformly random and gives no information about the secret.</p>
+</div>
+</section>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
+<p>Starting from <code class="docutils literal notranslate"><span class="pre">hyb1_sum</span></code> above, let’s build the proof! First, we’ll introduce some constraints. We annotate each new constraint with the constraint move that supports its validity.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">total</span></code> = <code class="docutils literal notranslate"><span class="pre">functionality_output</span></code> (output correctness)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">total</span></code> = <code class="docutils literal notranslate"><span class="pre">sum1</span> <span class="pre">+</span> <span class="pre">sum2</span></code> (constraint introduction)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sum1</span></code> = <code class="docutils literal notranslate"><span class="pre">x1</span> <span class="pre">+</span> <span class="pre">y1</span></code> (constraint introduction)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sum2</span></code> = <code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">+</span> <span class="pre">y2</span></code> (constraint introduction)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sum2</span></code> = <code class="docutils literal notranslate"><span class="pre">functionality_output</span> <span class="pre">-</span> <span class="pre">sum1</span></code> (algebra on 1, 2, 3, 4)</p></li>
+</ol>
+<p>Now, we can the last constraint to make hybrid moves and progress toward the simulator.</p>
+<p>First, we use the <strong>Constraint Application</strong> move with constraint 5 to replace the definition of <code class="docutils literal notranslate"><span class="pre">sum2</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hyb2_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">functionality_output</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">x2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">sum1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span>
+    <span class="n">sum2</span> <span class="o">=</span> <span class="n">functionality_output</span> <span class="o">-</span> <span class="n">sum1</span>
+    <span class="n">sum1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">sum2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">([</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we observe that <code class="docutils literal notranslate"><span class="pre">y2</span></code> is defined, but is never used in the program! So, we use the <strong>Unused Share</strong> move to eliminate <code class="docutils literal notranslate"><span class="pre">y2</span></code> from the program and replace <code class="docutils literal notranslate"><span class="pre">y1</span></code> with a random value. Once we’ve made this move, the honest party’s input (<code class="docutils literal notranslate"><span class="pre">y</span></code>) is also no longer used, so we can eliminate it from the set of inputs to the program.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hyb3_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">functionality_output</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">share</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">())</span>
+    <span class="n">x2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">y1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">sum1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span>
+    <span class="n">sum2</span> <span class="o">=</span> <span class="n">functionality_output</span> <span class="o">-</span> <span class="n">sum1</span>
+    <span class="n">sum1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+    <span class="n">sum2</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">reconstruct</span><span class="p">([</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This hybrid is our simulator! From the adversary’s perspective, it’s indistinguishable from the real protocol, given the output of the ideal functionality, due to the hybrid argument that <code class="docutils literal notranslate"><span class="pre">protocol_sum</span> <span class="pre">==</span> <span class="pre">hyb1_sum</span> <span class="pre">==</span> <span class="pre">hyb2_sum</span> <span class="pre">==</span> <span class="pre">hyb3_sum</span></code>. Since we’re able to build this simulator, and it doesn’t use P2’s input at all, we can say that the protocol <em>securely realizes the ideal functionality</em> in the presence of a semi-honest adversary when P1 is corrupted and P2 is honest.</p>
+<p>It’s easy to see that a similar set of moves would let us build a sequence of hybrids for the case where P2 is corrupted and P1 is honest, since the protocol is essentially symmetric between the parties.</p>
+</section>
 </section>
 </section>
 </section>
@@ -541,11 +752,19 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-participants">How Many Participants?</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-real-ideal-paradigm">The Real/Ideal Paradigm</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-security-the-real-ideal-paradigm">Defining Security: The Real/Ideal Paradigm</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ideal-world-and-ideal-functionality">The Ideal World and Ideal Functionality</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-real-world">The Real World</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simulator-and-simulator-security">The Simulator and Simulator Security</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-arguments">Hybrid Arguments</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simulator-and-simulator-security">The Simulator and Simulator Security</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-correctness">Proving Correctness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-semi-honest-security-with-a-simulator">Proving Semi-Honest Security with a Simulator</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#constraint-moves">Constraint Moves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hybrid-moves">Hybrid Moves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -569,13 +788,6 @@ By Joseph P. Near
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   
