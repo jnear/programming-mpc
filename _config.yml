@@ -32,5 +32,7 @@ html:
   use_repository_button: true
 
 sphinx:
+  config:
+    html_show_copyright: false
   extra_extensions:
     - sphinxcontrib.mermaid
