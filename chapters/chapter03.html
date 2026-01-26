@@ -626,6 +626,11 @@ total &amp;= sum1 + sum2 \tag{definition of the protocol}\\
 <p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x1,</span> <span class="pre">x2</span> <span class="pre">=</span> <span class="pre">share(x)</span></code> and <code class="docutils literal notranslate"><span class="pre">x1</span></code> is not used in the rest of the protocol, then you can replace the statement with <code class="docutils literal notranslate"><span class="pre">x2</span> <span class="pre">=</span> <span class="pre">random()</span></code>.</p>
 <p>Why it’s allowed: A single secret share in isolation appears uniformly random and gives no information about the secret.</p>
 </div>
+<div class="important admonition">
+<p class="admonition-title">Hybrid Move: Unused Variable</p>
+<p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">e</span></code> and <code class="docutils literal notranslate"><span class="pre">x</span></code> is not used in the rest of the protocol, then you can delete the statement.</p>
+<p>Why it’s allowed: Unused values don’t affect the protocol’s behavior.</p>
+</div>
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
