@@ -627,6 +627,11 @@ total &amp;= sum1 + sum2 \tag{definition of the protocol}\\
 <p>Why it’s allowed: A single secret share in isolation appears uniformly random and gives no information about the secret.</p>
 </div>
 <div class="important admonition">
+<p class="admonition-title">Hybrid Move: Random Value</p>
+<p>If the value of an expression <code class="docutils literal notranslate"><span class="pre">e</span></code> is uniformly random, unknown to the adversary, and independent from all other values known to the adversary, then you can replace <code class="docutils literal notranslate"><span class="pre">e</span></code> with <code class="docutils literal notranslate"><span class="pre">random()</span></code>.</p>
+<p>Why it’s allowed: Uniformly random values are indistinguishable from each other, absent knowledge from a correlated value.</p>
+</div>
+<div class="important admonition">
 <p class="admonition-title">Hybrid Move: Unused Variable</p>
 <p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">e</span></code> and <code class="docutils literal notranslate"><span class="pre">x</span></code> is not used in the rest of the protocol, then you can delete the statement.</p>
 <p>Why it’s allowed: Unused values don’t affect the protocol’s behavior.</p>
