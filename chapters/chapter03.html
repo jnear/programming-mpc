@@ -636,6 +636,11 @@ total &amp;= sum1 + sum2 \tag{definition of the protocol}\\
 <p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">e</span></code> and <code class="docutils literal notranslate"><span class="pre">x</span></code> is not used in the rest of the protocol, then you can delete the statement.</p>
 <p>Why it’s allowed: Unused values don’t affect the protocol’s behavior.</p>
 </div>
+<div class="important admonition">
+<p class="admonition-title">Hybrid Move: Send to Honest Party</p>
+<p>If the protocol contains the statement <code class="docutils literal notranslate"><span class="pre">x.send(p,</span> <span class="pre">q)</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code> is an honest party, and <code class="docutils literal notranslate"><span class="pre">x</span></code> is not used in the rest of the protocol, then you can delete the statement.</p>
+<p>Why it’s allowed: Sends from corrupt parties to honest parties are not part of the adversary’s view, so the simulator can omit them.</p>
+</div>
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
