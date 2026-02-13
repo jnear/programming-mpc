@@ -819,7 +819,7 @@ document.write(`
 </section>
 <section id="implementing-additive-secret-sharing">
 <h2>Implementing Additive Secret Sharing<a class="headerlink" href="#implementing-additive-secret-sharing" title="Link to this heading">#</a></h2>
-<p>Since finite fields are finite, it’s easy to pick uniformly random field elements. This means we can easily implement the idea outlined above for additive secret sharing. To escret share a secret field element <span class="math notranslate nohighlight">\(x\)</span>, we set <span class="math notranslate nohighlight">\(r_1, \dots, r_{n-1} \in GF(p)\)</span> to random field elements, and then set <span class="math notranslate nohighlight">\(r_n\)</span> to <span class="math notranslate nohighlight">\(x - \sum_{i=1}^{n-1} r_i\)</span>. This is easy to implement:</p>
+<p>Since finite fields are finite, it’s easy to pick uniformly random field elements. This means we can easily implement the idea outlined above for additive secret sharing. To secret share a secret field element <span class="math notranslate nohighlight">\(x\)</span>, we set <span class="math notranslate nohighlight">\(r_1, \dots, r_{n-1} \in GF(p)\)</span> to random field elements, and then set <span class="math notranslate nohighlight">\(r_n\)</span> to <span class="math notranslate nohighlight">\(x - \sum_{i=1}^{n-1} r_i\)</span>. This is easy to implement:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">share</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -837,7 +837,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares of 5: [GF(2, order=11), GF(10, order=11), GF(4, order=11)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares of 5: [GF(8, order=11), GF(9, order=11), GF(10, order=11)]
 </pre></div>
 </div>
 </div>
@@ -855,7 +855,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares: [GF(2, order=11), GF(3, order=11), GF(0, order=11)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares: [GF(5, order=11), GF(2, order=11), GF(9, order=11)]
 Reconstructed value: 5
 </pre></div>
 </div>
@@ -1028,7 +1028,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3789a885acf3d04fbb1bfd952a087b72639fe907889919a47894f75959af7f74.png" src="../_images/3789a885acf3d04fbb1bfd952a087b72639fe907889919a47894f75959af7f74.png" />
+<img alt="../_images/29875b50ebbbbd2f47ffa839a6620ef4b24ccbd7657b597bb9f7d67c0e931606.png" src="../_images/29875b50ebbbbd2f47ffa839a6620ef4b24ccbd7657b597bb9f7d67c0e931606.png" />
 </div>
 </div>
 <p>Sure enough, all results between 0 and 10 seem to be equally likely. The bars aren’t identical because we’ve approximated the distribution of random shares by sampling 10000 times; if we increased the number of samples, the bars would get closer together.</p>
@@ -1041,7 +1041,7 @@ p2 -&gt;&gt; p1 : 1992615555
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f5c6776351034d21c89f52c4c4d1c06ae3dfbd03d7e722a25abbcb9e8e9ba4a6.png" src="../_images/f5c6776351034d21c89f52c4c4d1c06ae3dfbd03d7e722a25abbcb9e8e9ba4a6.png" />
+<img alt="../_images/cf5a3fb6141c9274d32e19b2e5252a2d136594a4ce83785201919dc58a66f2c1.png" src="../_images/cf5a3fb6141c9274d32e19b2e5252a2d136594a4ce83785201919dc58a66f2c1.png" />
 </div>
 </div>
 <p>This graph has a similar shape, but the maximum and minimum are different - there are no results smaller than -5, and there are lots of results bigger than 10. Unfortunately, this is a sign that the second share - by itself - can sometimes reveal something about <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>

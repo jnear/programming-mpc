@@ -456,8 +456,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Representation of x: SecBitInt(bits=[SecBit(s1=0@{p1}, s2=1@{p2, p1}), SecBit(s1=0@{p1}, s2=1@{p2, p1}), SecBit(s1=0@{p1}, s2=0@{p2, p1})])
-Value of x: 3@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Representation of x: SecBitInt(bits=[SecBit(s1=1@{p1}, s2=0@{p1, p2}), SecBit(s1=0@{p1}, s2=1@{p1, p2}), SecBit(s1=0@{p1}, s2=0@{p1, p2})])
+Value of x: 3@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -466,9 +466,15 @@ Value of x: 3@{p2, p1}
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">adder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">SecBit</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
     <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">carry</span> <span class="o">=</span> <span class="n">SecBit</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
-    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="n">zero</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">else</span> <span class="n">zero</span>
+
         <span class="n">out</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">carry</span>
         <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
         <span class="n">carry</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span> <span class="o">+</span> <span class="n">carry</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">carry</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span><span class="p">)</span>
@@ -486,7 +492,7 @@ Value of x: 3@{p2, p1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x: 6@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x: 6@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -501,7 +507,37 @@ Value of x: 3@{p2, p1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x + x: 1@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + x + x: 1@{p1, p2}
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also implement multiplication using a <a class="reference external" href="https://en.wikipedia.org/wiki/Binary_multiplier">binary multiplier circuit</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">multiplier</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">SecBit</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">GF_2</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">zero</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">partial</span> <span class="o">=</span> <span class="p">[</span><span class="n">zero</span><span class="p">]</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="p">[</span><span class="n">xi</span> <span class="o">*</span> <span class="n">yj</span> <span class="k">for</span> <span class="n">yj</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">adder</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">partial</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecBitInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">num_bits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x * x:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x * x: 9@{p1, p2}
 </pre></div>
 </div>
 </div>
@@ -540,8 +576,8 @@ Value of x: 3@{p2, p1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x == x: 1@{p2, p1}
-(x+x) == x: 0@{p2, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x == x: 1@{p1, p2}
+(x+x) == x: 0@{p1, p2}
 </pre></div>
 </div>
 </div>

@@ -462,11 +462,11 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>p1 (GF(1, order=2147483647), GF(1332489646, order=2147483647))@{p1}
-p2 (GF(2, order=2147483647), GF(461843733, order=2147483647))@{p2, p1}
-p3 (GF(3, order=2147483647), GF(1683029560, order=2147483647))@{p3, p1}
-p4 (GF(4, order=2147483647), GF(701079833, order=2147483647))@{p4, p1}
-p5 (GF(5, order=2147483647), GF(1810961846, order=2147483647))@{p5, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>p1 (GF(1, order=2147483647), GF(692131243, order=2147483647))@{p1}
+p2 (GF(2, order=2147483647), GF(1227058256, order=2147483647))@{p2, p1}
+p3 (GF(3, order=2147483647), GF(1604781044, order=2147483647))@{p1, p3}
+p4 (GF(4, order=2147483647), GF(1825299607, order=2147483647))@{p4, p1}
+p5 (GF(5, order=2147483647), GF(1888613945, order=2147483647))@{p1, p5}
 </pre></div>
 </div>
 </div>
@@ -507,14 +507,14 @@ p5 (GF(5, order=2147483647), GF(1810961846, order=2147483647))@{p5, p1}
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares:
-p1 (GF(1, order=2147483647), GF(1669390106, order=2147483647))@{p1}
-p2 (GF(2, order=2147483647), GF(422495998, order=2147483647))@{p2, p1}
-p3 (GF(3, order=2147483647), GF(554284975, order=2147483647))@{p3, p1}
-p4 (GF(4, order=2147483647), GF(2064757037, order=2147483647))@{p4, p1}
-p5 (GF(5, order=2147483647), GF(658944890, order=2147483647))@{p5, p1}
+p1 (GF(1, order=2147483647), GF(1831862319, order=2147483647))@{p1}
+p2 (GF(2, order=2147483647), GF(519800573, order=2147483647))@{p2, p1}
+p3 (GF(3, order=2147483647), GF(358782061, order=2147483647))@{p1, p3}
+p4 (GF(4, order=2147483647), GF(1348806783, order=2147483647))@{p4, p1}
+p5 (GF(5, order=2147483647), GF(1342391092, order=2147483647))@{p1, p5}
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Revealed value: 5@{p2, p5, p3, p4, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Revealed value: 5@{p4, p2, p1, p5, p3}
 </pre></div>
 </div>
 </div>
@@ -528,25 +528,40 @@ p5 (GF(5, order=2147483647), GF(658944890, order=2147483647))@{p5, p1}
 <span class="k">def</span> <span class="nf">get_y_coord</span><span class="p">(</span><span class="n">share</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">share</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">mult_constant_share</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="k">return</span> <span class="n">x2</span><span class="p">,</span> <span class="n">c</span> <span class="o">*</span> <span class="n">y2</span>
+
+<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
+<span class="k">def</span> <span class="nf">sum_shares</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">shares</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">add_shares</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">total</span>
+
 <span class="k">def</span> <span class="nf">protocol_bgw_mult</span><span class="p">(</span><span class="n">x_shares</span><span class="p">,</span> <span class="n">y_shares</span><span class="p">):</span>
     <span class="c1"># Step 1: multiply shares locally</span>
     <span class="n">z_shares</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">mult_shares</span><span class="p">(</span><span class="n">x_shares</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="n">y_shares</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">}</span>
 
     <span class="c1"># Step 2: re-share the high-degree shares</span>
-    <span class="n">q_is</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">get_y_coord</span><span class="p">(</span><span class="n">z_shares</span><span class="p">[</span><span class="n">p</span><span class="p">]),</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">}</span>
+    <span class="n">all_q_is</span> <span class="o">=</span> <span class="p">[</span><span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">get_y_coord</span><span class="p">(</span><span class="n">z_shares</span><span class="p">[</span><span class="n">p</span><span class="p">]),</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">]</span>
 
     <span class="c1"># Step 3: perform degree reduction</span>
     <span class="n">Vi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vander</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">parties</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">increasing</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
     <span class="n">lambda_is</span> <span class="o">=</span> <span class="n">Vi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
-    <span class="k">def</span> <span class="nf">degree_reduce</span><span class="p">(</span><span class="n">q_is</span><span class="p">):</span>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="n">qi_shares</span><span class="p">):</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">qi_shares</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_total</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">lambda_is</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ys</span><span class="p">)])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_total</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">q_is</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">z_shares</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">:</span>
+        <span class="n">my_qi_shares</span> <span class="o">=</span> <span class="p">[</span><span class="n">q_is</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">q_is</span> <span class="ow">in</span> <span class="n">all_q_is</span><span class="p">]</span>
+        <span class="n">z_shares</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">interpolate</span><span class="p">(</span><span class="n">my_qi_shares</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">z_shares</span>
 </pre></div>
@@ -566,37 +581,7 @@ p5 (GF(5, order=2147483647), GF(658944890, order=2147483647))@{p5, p1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>p1
-   p1 (GF(1, order=2147483647), GF(577925031, order=2147483647))@{p1}
-   p2 (GF(2, order=2147483647), GF(1362887128, order=2147483647))@{p2, p1}
-   p3 (GF(3, order=2147483647), GF(1911776827, order=2147483647))@{p3, p1}
-   p4 (GF(4, order=2147483647), GF(77110481, order=2147483647))@{p4, p1}
-   p5 (GF(5, order=2147483647), GF(153855384, order=2147483647))@{p5, p1}
-p2
-   p1 (GF(1, order=2147483647), GF(496525648, order=2147483647))@{p2, p1}
-   p2 (GF(2, order=2147483647), GF(783999073, order=2147483647))@{p2}
-   p3 (GF(3, order=2147483647), GF(11532583, order=2147483647))@{p2, p3}
-   p4 (GF(4, order=2147483647), GF(326609825, order=2147483647))@{p2, p4}
-   p5 (GF(5, order=2147483647), GF(1729230799, order=2147483647))@{p5, p2}
-p3
-   p1 (GF(1, order=2147483647), GF(1588941580, order=2147483647))@{p3, p1}
-   p2 (GF(2, order=2147483647), GF(1033682437, order=2147483647))@{p2, p3}
-   p3 (GF(3, order=2147483647), GF(91486502, order=2147483647))@{p3}
-   p4 (GF(4, order=2147483647), GF(909837422, order=2147483647))@{p3, p4}
-   p5 (GF(5, order=2147483647), GF(1341251550, order=2147483647))@{p5, p3}
-p4
-   p1 (GF(1, order=2147483647), GF(1337638283, order=2147483647))@{p4, p1}
-   p2 (GF(2, order=2147483647), GF(42864812, order=2147483647))@{p2, p4}
-   p3 (GF(3, order=2147483647), GF(1259301321, order=2147483647))@{p3, p4}
-   p4 (GF(4, order=2147483647), GF(691980516, order=2147483647))@{p4}
-   p5 (GF(5, order=2147483647), GF(488386044, order=2147483647))@{p5, p4}
-p5
-   p1 (GF(1, order=2147483647), GF(553890291, order=2147483647))@{p5, p1}
-   p2 (GF(2, order=2147483647), GF(1487253041, order=2147483647))@{p5, p2}
-   p3 (GF(3, order=2147483647), GF(357260731, order=2147483647))@{p5, p3}
-   p4 (GF(4, order=2147483647), GF(1458880655, order=2147483647))@{p5, p4}
-   p5 (GF(5, order=2147483647), GF(497145519, order=2147483647))@{p5}
-15@{p2, p5, p3, p4, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15@{p4, p2, p1, p5, p3}
 </pre></div>
 </div>
 </div>
