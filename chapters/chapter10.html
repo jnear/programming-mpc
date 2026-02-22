@@ -395,6 +395,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-input">BGW: Input</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-reveal">BGW: Reveal</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-multiplication">BGW: Multiplication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-based-secint">BGW-Based <code class="docutils literal notranslate"><span class="pre">SecInt</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -408,7 +409,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="the-bgw-protocol">
 <h1>The BGW Protocol<a class="headerlink" href="#the-bgw-protocol" title="Link to this heading">#</a></h1>
-<p>The Ben-Or, Goldwasser, and Wigderson protocol <span id="id1">[]</span> is another classic MPC protocol, this time employing Shamir secret sharing and arithmetic circuits. The BGW protocol performs multiplication using the limited multiplicative homomorphism of Shamir shares. The BGW protocol naturally supports more than 2 parties, and actually <em>requires</em> at least 3 parties for the standard variant.</p>
+<p>The Ben-Or, Goldwasser, and Wigderson protocol <span id="id1">[<a class="reference internal" href="../bibliography.html#id3" title="Michael Ben-Or, Shafi Goldwasser, and Avi Wigderson. Completeness theorems for non-cryptographic fault-tolerant distributed computation. In 20th Annual ACM Symposium on Theory of Computing, 1–10. 1988.">BOGW88</a>]</span> is another classic MPC protocol, this time employing Shamir secret sharing and arithmetic circuits. The BGW protocol performs multiplication using the limited multiplicative homomorphism of Shamir shares. The BGW protocol naturally supports more than 2 parties, and actually <em>requires</em> at least 3 parties for the standard variant.</p>
 <div class="seealso admonition">
 <p class="admonition-title">Further reading: BGW Protocol</p>
 <p>For more information on the BGW protocol, see <strong>Section 3.3 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
@@ -419,28 +420,20 @@ document.write(`
 <li><p>Parties hold Shamir secret shares of values, and shares are built as described in Chapter 9</p></li>
 <li><p>Parties perform addition locally, via the additive homomorphism of the shares</p></li>
 <li><p>Parties perform multiplication using the limited multiplicative homomorphism of the shares, with a <em>degree reduction</em> step to avoid the threshold <span class="math notranslate nohighlight">\(t\)</span> growing too large</p></li>
+<li><p>We start with the threshold <span class="math notranslate nohighlight">\(t = \lfloor n/2 \rfloor\)</span> where <span class="math notranslate nohighlight">\(n\)</span> is the number of parties, so that we can use the limited multiplicative homomorphism of the shares</p></li>
+<li><p>This means the protocol requires an <em>honest majority</em>: if more than half of the parties are corrupted, they can decrypt any value they like with the shares they hold</p></li>
 </ul>
-<p>We first present the protocol for multiplication, then build a BGW-based <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> class that implements the BGW protocol.</p>
+<p>We first present the protocols for input, reveal, and multiplication, then build a BGW-based <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> class that implements the BGW protocol. As a building block, we’ll use the <code class="docutils literal notranslate"><span class="pre">ShamirShare</span></code> class that we defined in Chapter 9. We’ll also use functions from Chapter 9 for secret sharing and reconstruction with Shamir shares.</p>
 <section id="bgw-input">
 <h2>BGW: Input<a class="headerlink" href="#bgw-input" title="Link to this heading">#</a></h2>
-<p>TODO</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">parties</span> <span class="o">=</span> <span class="p">[</span><span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;p</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
-<span class="n">t</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parties</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p>The input protocol is simple: we secret share the input value using the <code class="docutils literal notranslate"><span class="pre">shamir_share</span></code> function from Chapter 9, and then send each share to its owner. We return a dictionary mapping each owner to their share.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_bgw_input</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
     <span class="c1"># Step 1: Create Shamir shares</span>
     <span class="n">shares</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">unlist</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-    <span class="c1"># Step 2: send each share to its owner</span>
+    <span class="c1"># Step 2: Send each share to its owner</span>
     <span class="n">shares_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">share</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shares</span><span class="p">,</span> <span class="n">parties</span><span class="p">):</span>
         <span class="n">share</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
@@ -452,7 +445,12 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GF</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">parties</span> <span class="o">=</span> <span class="p">[</span><span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;p</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parties</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
     <span class="n">p1</span> <span class="o">=</span> <span class="n">parties</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">shares</span> <span class="o">=</span> <span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">p1</span><span class="p">)</span>
 
@@ -462,11 +460,11 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>p1 (GF(1, order=2147483647), GF(692131243, order=2147483647))@{p1}
-p2 (GF(2, order=2147483647), GF(1227058256, order=2147483647))@{p2, p1}
-p3 (GF(3, order=2147483647), GF(1604781044, order=2147483647))@{p1, p3}
-p4 (GF(4, order=2147483647), GF(1825299607, order=2147483647))@{p4, p1}
-p5 (GF(5, order=2147483647), GF(1888613945, order=2147483647))@{p1, p5}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>p1 ShamirShare(x=GF(1, order=2147483647), y=GF(875121067, order=2147483647))@{p1}
+p2 ShamirShare(x=GF(2, order=2147483647), y=GF(29259648, order=2147483647))@{p2, p1}
+p3 ShamirShare(x=GF(3, order=2147483647), y=GF(1757383042, order=2147483647))@{p3, p1}
+p4 ShamirShare(x=GF(4, order=2147483647), y=GF(1764523955, order=2147483647))@{p4, p1}
+p5 ShamirShare(x=GF(5, order=2147483647), y=GF(50682387, order=2147483647))@{p5, p1}
 </pre></div>
 </div>
 </div>
@@ -474,7 +472,7 @@ p5 (GF(5, order=2147483647), GF(1888613945, order=2147483647))@{p1, p5}
 </section>
 <section id="bgw-reveal">
 <h2>BGW: Reveal<a class="headerlink" href="#bgw-reveal" title="Link to this heading">#</a></h2>
-<p>TODO</p>
+<p>The reveal protocol is similarly simple: each party broadcasts their share to the other parties, and then we call <code class="docutils literal notranslate"><span class="pre">shamir_reconstruct</span></code> on the broadcasted shares.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">protocol_bgw_reveal</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
@@ -483,7 +481,7 @@ p5 (GF(5, order=2147483647), GF(1888613945, order=2147483647))@{p1, p5}
         <span class="k">for</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">:</span>
             <span class="n">share</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
 
-    <span class="c1"># Step 2: reconstruct the secret</span>
+    <span class="c1"># Step 2: Reconstruct the secret</span>
     <span class="n">reconstructed</span> <span class="o">=</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">shares</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
     <span class="k">return</span> <span class="n">reconstructed</span>
 </pre></div>
@@ -496,25 +494,13 @@ p5 (GF(5, order=2147483647), GF(1888613945, order=2147483647))@{p1, p5}
     <span class="n">p1</span> <span class="o">=</span> <span class="n">parties</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">shares</span> <span class="o">=</span> <span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Shares:&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shares</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-
     <span class="n">revealed</span> <span class="o">=</span> <span class="n">protocol_bgw_reveal</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Revealed value:&#39;</span><span class="p">,</span> <span class="n">revealed</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shares:
-p1 (GF(1, order=2147483647), GF(1831862319, order=2147483647))@{p1}
-p2 (GF(2, order=2147483647), GF(519800573, order=2147483647))@{p2, p1}
-p3 (GF(3, order=2147483647), GF(358782061, order=2147483647))@{p1, p3}
-p4 (GF(4, order=2147483647), GF(1348806783, order=2147483647))@{p4, p1}
-p5 (GF(5, order=2147483647), GF(1342391092, order=2147483647))@{p1, p5}
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Revealed value: 5@{p4, p2, p1, p5, p3}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Revealed value: 5@{p2, p1, p3, p4, p5}
 </pre></div>
 </div>
 </div>
@@ -522,46 +508,96 @@ p5 (GF(5, order=2147483647), GF(1342391092, order=2147483647))@{p1, p5}
 </section>
 <section id="bgw-multiplication">
 <h2>BGW: Multiplication<a class="headerlink" href="#bgw-multiplication" title="Link to this heading">#</a></h2>
+<p>To multiply two secret-shared values <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> where <span class="math notranslate nohighlight">\(t \leq \lfloor n/2 \rfloor\)</span> and <span class="math notranslate nohighlight">\(n\)</span> is the number of parties, each party can multiply their shares locally to get one share of the product. Unfortunately, the degree of the resulting polynomial could be as high as <span class="math notranslate nohighlight">\(n\)</span>, so we won’t be able to do more than one multiplication this way.</p>
+<p>To solve this problem, we’ll use a simplified version of BGW multiplication called GRR multiplication. This approach was proposed by Gennaro, Rabin, and Rabin <span id="id2">[<a class="reference internal" href="../bibliography.html#id2" title="Rosario Gennaro, Michael O Rabin, and Tal Rabin. Simplified vss and fast-track multiparty computations with applications to threshold cryptography. In Proceedings of the seventeenth annual ACM symposium on Principles of distributed computing, 101–111. 1998.">GRR98</a>]</span> and is commonly implemented instead of the original. GRR multiplication works by having each party multiply shares locally to obtain one share with a high threshold, then performing a <em>degree reduction</em> step to bring the threshold back down to <span class="math notranslate nohighlight">\(\lfloor n/2 \rfloor\)</span>.</p>
+<p>To start, we assume that each party holds one share of <span class="math notranslate nohighlight">\(x\)</span> and one share of <span class="math notranslate nohighlight">\(y\)</span> with degree <span class="math notranslate nohighlight">\(t \leq \lfloor n/2 \rfloor\)</span>, and each party multiplies shares locally (as in Chapter 9) to obtain on share of <span class="math notranslate nohighlight">\(z = xy\)</span> with degree <span class="math notranslate nohighlight">\(n \leq n\)</span>.</p>
+<p>To do the degree reduction, we use the <a class="reference external" href="https://en.wikipedia.org/wiki/Vandermonde_matrix#Applications">Vandermonde matrix</a>, a special matrix that enables <em>polynomial interpolcation via matrix multiplication</em>. In particular, for a polynomial <span class="math notranslate nohighlight">\(f(x) = a_0 + a_1 x + ... a_n x^n\)</span>, there is a Vandermonde matrix <span class="math notranslate nohighlight">\(V\)</span> such that the following holds:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+V \cdot
+\begin{bmatrix}
+a_0 \\
+a_1 \\
+...\\
+a_n
+\end{bmatrix}
+=
+\begin{bmatrix}
+f(1) \\
+f(2) \\
+... \\
+f(n)
+\end{bmatrix}
+\end{split}\]</div>
+<p>Notice that in our setting, the first coefficient <span class="math notranslate nohighlight">\(a_0\)</span> <em>is the secret</em> <span class="math notranslate nohighlight">\(z\)</span>, and the right-hand side of the equation is exactly equal to the secret shares held by the parties after multipling their shares locally. To recover the secret <span class="math notranslate nohighlight">\(a_0\)</span>, if we had all of the shares <span class="math notranslate nohighlight">\(f(1) ... f(n)\)</span>, we could invert <span class="math notranslate nohighlight">\(V\)</span> and do some algebra:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}
+a_0 \\
+a_1 \\
+...\\
+a_n
+\end{bmatrix}
+=
+V^{-1} \cdot
+\begin{bmatrix}
+f(1) \\
+f(2) \\
+... \\
+f(n)
+\end{bmatrix}
+\end{split}\]</div>
+<p>Since we only care about <span class="math notranslate nohighlight">\(a_0\)</span> (and not about <span class="math notranslate nohighlight">\(a_1 \dots a_n\)</span>), we can grab just the first row of <span class="math notranslate nohighlight">\(V^{-1}\)</span>, and the dot product of that row with the shares will equal the secret! We denote the first row of <span class="math notranslate nohighlight">\(V^{-1}\)</span> as <span class="math notranslate nohighlight">\(\lambda_1, \dots, \lambda_n\)</span>, then calculate:</p>
+<div class="math notranslate nohighlight">
+\[
+z = a_0 = \lambda_1 f(1) + \lambda_2 f(2) + \dots + \lambda_n f(n)
+\]</div>
+<p>At first, this doesn’t seem useful, because each party only knows one share (party <span class="math notranslate nohighlight">\(i\)</span> knows <span class="math notranslate nohighlight">\(f(i)\)</span>), and we don’t want anyone to learn <span class="math notranslate nohighlight">\(z\)</span> - we want each party to hold one share of it!</p>
+<p>The central trick of GRR multiplication solves this problem: each party <em>secret-shares their share</em>, then computes <em>one share of the interpolation result</em> using their shares of <span class="math notranslate nohighlight">\(f(1) \dots f(n)\)</span>. This approach effectively performs <em>encrypted interpolation</em>, resulting in a <em>brand-new polynomial</em> with threshold <span class="math notranslate nohighlight">\(t\)</span> that has new random coefficients but has <span class="math notranslate nohighlight">\(y\)</span>-intercept of <span class="math notranslate nohighlight">\(z\)</span> (the secret we want).</p>
+<div class="note admonition">
+<p class="admonition-title">Protocol: GRR Multiplication</p>
+<p>Each party <span class="math notranslate nohighlight">\(P_i\)</span> holds one share <span class="math notranslate nohighlight">\(x_i\)</span> of <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y_i\)</span> of <span class="math notranslate nohighlight">\(y\)</span>. The parties <span class="math notranslate nohighlight">\(P_1, \dots, P_n\)</span> follow the following steps:</p>
+<ol class="arabic simple">
+<li><p>Party <span class="math notranslate nohighlight">\(P_i\)</span> computes <span class="math notranslate nohighlight">\(z_i = x_i \cdot y_i\)</span>, one share of <span class="math notranslate nohighlight">\(z\)</span> with threshold <span class="math notranslate nohighlight">\(n\)</span>, using local multiplication of shares.</p></li>
+<li><p>Party <span class="math notranslate nohighlight">\(P_i\)</span> secret shares <span class="math notranslate nohighlight">\(z_i\)</span> (which represents <span class="math notranslate nohighlight">\(f(i)\)</span> from above) with threshold <span class="math notranslate nohighlight">\(t\)</span> (usually <span class="math notranslate nohighlight">\(t = \lfloor n/2 \rfloor\)</span>), distributing one share <span class="math notranslate nohighlight">\(z_{i,j}\)</span> to each party <span class="math notranslate nohighlight">\(j\)</span>. Party <span class="math notranslate nohighlight">\(P_j\)</span> now holds <span class="math notranslate nohighlight">\(z_{1, j} \dots z_{n, j}\)</span>, one share of each of <span class="math notranslate nohighlight">\(z_1, \dots, z_n\)</span>.</p></li>
+<li><p>Party <span class="math notranslate nohighlight">\(P_j\)</span> locally computes <span class="math notranslate nohighlight">\(\sum_{i=1}^n \lambda_i \cdot z_{i, j}\)</span>, one share of <span class="math notranslate nohighlight">\(z\)</span> with threshold <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ol>
+<p>At the end of the protocol, each party holds one Shamir share of <span class="math notranslate nohighlight">\(z = xy\)</span> with threshold <span class="math notranslate nohighlight">\(t\)</span>.</p>
+</div>
+<p>The implementation requires the ability to multiply a Shamir share by a constant (the <span class="math notranslate nohighlight">\(\lambda_i\)</span> values), and a function to sum a list of shares.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
 <span class="k">def</span> <span class="nf">get_y_coord</span><span class="p">(</span><span class="n">share</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">share</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">share</span><span class="o">.</span><span class="n">y</span>
 
 <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
-<span class="k">def</span> <span class="nf">mult_constant_share</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">b</span>
-    <span class="k">return</span> <span class="n">x2</span><span class="p">,</span> <span class="n">c</span> <span class="o">*</span> <span class="n">y2</span>
+<span class="k">def</span> <span class="nf">mul_constant</span><span class="p">(</span><span class="n">share</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ShamirShare</span><span class="p">(</span><span class="n">share</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">share</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
 
-<span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
 <span class="k">def</span> <span class="nf">sum_shares</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="n">shares</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-        <span class="n">total</span> <span class="o">=</span> <span class="n">add_shares</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">total</span>
+    <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">,</span> <span class="n">shares</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">protocol_bgw_mult</span><span class="p">(</span><span class="n">x_shares</span><span class="p">,</span> <span class="n">y_shares</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">protocol_grr_mult</span><span class="p">(</span><span class="n">x_shares</span><span class="p">,</span> <span class="n">y_shares</span><span class="p">):</span>
+    <span class="n">parties</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x_shares</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">y_shares</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="n">parties</span>
+
     <span class="c1"># Step 1: multiply shares locally</span>
-    <span class="n">z_shares</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">mult_shares</span><span class="p">(</span><span class="n">x_shares</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="n">y_shares</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">}</span>
+    <span class="n">z_is</span> <span class="o">=</span> <span class="p">{</span><span class="n">pi</span><span class="p">:</span> <span class="n">x_shares</span><span class="p">[</span><span class="n">pi</span><span class="p">]</span> <span class="o">*</span> <span class="n">y_shares</span><span class="p">[</span><span class="n">pi</span><span class="p">]</span> <span class="k">for</span> <span class="n">pi</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">}</span>
 
     <span class="c1"># Step 2: re-share the high-degree shares</span>
-    <span class="n">all_q_is</span> <span class="o">=</span> <span class="p">[</span><span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">get_y_coord</span><span class="p">(</span><span class="n">z_shares</span><span class="p">[</span><span class="n">p</span><span class="p">]),</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">]</span>
+    <span class="c1"># z_{i,j} = zijs[pi][pj]</span>
+    <span class="n">zijs</span> <span class="o">=</span> <span class="p">{</span><span class="n">pi</span><span class="p">:</span> <span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">get_y_coord</span><span class="p">(</span><span class="n">z_is</span><span class="p">[</span><span class="n">pi</span><span class="p">]),</span> <span class="n">pi</span><span class="p">)</span> <span class="k">for</span> <span class="n">pi</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">}</span>
 
     <span class="c1"># Step 3: perform degree reduction</span>
-    <span class="n">Vi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vander</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">parties</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">increasing</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
-    <span class="n">lambda_is</span> <span class="o">=</span> <span class="n">Vi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Vinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vander</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">parties</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">increasing</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+    <span class="n">lambda_is</span> <span class="o">=</span> <span class="n">Vinv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="nd">@pychor</span><span class="o">.</span><span class="n">local_function</span>
-    <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="n">qi_shares</span><span class="p">):</span>
-        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">qi_shares</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">y_total</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">lambda_is</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ys</span><span class="p">)])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_total</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">step3</span><span class="p">(</span><span class="n">pj</span><span class="p">):</span>
+        <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">mul_constant</span><span class="p">(</span><span class="n">zijs</span><span class="p">[</span><span class="n">pi</span><span class="p">][</span><span class="n">pj</span><span class="p">],</span> <span class="n">pj</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">lambda_is</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parties</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">sum_shares</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
 
-    <span class="n">z_shares</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">:</span>
-        <span class="n">my_qi_shares</span> <span class="o">=</span> <span class="p">[</span><span class="n">q_is</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">q_is</span> <span class="ow">in</span> <span class="n">all_q_is</span><span class="p">]</span>
-        <span class="n">z_shares</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">interpolate</span><span class="p">(</span><span class="n">my_qi_shares</span><span class="p">)</span>
+    <span class="n">z_shares</span> <span class="o">=</span> <span class="p">{</span><span class="n">pj</span><span class="p">:</span> <span class="n">step3</span><span class="p">(</span><span class="n">pj</span><span class="p">)</span> <span class="k">for</span> <span class="n">pj</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">z_shares</span>
 </pre></div>
@@ -575,17 +611,66 @@ p5 (GF(5, order=2147483647), GF(1342391092, order=2147483647))@{p1, p5}
     <span class="n">p2</span> <span class="o">=</span> <span class="n">parties</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">p1</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">p2</span><span class="p">)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">protocol_bgw_mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">protocol_grr_mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">protocol_bgw_reveal</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15@{p4, p2, p1, p5, p3}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15@{p2, p1, p3, p4, p5}
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="bgw-based-secint">
+<h2>BGW-Based <code class="docutils literal notranslate"><span class="pre">SecInt</span></code><a class="headerlink" href="#bgw-based-secint" title="Link to this heading">#</a></h2>
+<p>We can use the protocols defined above to define a <code class="docutils literal notranslate"><span class="pre">SecInt</span></code> class for <span class="math notranslate nohighlight">\(n\)</span>-party secure integer computations with an honest majority. We implement addition by local addition of shares, and input, multiplication, and reveal using the protocols defined earlier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SecInt</span><span class="p">:</span>
+    <span class="c1"># The `shares` field maps each party to the share they hold</span>
+    <span class="n">shares</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">pychor</span><span class="o">.</span><span class="n">Party</span><span class="p">,</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">parties</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">SecInt</span><span class="p">(</span><span class="n">protocol_bgw_input</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">parties</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">parties</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shares</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">y</span><span class="o">.</span><span class="n">shares</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">==</span> <span class="n">parties</span>
+        <span class="k">return</span> <span class="n">SecInt</span><span class="p">({</span><span class="n">p</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">shares</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">shares</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parties</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SecInt</span><span class="p">(</span><span class="n">protocol_grr_mult</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shares</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shares</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">reveal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">protocol_bgw_reveal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pychor</span><span class="o">.</span><span class="n">LocalBackend</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">SecInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">parties</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">SecInt</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">parties</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(x+y)*x*y =&#39;</span><span class="p">,</span> <span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reveal</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(x+y)*x*y = 120@{p2, p1, p3, p4, p5}
+</pre></div>
+</div>
+</div>
+</div>
+<p>The BGW protocol is efficient - it natively supports arbitrary fields, performs addition without communication, and requires each party to send <span class="math notranslate nohighlight">\(n\)</span> field elements for each multiplication (during the secret sharing of step 2 in GRR multiplication). This matches the efficiency of arithmetic multiplication-triple-based MPC as described in Chapter 4 - but <em>without the need for multiplication triples</em>.</p>
+<p>However, the BGW protocol <em>requires</em> an honest majority assumption, which is significantly weaker than the <span class="math notranslate nohighlight">\(n-1\)</span> assumption for protocols based on additive sharing. This also means that the protocol requires at least 3 parties: in the 2-party case, we would need to set <span class="math notranslate nohighlight">\(t = \lfloor 2/2 \rfloor = 1\)</span>, and the corrupted party would be able to reconstruct all of the secrets.</p>
+<p>When these limitations are acceptable, however, protocols like BGW that leverage Shamir shares can be an efficient choice.</p>
 </section>
 </section>
 
@@ -656,6 +741,7 @@ p5 (GF(5, order=2147483647), GF(1342391092, order=2147483647))@{p1, p5}
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-input">BGW: Input</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-reveal">BGW: Reveal</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-multiplication">BGW: Multiplication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bgw-based-secint">BGW-Based <code class="docutils literal notranslate"><span class="pre">SecInt</span></code></a></li>
 </ul>
   </nav></div>
 

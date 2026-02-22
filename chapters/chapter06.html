@@ -471,7 +471,7 @@ OT Result (s=1): 67@{receiver, FOT}
 </section>
 <section id="a-protocol-for-oblivious-transfer">
 <h2>A Protocol for Oblivious Transfer<a class="headerlink" href="#a-protocol-for-oblivious-transfer" title="Link to this heading">#</a></h2>
-<p>In this section we’ll define a simple protocol for OT that realizes the functionality in the semi-honest setting. Our approach follows Section 3.7 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a> and uses <a class="reference external" href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> as a fundamental building block. The asymmetry between Sender and Receiver in OT is very different from what we’ve seen in prior chapters, and it turns out that this asymmetry creates a deep link between OT and public-key cryptography (see Gertner et al. <span id="id1">[<a class="reference internal" href="../bibliography.html#id4" title="Yael Gertner, Sampath Kannan, Tal Malkin, Omer Reingold, and Mahesh Viswanathan. The relationship between public key encryption and oblivious transfer. In Proceedings 41st Annual Symposium on Foundations of Computer Science, 325–335. IEEE, 2000.">GKM+00</a>]</span>) for details).</p>
+<p>In this section we’ll define a simple protocol for OT that realizes the functionality in the semi-honest setting. Our approach follows Section 3.7 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a> and uses <a class="reference external" href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> as a fundamental building block. The asymmetry between Sender and Receiver in OT is very different from what we’ve seen in prior chapters, and it turns out that this asymmetry creates a deep link between OT and public-key cryptography (see Gertner et al. <span id="id1">[<a class="reference internal" href="../bibliography.html#id6" title="Yael Gertner, Sampath Kannan, Tal Malkin, Omer Reingold, and Mahesh Viswanathan. The relationship between public key encryption and oblivious transfer. In Proceedings 41st Annual Symposium on Foundations of Computer Science, 325–335. IEEE, 2000.">GKM+00</a>]</span>) for details).</p>
 <p>We’ll use the <a class="reference external" href="https://pypi.org/project/PyNaCl/">PyNaCl</a> library for public-key cryptography. This library is a wrapper around <a class="reference external" href="https://github.com/jedisct1/libsodium">libsodium</a>, a high-performance cryptography library. The <a class="reference external" href="https://pynacl.readthedocs.io/en/latest/public/">documentation for public-key cryptography in PyNaCl can be found here</a>. Here’s a simple example that generates a key pair, encrypts a value, and then decrypts the value. When using the PyNaCl library, everything is bytes (input values, keys, encrypted values, etc) - so we will often need to encode the values we want to encrypt into bytestrings before doing so.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -493,8 +493,8 @@ OT Result (s=1): 67@{receiver, FOT}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key pair: b&#39;\xf0\xef\xc70:\xdfd$\xaa\xcdl\xc7\x99\xdc\x14\x07\\\xfd$\xa12\r\xfbO\xb2z[\\Z\xb7\x7f}&#39;
-Encrypted value: b&quot;\x94\xab\xe5Cp\xb1\xe4\xba\xe6\x90\xbb\xb1\xef&#39;n\x1e\x10\xd7\x84\xcc\x07\xc8i\xd8\xccWn\x1b\r(\x01^\x9c\xe1Cm\xa3,\x06\x82KB\xab\xe4\xd2\x1b\x9fa\xe5\xbc\xbc\xe4\xa0h3\x8d\x99\x1c\xd5G~e&quot;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key pair: b&quot;\nn\x00\xb6\xdd\x90\x11\x96.\xee&#39;\xdbA\x1f`\x84\xe5\x0e\xc7,\x7f\x9a\xe2~\x17R@\\Nb|\x8d&quot;
+Encrypted value: b&quot;\xca\xa8\xb3\xe6\t\xe2\xe2@\x7fp\x7f1d\x0b`\x90\xbd\x19\xc0\xa3Z\xbe\x9f_hjuq\x1b&#39;\xb7Z\x91\x94@\x10\x87\x0f\xf3\xc6\xf8\xc2\xfd\xf4\xb0\xab\x93\x98\n\xe3\x8bO\x9b:\x8a\xe0\x87\x13\x85X\xd8\xd8&quot;
 Decrypted value: b&#39;this is a test&#39;
 </pre></div>
 </div>
@@ -757,8 +757,8 @@ OT Result (s=1): 67@{receiver}
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a*b: 0@{p1}, c: 0@{p1}; are they equal? True
 a*b: 0@{p1}, c: 0@{p1}; are they equal? True
 a*b: 0@{p1}, c: 0@{p1}; are they equal? True
-a*b: 0@{p1}, c: 0@{p1}; are they equal? True
 a*b: 1@{p1}, c: 1@{p1}; are they equal? True
+a*b: 0@{p1}, c: 0@{p1}; are they equal? True
 </pre></div>
 </div>
 </div>
@@ -878,7 +878,7 @@ c_2' &amp;= a_2 b_2\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cross term shares: (0@{p1}, 4@{p2})
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cross term shares: (14@{p1}, 7@{p2})
 </pre></div>
 </div>
 </div>
@@ -931,7 +931,7 @@ c_2' &amp;= a_2 b_2\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiplication triple: ((16@{p1}, 4@{p2}), (3@{p1}, 14@{p2}), (7@{p1}, 10@{p2}))
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiplication triple: ((0@{p1}, 9@{p2}), (5@{p1}, 7@{p2}), (16@{p1}, 7@{p2}))
 </pre></div>
 </div>
 </div>
@@ -939,7 +939,7 @@ c_2' &amp;= a_2 b_2\\
 <p>Note that this protocol requires two uses of the <code class="docutils literal notranslate"><span class="pre">protocol_crossterm</span></code> protocol, and each one of those requires <span class="math notranslate nohighlight">\(\lceil \log_2(p) \rceil\)</span> uses of OT. Each OT requires two public-key encryptions, which is often the most expensive part of one of these protocols. This means that generating multiplication triples in <span class="math notranslate nohighlight">\(GF(p)\)</span> is expensive!</p>
 <div class="seealso admonition">
 <p class="admonition-title">Further reading: OT extension</p>
-<p>The idea of <em>Oblivious Transfer extension</em>, introduced in <span id="id2">[<a class="reference internal" href="../bibliography.html#id3" title="Yuval Ishai, Joe Kilian, Kobbi Nissim, and Erez Petrank. Extending oblivious transfers efficiently. In Annual International Cryptology Conference, 145–161. Springer, 2003.">IKNP03</a>]</span>, speeds up protocols that make use of OT in batches (e.g. for generating multiplication triples) by “extending” a small number of “base OTs” (e.g. 128) to a much larger number of usable OTs (e.g. thousands). Techniques for OT extension are surveyed in <strong>Section 3.7.2 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
+<p>The idea of <em>Oblivious Transfer extension</em>, introduced in <span id="id2">[<a class="reference internal" href="../bibliography.html#id5" title="Yuval Ishai, Joe Kilian, Kobbi Nissim, and Erez Petrank. Extending oblivious transfers efficiently. In Annual International Cryptology Conference, 145–161. Springer, 2003.">IKNP03</a>]</span>, speeds up protocols that make use of OT in batches (e.g. for generating multiplication triples) by “extending” a small number of “base OTs” (e.g. 128) to a much larger number of usable OTs (e.g. thousands). Techniques for OT extension are surveyed in <strong>Section 3.7.2 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
 </div>
 </section>
 </section>

@@ -709,7 +709,7 @@ document.write(`
 <h1>Multiplication Triples<a class="headerlink" href="#multiplication-triples" title="Link to this heading">#</a></h1>
 <p>We’ve seen how to use additive secret sharing to build protocols for summation, by using the additive homomorphism property of additive shares.</p>
 <p>What if we want to do multiplication? Unfortunately, additive shares don’t have a multiplicative homomorphism!</p>
-<p>Fortunately, there’s a commonly-used trick for performing multiplication on additive secret shares that leverages a construction called a <em>multiplication triple</em>. The idea is due to <a class="reference external" href="https://sites.google.com/view/donbeaver/home">Don Beaver</a> <span id="id1">[<a class="reference internal" href="../bibliography.html#id5" title="Donald Beaver. Efficient multiparty protocols using circuit randomization. In Annual international cryptology conference, 420–432. Springer, 1991.">Bea91</a>]</span>; multiplication triples are often called <em>Beaver triples</em>, and the approach is sometimes called <em>Beaver’s trick</em>.</p>
+<p>Fortunately, there’s a commonly-used trick for performing multiplication on additive secret shares that leverages a construction called a <em>multiplication triple</em>. The idea is due to <a class="reference external" href="https://sites.google.com/view/donbeaver/home">Don Beaver</a> <span id="id1">[<a class="reference internal" href="../bibliography.html#id7" title="Donald Beaver. Efficient multiparty protocols using circuit randomization. In Annual international cryptology conference, 420–432. Springer, 1991.">Bea91</a>]</span>; multiplication triples are often called <em>Beaver triples</em>, and the approach is sometimes called <em>Beaver’s trick</em>.</p>
 <div class="seealso admonition">
 <p class="admonition-title">Further reading: Multiplication Triples</p>
 <p>For more information on multiplication triples, see <strong>Section 3.4 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
@@ -797,11 +797,11 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shared triple: ((11@{p1, Fgen}, 11@{Fgen, p2}), (12@{p1, Fgen}, 9@{Fgen, p2}), (6@{p1, Fgen}, 14@{Fgen, p2}))
-Reconstructed a: 5@{Fgen}
-Reconstructed b: 4@{Fgen}
-Reconstructed c: 3@{Fgen}
-Reconstructed a*b: 3@{Fgen}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shared triple: ((3@{Fgen, p1}, 0@{Fgen, p2}), (8@{Fgen, p1}, 4@{Fgen, p2}), (13@{Fgen, p1}, 6@{Fgen, p2}))
+Reconstructed a: 3@{Fgen}
+Reconstructed b: 12@{Fgen}
+Reconstructed c: 2@{Fgen}
+Reconstructed a*b: 2@{Fgen}
 </pre></div>
 </div>
 </div>
@@ -810,7 +810,7 @@ Reconstructed a*b: 3@{Fgen}
 </section>
 <section id="multiplying-additive-shares-using-multiplication-triples">
 <h2>Multiplying Additive Shares using Multiplication Triples<a class="headerlink" href="#multiplying-additive-shares-using-multiplication-triples" title="Link to this heading">#</a></h2>
-<p>How do we use a multiplication triple to actually perform multiplication? We can use Beaver’s trick to perform the multiplication, consuming one multiplication triple in the process. The following protocol performs the multiplication, and is due to Beaver <span id="id2">[<a class="reference internal" href="../bibliography.html#id5" title="Donald Beaver. Efficient multiparty protocols using circuit randomization. In Annual international cryptology conference, 420–432. Springer, 1991.">Bea91</a>]</span>.</p>
+<p>How do we use a multiplication triple to actually perform multiplication? We can use Beaver’s trick to perform the multiplication, consuming one multiplication triple in the process. The following protocol performs the multiplication, and is due to Beaver <span id="id2">[<a class="reference internal" href="../bibliography.html#id7" title="Donald Beaver. Efficient multiparty protocols using circuit randomization. In Annual international cryptology conference, 420–432. Springer, 1991.">Bea91</a>]</span>.</p>
 <div class="note admonition">
 <p class="admonition-title">Protocol: multiplication of secret-shared values using a multiplication triple</p>
 <p>Setup:</p>

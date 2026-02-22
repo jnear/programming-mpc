@@ -417,6 +417,7 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">galois</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 </pre></div>
 </div>
 </div>
@@ -426,11 +427,11 @@ document.write(`
 <p>Chapter 2 introduced additive secret sharing, a simple secret sharing scheme with an additive homomorphism. This chapter describes <a class="reference internal" href="#todo"><span class="xref myst"><em>Shamir secret sharing</em></span></a>, a <em>threshold sharing scheme</em>.</p>
 <div class="seealso admonition">
 <p class="admonition-title">Further reading: Shamir Secret Sharing</p>
-<p>For more information on Shamir secret sharing, see <strong>TODO MAYBE JOY OF CRYPTOGRAPHY</strong>.</p>
+<p>For more information on Shamir secret sharing, see <a class="reference external" href="https://joyofcryptography.com/ss/#sec.shamir"><strong>Section 3.5 of The Joy of Cryptography</strong></a>.</p>
 </div>
 <section id="threshold-secret-sharing-schemes">
 <h2>Threshold Secret Sharing Schemes<a class="headerlink" href="#threshold-secret-sharing-schemes" title="Link to this heading">#</a></h2>
-<p>A <a class="reference internal" href="#todo"><span class="xref myst">threshold secret sharing scheme</span></a> is similar to additive secret sharing, but with one major difference: it’s possible to reconstruct the secret with <em>only a subset of the shares</em>. More formally, a threshold scheme is defined by two functions</p>
+<p>A <em>threshold secret sharing scheme</em> is similar to additive secret sharing, but with one major difference: it’s possible to reconstruct the secret with <em>only a subset of the shares</em>. More formally, a threshold scheme is defined by two functions</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">share(x,t,n)</span></code> generates <code class="docutils literal notranslate"><span class="pre">n</span></code> secret shares with threshold <code class="docutils literal notranslate"><span class="pre">t</span></code> of the secret value <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reconstruct(ss)</span></code> decrypts a secret value from a list <code class="docutils literal notranslate"><span class="pre">ss</span></code> of <code class="docutils literal notranslate"><span class="pre">t</span></code> or more secret shares</p></li>
@@ -440,7 +441,7 @@ document.write(`
 </section>
 <section id="the-shamir-scheme">
 <h2>The Shamir Scheme<a class="headerlink" href="#the-shamir-scheme" title="Link to this heading">#</a></h2>
-<p>The <a class="reference internal" href="#"><span class="xref myst">Shamir secret sharing scheme</span></a> is due to Adi Shamir <span id="id1">[]</span>. There are two key ideas behind the scheme:</p>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing">Shamir secret sharing scheme</a> is due to Adi Shamir <span id="id1">[<a class="reference internal" href="../bibliography.html#id2" title="Adi Shamir. How to share a secret. Communications of the ACM, 22(11):612–613, 1979.">Sha79</a>]</span>. There are two key ideas behind the scheme:</p>
 <ul class="simple">
 <li><p>To secret share a value with threshold <span class="math notranslate nohighlight">\(t\)</span>, construct a <a class="reference internal" href="#todo"><span class="xref myst"><em>polynomial</em> of degree <span class="math notranslate nohighlight">\(t\)</span></span></a></p></li>
 <li><p>To reconstruct the secret from <span class="math notranslate nohighlight">\(t\)</span> shares, use <em>polynomial interpolation</em></p></li>
@@ -509,10 +510,15 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
 <li><p>Construct a degree-<span class="math notranslate nohighlight">\(t\)</span> polynomial <span class="math notranslate nohighlight">\(f(x)\)</span> with coefficients <span class="math notranslate nohighlight">\(c_0, \dots, c_t\)</span> where <span class="math notranslate nohighlight">\(c_0\)</span> is the secret</p></li>
 <li><p>The shares are <span class="math notranslate nohighlight">\(n\)</span> <span class="math notranslate nohighlight">\((x, y)\)</span> pairs <span class="math notranslate nohighlight">\((x_1, f(x_1)), \dots, (x_n, f(x_n))\)</span> where <span class="math notranslate nohighlight">\(x_i &gt; 0\)</span></p></li>
 </ol>
-<p>In the last step, it’s common to pick <span class="math notranslate nohighlight">\(x_1 = 1, x_2 = 2, \dots, x_n = n\)</span> for convenience. We can implement these steps in the function <code class="docutils literal notranslate"><span class="pre">shamir_share</span></code>:</p>
+<p>In the last step, it’s common to pick <span class="math notranslate nohighlight">\(x_1 = 1, x_2 = 2, \dots, x_n = n\)</span> for convenience. We can implement these steps in a function called <code class="docutils literal notranslate"><span class="pre">shamir_share</span></code>, and we’ll also define a class to represent Shamir shares that stores their <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> values.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">shamir_share</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ShamirShare</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">galois</span><span class="o">.</span><span class="n">GF</span>
+
+<span class="k">def</span> <span class="nf">shamir_share</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="c1"># Step 1: pick t-1 random coefficients</span>
     <span class="n">coefficients</span> <span class="o">=</span> <span class="p">[</span><span class="n">GF</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
 
@@ -521,7 +527,7 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
     <span class="n">poly</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">Poly</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">coefficients</span><span class="p">))</span>
 
     <span class="c1"># Step 3: compute the shares</span>
-    <span class="n">shares</span> <span class="o">=</span> <span class="p">[(</span><span class="n">GF</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">poly</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">shares</span> <span class="o">=</span> <span class="p">[</span><span class="n">ShamirShare</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">poly</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">shares</span>
 </pre></div>
 </div>
@@ -534,10 +540,10 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(GF(1, order=97), GF(32, order=97)),
- (GF(2, order=97), GF(51, order=97)),
- (GF(3, order=97), GF(70, order=97)),
- (GF(4, order=97), GF(89, order=97))]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ShamirShare(x=GF(1, order=97), y=GF(8, order=97)),
+ ShamirShare(x=GF(2, order=97), y=GF(3, order=97)),
+ ShamirShare(x=GF(3, order=97), y=GF(95, order=97)),
+ ShamirShare(x=GF(4, order=97), y=GF(90, order=97))]
 </pre></div>
 </div>
 </div>
@@ -545,7 +551,7 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
 </section>
 <section id="reconstruction">
 <h3>Reconstruction<a class="headerlink" href="#reconstruction" title="Link to this heading">#</a></h3>
-<p>Reconstruction is performed using <a class="reference internal" href="#todo"><span class="xref myst">polynomial interpolation</span></a>. Given at least <span class="math notranslate nohighlight">\(t\)</span> <span class="math notranslate nohighlight">\((x,y)\)</span> pairs on the polynomial, the interpolation process allows us to reconstruct the original polynomial. Since the coefficient <span class="math notranslate nohighlight">\(c_0\)</span> is equal to the secret, knowing the polynomial is equivalent to knowing the secret. Reconstruction follows these steps:</p>
+<p>Reconstruction is performed using <a class="reference external" href="https://en.wikipedia.org/wiki/Polynomial_interpolation">polynomial interpolation</a>. Given at least <span class="math notranslate nohighlight">\(t\)</span> <span class="math notranslate nohighlight">\((x,y)\)</span> pairs on the polynomial, the interpolation process allows us to reconstruct the original polynomial. Since the coefficient <span class="math notranslate nohighlight">\(c_0\)</span> is equal to the secret, knowing the polynomial is equivalent to knowing the secret. Reconstruction follows these steps:</p>
 <ol class="arabic simple">
 <li><p>Recover the original polynomial <span class="math notranslate nohighlight">\(f(x)\)</span> using polynomial interpolation</p></li>
 <li><p>Evaluate <span class="math notranslate nohighlight">\(f(0)\)</span> to recover the secret</p></li>
@@ -555,8 +561,8 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">shamir_reconstruct</span><span class="p">(</span><span class="n">shares</span><span class="p">):</span>
     <span class="c1"># Step 1: recover the polynomial</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">])</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">])</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">])</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">GF</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shares</span><span class="p">])</span>
     <span class="n">poly</span> <span class="o">=</span> <span class="n">galois</span><span class="o">.</span><span class="n">lagrange_poly</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
 
     <span class="c1"># Step 2: evaluate f(0) to recover the secret</span>
@@ -588,7 +594,7 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First two shares: [(GF(1, order=97), GF(42, order=97)), (GF(2, order=97), GF(71, order=97))]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First two shares: [ShamirShare(x=GF(1, order=97), y=GF(72, order=97)), ShamirShare(x=GF(2, order=97), y=GF(34, order=97))]
 Reconstructed secret: 13
 </pre></div>
 </div>
@@ -603,8 +609,8 @@ Reconstructed secret: 13
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First share: [(GF(1, order=97), GF(42, order=97))]
-Reconstructed secret: 42
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First share: [ShamirShare(x=GF(1, order=97), y=GF(72, order=97))]
+Reconstructed secret: 72
 </pre></div>
 </div>
 </div>
@@ -622,20 +628,19 @@ Reconstructed secret: 42
 <ul class="simple">
 <li><p>If <span class="math notranslate nohighlight">\((x, y_1)\)</span> lies on the polynomial <span class="math notranslate nohighlight">\(f_1\)</span></p></li>
 <li><p>And <span class="math notranslate nohighlight">\((x, y_2)\)</span> lies on the polynomial <span class="math notranslate nohighlight">\(f_2\)</span></p></li>
-<li><p>Then <span class="math notranslate nohighlight">\((x, y_1 + y_2)\)</span> lies on the polynomial <span class="math notranslate nohighlight">\(f_1 + f2\)</span></p></li>
+<li><p>Then <span class="math notranslate nohighlight">\((x, y_1 + y_2)\)</span> lies on the polynomial <span class="math notranslate nohighlight">\(f_1 + f_2\)</span></p></li>
 </ul>
 <p>So, we can add Shamir-shared numbers together locally, just like we can with additive shares! Unlike with additive shares, we need to be careful <em>which</em> shares we add together when using Shamir shares - the added shares need to have the same <span class="math notranslate nohighlight">\(x\)</span> coordinate. It’s typical to assign each party in a protocol a particular <span class="math notranslate nohighlight">\(x\)</span> coordinate and use the same one consistently throughout the protocol, so that each party always holds shares that are compatible.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">a</span>
-    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">b</span>
-    <span class="k">assert</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span>
-    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">y2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ShamirShare</span><span class="p">(</span><span class="n">ShamirShare</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">return</span> <span class="n">ShamirShare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
 <span class="n">shares1</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">shares2</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">add_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shares1</span><span class="p">,</span> <span class="n">shares2</span><span class="p">)]</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shares1</span><span class="p">,</span> <span class="n">shares2</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed sum:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -670,15 +675,14 @@ f(x) &amp;= f_1(x) f_2(x) \\
 <p>In general, multiplying two polynomials of degree <span class="math notranslate nohighlight">\(d\)</span> results in a polynomial of degree at most <span class="math notranslate nohighlight">\(2d\)</span>. This means we can multiply Shamir shares with threshold <span class="math notranslate nohighlight">\(t\)</span> to get new Shamir shares of the product with threshold <span class="math notranslate nohighlight">\(2t\)</span>. Here, we multiply shares with <span class="math notranslate nohighlight">\(t=2\)</span> and get new shares with <span class="math notranslate nohighlight">\(t=4\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mult_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">a</span>
-    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">b</span>
-    <span class="k">assert</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">x2</span>
-    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ShamirShare</span><span class="p">(</span><span class="n">ShamirShare</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">return</span> <span class="n">ShamirShare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
 <span class="n">shares1</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">shares2</span> <span class="o">=</span> <span class="n">shamir_share</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">mult_shares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shares1</span><span class="p">,</span> <span class="n">shares2</span><span class="p">)]</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shares1</span><span class="p">,</span> <span class="n">shares2</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reconstructed product:&#39;</span><span class="p">,</span> <span class="n">shamir_reconstruct</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -697,7 +701,7 @@ f(x) &amp;= f_1(x) f_2(x) \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed product, with only 2 shares: 40
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed product, with only 2 shares: 46
 </pre></div>
 </div>
 </div>
