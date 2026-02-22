@@ -411,18 +411,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hidden cell for imports</span>
-
-<span class="kn">import</span> <span class="nn">galois</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section class="tex2jax_ignore mathjax_ignore" id="shamir-secret-sharing">
+  <section class="tex2jax_ignore mathjax_ignore" id="shamir-secret-sharing">
 <h1>Shamir Secret Sharing<a class="headerlink" href="#shamir-secret-sharing" title="Link to this heading">#</a></h1>
 <p>Chapter 2 introduced additive secret sharing, a simple secret sharing scheme with an additive homomorphism. This chapter describes <a class="reference internal" href="#todo"><span class="xref myst"><em>Shamir secret sharing</em></span></a>, a <em>threshold sharing scheme</em>.</p>
 <div class="seealso admonition">
@@ -540,10 +529,10 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ShamirShare(x=GF(1, order=97), y=GF(8, order=97)),
- ShamirShare(x=GF(2, order=97), y=GF(3, order=97)),
- ShamirShare(x=GF(3, order=97), y=GF(95, order=97)),
- ShamirShare(x=GF(4, order=97), y=GF(90, order=97))]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ShamirShare(x=GF(1, order=97), y=GF(14, order=97)),
+ ShamirShare(x=GF(2, order=97), y=GF(15, order=97)),
+ ShamirShare(x=GF(3, order=97), y=GF(16, order=97)),
+ ShamirShare(x=GF(4, order=97), y=GF(17, order=97))]
 </pre></div>
 </div>
 </div>
@@ -594,7 +583,7 @@ f(x) = c_0 + c_1 x + c_2 x^2 + ... + c_t x^t
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First two shares: [ShamirShare(x=GF(1, order=97), y=GF(72, order=97)), ShamirShare(x=GF(2, order=97), y=GF(34, order=97))]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First two shares: [ShamirShare(x=GF(1, order=97), y=GF(13, order=97)), ShamirShare(x=GF(2, order=97), y=GF(13, order=97))]
 Reconstructed secret: 13
 </pre></div>
 </div>
@@ -609,8 +598,8 @@ Reconstructed secret: 13
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First share: [ShamirShare(x=GF(1, order=97), y=GF(72, order=97))]
-Reconstructed secret: 72
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First share: [ShamirShare(x=GF(1, order=97), y=GF(13, order=97))]
+Reconstructed secret: 13
 </pre></div>
 </div>
 </div>
@@ -701,7 +690,7 @@ f(x) &amp;= f_1(x) f_2(x) \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed product, with only 2 shares: 46
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reconstructed product, with only 2 shares: 77
 </pre></div>
 </div>
 </div>
