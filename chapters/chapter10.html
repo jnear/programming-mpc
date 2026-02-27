@@ -409,7 +409,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="the-bgw-protocol">
 <h1>The BGW Protocol<a class="headerlink" href="#the-bgw-protocol" title="Link to this heading">#</a></h1>
-<p>The Ben-Or, Goldwasser, and Wigderson protocol <span id="id1">[<a class="reference internal" href="../bibliography.html#id3" title="Michael Ben-Or, Shafi Goldwasser, and Avi Wigderson. Completeness theorems for non-cryptographic fault-tolerant distributed computation. In 20th Annual ACM Symposium on Theory of Computing, 1–10. 1988.">BOGW88</a>]</span> is another classic MPC protocol, this time employing Shamir secret sharing and arithmetic circuits. The BGW protocol performs multiplication using the limited multiplicative homomorphism of Shamir shares. The BGW protocol naturally supports more than 2 parties, and actually <em>requires</em> at least 3 parties for the standard variant.</p>
+<p>The Ben-Or, Goldwasser, and Wigderson protocol <span id="id1">[<a class="reference internal" href="../bibliography.html#id4" title="Michael Ben-Or, Shafi Goldwasser, and Avi Wigderson. Completeness theorems for non-cryptographic fault-tolerant distributed computation. In 20th Annual ACM Symposium on Theory of Computing, 1–10. 1988.">BOGW88</a>]</span> is another classic MPC protocol, this time employing Shamir secret sharing and arithmetic circuits. The BGW protocol performs multiplication using the limited multiplicative homomorphism of Shamir shares. The BGW protocol naturally supports more than 2 parties, and actually <em>requires</em> at least 3 parties for the standard variant.</p>
 <div class="seealso admonition">
 <p class="admonition-title">Further reading: BGW Protocol</p>
 <p>For more information on the BGW protocol, see <strong>Section 3.3 of <a class="reference external" href="https://securecomputation.org/">Pragmatic MPC</a></strong>.</p>
@@ -460,11 +460,11 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>p1 ShamirShare(x=GF(1, order=2147483647), y=GF(875121067, order=2147483647))@{p1}
-p2 ShamirShare(x=GF(2, order=2147483647), y=GF(29259648, order=2147483647))@{p2, p1}
-p3 ShamirShare(x=GF(3, order=2147483647), y=GF(1757383042, order=2147483647))@{p3, p1}
-p4 ShamirShare(x=GF(4, order=2147483647), y=GF(1764523955, order=2147483647))@{p4, p1}
-p5 ShamirShare(x=GF(5, order=2147483647), y=GF(50682387, order=2147483647))@{p5, p1}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>p1 ShamirShare(x=GF(1, order=2147483647), y=GF(682975963, order=2147483647))@{p1}
+p2 ShamirShare(x=GF(2, order=2147483647), y=GF(1897425256, order=2147483647))@{p2, p1}
+p3 ShamirShare(x=GF(3, order=2147483647), y=GF(1495864237, order=2147483647))@{p3, p1}
+p4 ShamirShare(x=GF(4, order=2147483647), y=GF(1625776553, order=2147483647))@{p4, p1}
+p5 ShamirShare(x=GF(5, order=2147483647), y=GF(139678557, order=2147483647))@{p5, p1}
 </pre></div>
 </div>
 </div>
@@ -500,7 +500,7 @@ p5 ShamirShare(x=GF(5, order=2147483647), y=GF(50682387, order=2147483647))@{p5,
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Revealed value: 5@{p2, p1, p3, p4, p5}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Revealed value: 5@{p3, p2, p1, p4, p5}
 </pre></div>
 </div>
 </div>
@@ -508,10 +508,10 @@ p5 ShamirShare(x=GF(5, order=2147483647), y=GF(50682387, order=2147483647))@{p5,
 </section>
 <section id="bgw-multiplication">
 <h2>BGW: Multiplication<a class="headerlink" href="#bgw-multiplication" title="Link to this heading">#</a></h2>
-<p>To multiply two secret-shared values <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> where <span class="math notranslate nohighlight">\(t \leq \lfloor n/2 \rfloor\)</span> and <span class="math notranslate nohighlight">\(n\)</span> is the number of parties, each party can multiply their shares locally to get one share of the product. Unfortunately, the degree of the resulting polynomial could be as high as <span class="math notranslate nohighlight">\(n\)</span>, so we won’t be able to do more than one multiplication this way.</p>
-<p>To solve this problem, we’ll use a simplified version of BGW multiplication called GRR multiplication. This approach was proposed by Gennaro, Rabin, and Rabin <span id="id2">[<a class="reference internal" href="../bibliography.html#id2" title="Rosario Gennaro, Michael O Rabin, and Tal Rabin. Simplified vss and fast-track multiparty computations with applications to threshold cryptography. In Proceedings of the seventeenth annual ACM symposium on Principles of distributed computing, 101–111. 1998.">GRR98</a>]</span> and is commonly implemented instead of the original. GRR multiplication works by having each party multiply shares locally to obtain one share with a high threshold, then performing a <em>degree reduction</em> step to bring the threshold back down to <span class="math notranslate nohighlight">\(\lfloor n/2 \rfloor\)</span>.</p>
-<p>To start, we assume that each party holds one share of <span class="math notranslate nohighlight">\(x\)</span> and one share of <span class="math notranslate nohighlight">\(y\)</span> with degree <span class="math notranslate nohighlight">\(t \leq \lfloor n/2 \rfloor\)</span>, and each party multiplies shares locally (as in Chapter 9) to obtain on share of <span class="math notranslate nohighlight">\(z = xy\)</span> with degree <span class="math notranslate nohighlight">\(n \leq n\)</span>.</p>
-<p>To do the degree reduction, we use the <a class="reference external" href="https://en.wikipedia.org/wiki/Vandermonde_matrix#Applications">Vandermonde matrix</a>, a special matrix that enables <em>polynomial interpolcation via matrix multiplication</em>. In particular, for a polynomial <span class="math notranslate nohighlight">\(f(x) = a_0 + a_1 x + ... a_n x^n\)</span>, there is a Vandermonde matrix <span class="math notranslate nohighlight">\(V\)</span> such that the following holds:</p>
+<p>To multiply two secret-shared values <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> where <span class="math notranslate nohighlight">\(t \leq \lfloor n/2 \rfloor\)</span> and <span class="math notranslate nohighlight">\(n\)</span> is the number of parties, each party can multiply their shares locally to get one share of the product. Unfortunately, the degree of the resulting polynomial could be as high as <span class="math notranslate nohighlight">\(n-1\)</span>, so we won’t be able to do more than one multiplication this way.</p>
+<p>To solve this problem, we’ll use a simplified version of BGW multiplication called GRR multiplication. This approach was proposed by Gennaro, Rabin, and Rabin <span id="id2">[<a class="reference internal" href="../bibliography.html#id3" title="Rosario Gennaro, Michael O Rabin, and Tal Rabin. Simplified vss and fast-track multiparty computations with applications to threshold cryptography. In Proceedings of the seventeenth annual ACM symposium on Principles of distributed computing, 101–111. 1998.">GRR98</a>]</span> and is commonly implemented instead of the original. GRR multiplication works by having each party multiply shares locally to obtain one share with a high threshold, then performing a <em>degree reduction</em> step to bring the threshold back down to <span class="math notranslate nohighlight">\(\lfloor n/2 \rfloor\)</span>.</p>
+<p>To start, we assume that each party holds one share of <span class="math notranslate nohighlight">\(x\)</span> and one share of <span class="math notranslate nohighlight">\(y\)</span> with degree <span class="math notranslate nohighlight">\(t \leq \lfloor n/2 \rfloor\)</span>, and each party multiplies shares locally (as in Chapter 9) to obtain one share of <span class="math notranslate nohighlight">\(z = xy\)</span> with degree less than or equal to <span class="math notranslate nohighlight">\(n-1\)</span>.</p>
+<p>To do the degree reduction, we use the <a class="reference external" href="https://en.wikipedia.org/wiki/Vandermonde_matrix#Applications">Vandermonde matrix</a>, a special matrix that enables <em>polynomial interpolcation via matrix multiplication</em>. In particular, for a polynomial <span class="math notranslate nohighlight">\(f(x) = a_0 + a_1 x + ... a_n x^{n-1}\)</span>, there is a Vandermonde matrix <span class="math notranslate nohighlight">\(V\)</span> such that the following holds:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 V \cdot
@@ -519,7 +519,7 @@ V \cdot
 a_0 \\
 a_1 \\
 ...\\
-a_n
+a_{n-1}
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -536,7 +536,7 @@ f(n)
 a_0 \\
 a_1 \\
 ...\\
-a_n
+a_{n-1}
 \end{bmatrix}
 =
 V^{-1} \cdot
@@ -547,13 +547,14 @@ f(2) \\
 f(n)
 \end{bmatrix}
 \end{split}\]</div>
-<p>Since we only care about <span class="math notranslate nohighlight">\(a_0\)</span> (and not about <span class="math notranslate nohighlight">\(a_1 \dots a_n\)</span>), we can grab just the first row of <span class="math notranslate nohighlight">\(V^{-1}\)</span>, and the dot product of that row with the shares will equal the secret! We denote the first row of <span class="math notranslate nohighlight">\(V^{-1}\)</span> as <span class="math notranslate nohighlight">\(\lambda_1, \dots, \lambda_n\)</span>, then calculate:</p>
+<p>Since we only care about <span class="math notranslate nohighlight">\(a_0\)</span> (and not about <span class="math notranslate nohighlight">\(a_1 \dots a_{n-1}\)</span>), we can grab just the first row of <span class="math notranslate nohighlight">\(V^{-1}\)</span>, and the dot product of that row with the shares will equal the secret! We denote the first row of <span class="math notranslate nohighlight">\(V^{-1}\)</span> as <span class="math notranslate nohighlight">\(\lambda_1, \dots, \lambda_n\)</span>, then calculate:</p>
 <div class="math notranslate nohighlight">
 \[
 z = a_0 = \lambda_1 f(1) + \lambda_2 f(2) + \dots + \lambda_n f(n)
 \]</div>
 <p>At first, this doesn’t seem useful, because each party only knows one share (party <span class="math notranslate nohighlight">\(i\)</span> knows <span class="math notranslate nohighlight">\(f(i)\)</span>), and we don’t want anyone to learn <span class="math notranslate nohighlight">\(z\)</span> - we want each party to hold one share of it!</p>
-<p>The central trick of GRR multiplication solves this problem: each party <em>secret-shares their share</em>, then computes <em>one share of the interpolation result</em> using their shares of <span class="math notranslate nohighlight">\(f(1) \dots f(n)\)</span>. This approach effectively performs <em>encrypted interpolation</em>, resulting in a <em>brand-new polynomial</em> with threshold <span class="math notranslate nohighlight">\(t\)</span> that has new random coefficients but has <span class="math notranslate nohighlight">\(y\)</span>-intercept of <span class="math notranslate nohighlight">\(z\)</span> (the secret we want).</p>
+<p>However, if each party instead had one share of <em>each</em> of the values <span class="math notranslate nohighlight">\(f(1), \dots, f(n)\)</span>, then each party could compute one share of <span class="math notranslate nohighlight">\(a_0\)</span> by evaluating the equation above on these secret shares.</p>
+<p>The central trick of GRR multiplication solves the problem using exactly this approach: each party <em>secret-shares their share</em>, then computes <em>one share of the interpolation result</em> using their shares of <span class="math notranslate nohighlight">\(f(1), \dots, f(n)\)</span>. This approach effectively performs <em>encrypted interpolation</em>, resulting in a <em>brand-new polynomial</em> with threshold <span class="math notranslate nohighlight">\(t\)</span> that has new random coefficients but has <span class="math notranslate nohighlight">\(y\)</span>-intercept of <span class="math notranslate nohighlight">\(z\)</span> (the secret we want).</p>
 <div class="note admonition">
 <p class="admonition-title">Protocol: GRR Multiplication</p>
 <p>Each party <span class="math notranslate nohighlight">\(P_i\)</span> holds one share <span class="math notranslate nohighlight">\(x_i\)</span> of <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y_i\)</span> of <span class="math notranslate nohighlight">\(y\)</span>. The parties <span class="math notranslate nohighlight">\(P_1, \dots, P_n\)</span> follow the following steps:</p>
@@ -617,7 +618,7 @@ z = a_0 = \lambda_1 f(1) + \lambda_2 f(2) + \dots + \lambda_n f(n)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15@{p2, p1, p3, p4, p5}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15@{p3, p2, p1, p4, p5}
 </pre></div>
 </div>
 </div>
@@ -663,7 +664,7 @@ z = a_0 = \lambda_1 f(1) + \lambda_2 f(2) + \dots + \lambda_n f(n)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(x+y)*x*y = 120@{p2, p1, p3, p4, p5}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(x+y)*x*y = 120@{p3, p2, p1, p4, p5}
 </pre></div>
 </div>
 </div>
